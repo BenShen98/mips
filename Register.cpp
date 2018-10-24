@@ -1,7 +1,11 @@
+#include "Register.hpp"
+#include <iostream>
+
+
+
 Word Register::get(Regidx i){
 	if(i>31){
-		std::cerr << "reading invaild register address"<<std::hex<<PC << '\n';
-		Memexception();
+		RegException();
 	}
 
 	if(i==0){
@@ -22,13 +26,18 @@ void Register::set(Regidx i, Word value){
 
 	//error check
 	if(i==0){
-		std::cerr << "WARNING: writting to register 0 at PC "<<std::hex<<PC << '\n';
+		std::cerr << "WARNING: writting to register 0 at PC "<< '\n';
 	}
 
 	if(i>31){
-		std::cerr << "reading invaild register address"<<std::hex<<PC << '\n';
-		Memexception();
+		RegException();
 	}
 
 	reg[i]=value;
+}
+
+void Register::RegException(){
+	std::cerr << "reading invaild register address"<< '\n';
+	// Memexception();
+	std::exit(-1008);
 }

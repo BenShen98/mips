@@ -1,4 +1,5 @@
 typedef unsigned int Word;
+typedef unsigned char Regidx;
 
 class Register{
 public:
@@ -7,6 +8,8 @@ public:
 	Word getLO();
 	void set(Regidx i, Word value);
 
+	void RegException();
+
 private:
 	Word reg[34]={0};
-}
+};

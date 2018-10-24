@@ -1,35 +1,29 @@
 #include <iostream>
 #include "Register.hpp"
+#include "Memory.hpp"
 
-typedef unsigned char Regidx;
+// typedef unsigned char Regidx;
 // typedef unsigned int Word;
-
-//memory are defined as byte, increment 4 bit
-
-
-
 
 class Simulator{
 	public:
 
 		void run();
-		simulator();
-		~simulator();
+		Simulator();
+		~Simulator();
 
 	private:
 		Register * reg;//HI/LO only access by mfhi/mfhlo
 		//TODO register zero = 0 !
-		Word * memInstruction;
+		Memory * mem;
 		int PC=0x10000000;
 
-		Word getInstruction();
 
 		void Rswitch();
 
 		void ISAexception();
 
 		void Mathexception();/* code */
-
 
 		void Memexception();
 
@@ -53,26 +47,24 @@ int main()
 
 	return 0;
 }
-reg
 
 
-Simulator::simulator() {
-	 memInstruction = new Word[0x10000](); //0x1000000>>2
-	 memInstruction[0]=0b00000000001000100001100000100001;
-	 memInstruction[1]=0b00000000000000000000000000001000;
+Simulator::Simulator() {
+
+	 mem = new Memory();
 
 	 reg = new Register();
  }
 
- Simulator::~simulator() {
- 	 delete memInstruction;
+ Simulator::~Simulator() {
+ 	 delete mem;
 	 delete reg;
   }
 
 void Simulator::run() {
 	//TODO: if
 	while (PC!=0) {
-		switch((getInstruction())>>26){
+		switch(( mem->getInstruction(PC) )>>26){
 			case 0b000000:
 				Rswitch();break;
 			//other case here
@@ -85,7 +77,7 @@ void Simulator::run() {
 
 
 void Simulator::Rswitch(){
-	Word const instruction=getInstruction();
+	Word const instruction=mem->getInstruction(PC);
 	Regidx s, t, d;
 	unsigned char shift;
 
@@ -139,20 +131,9 @@ void Simulator::Mathexception(){
 	//debug info eg PC counter....
 	std::exit (-10);
 }
-void Simulator::Memexception(){
-	std::cerr<<"Mem exception at memory address "<<std::hex<<PC<<std::endl;
-	//debug info eg PC counter....
-	std::exit (-11);
-}
 
-Word Simulator::getInstruction(){
 
-	if(PC<0x10000000 || PC>0x11000000){
-		Memexception();
-	}
 
-	return memInstruction[(PC-0x10000000)>>2];
-}
 
 
 //bin/mips_simulator x.bin --ext-memory=memo.bin --ext-reg=reg.bin
