@@ -1,10 +1,15 @@
 #include <iostream>
+#include "Register.hpp"
 
 typedef unsigned char Regidx;
-typedef unsigned int Mem;
+// typedef unsigned int Word;
+
+//memory are defined as byte, increment 4 bit
 
 
-class simulator{
+
+
+class Simulator{
 	public:
 
 		void run();
@@ -12,12 +17,12 @@ class simulator{
 		~simulator();
 
 	private:
-		int reg[34]={0};//HI/LO only access by mfhi/mfhlo
+		Register * reg;//HI/LO only access by mfhi/mfhlo
 		//TODO register zero = 0 !
-		Mem * memInstruction;
+		Word * memInstruction;
 		int PC=0x10000000;
 
-		Mem getInstruction();
+		Word getInstruction();
 
 		void Rswitch();
 
@@ -33,70 +38,38 @@ class simulator{
 		void addu(Regidx d,Regidx s,Regidx t);
 		void jr(Regidx s);
 
-		Mem getReg(Regidx i);
-		Mem getHI();
-		Mem getLO();
-		void setReg(Regidx i, Mem value);
+
 };
+
 
 
 
 
 int main()
 {
-	simulator s1;
+	Simulator s1;
 
 	s1.run();
 
 	return 0;
 }
+reg
 
-Mem simulator::getReg(Regidx i){
-	if(i>31){
-		std::cerr << "reading invaild register address"<<std::hex<<PC << '\n';
-		Memexception();
-	}
 
-	if(i==0){
-		return Mem(0);//type cast
-	}
-	return reg[i];
-}
-
-Mem simulator::getHI(){
-	return reg[33];
-}
-
-Mem simulator::getLO(){
-	return reg[32];
-}
-
-void simulator::setReg(Regidx i, Mem value){
-
-	//error check
-	if(i==0){
-		std::cerr << "WARNING: writting to register 0 at PC "<<std::hex<<PC << '\n';
-	}
-
-	if(i>31){
-		std::cerr << "reading invaild register address"<<std::hex<<PC << '\n';
-		Memexception();
-	}
-
-	reg[i]=value;
-}
-
-simulator::simulator() {
-	 memInstruction = new Mem[0x10000](); //0x1000000>>2
+Simulator::simulator() {
+	 memInstruction = new Word[0x10000](); //0x1000000>>2
 	 memInstruction[0]=0b00000000001000100001100000100001;
 	 memInstruction[1]=0b00000000000000000000000000001000;
+
+	 reg = new Register();
  }
 
- simulator::~simulator() {
+ Simulator::~simulator() {
  	 delete memInstruction;
+	 delete reg;
   }
 
-void simulator::run() {
+void Simulator::run() {
 	//TODO: if
 	while (PC!=0) {
 		switch((getInstruction())>>26){
@@ -111,8 +84,8 @@ void simulator::run() {
 
 
 
-void simulator::Rswitch(){
-	Mem const instruction=getInstruction();
+void Simulator::Rswitch(){
+	Word const instruction=getInstruction();
 	Regidx s, t, d;
 	unsigned char shift;
 
@@ -129,50 +102,50 @@ void simulator::Rswitch(){
 	}
 }
 
-void simulator::add(Regidx d,Regidx s,Regidx t){
+void Simulator::add(Regidx d,Regidx s,Regidx t){
 	// unsigned overflow
 	// BUG ???
-	int temp=reg[s]+reg[t];
-	if((int(reg[s])>0 && int(reg[t])>0 && (temp&0x80000000)) || (int(reg[s])<0 && int(reg[t])<0 && !(temp&0x80000000))){
+	int temp=reg->get(s)+reg->get(t);
+	if((int(reg->get(s))>0 && int(reg->get(t))>0 && (temp&0x80000000)) || (int(reg->get(s))<0 && int(reg->get(t))<0 && !(temp&0x80000000))){
 		Mathexception();
 	}
-	reg[d]=temp;
-	std::cerr<<"add\t| "<<reg[d]<<" is result at PC "<<std::hex<<PC<<"\n";
+	reg->set(d,temp);
+	std::cerr<<"add\t| "<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
 }
 
-void simulator::addu(Regidx d,Regidx s,Regidx t){
+void Simulator::addu(Regidx d,Regidx s,Regidx t){
 	//unsigned overflow
-	long temp=long(reg[s])+long(reg[t]);
+	long temp=long(reg->get(s))+long(reg->get(t));
 	if((temp>>32)){
 		Mathexception();
 	}
 
-	reg[d]=temp;
-	std::cerr<<"addu\t| "<<reg[d]<<" is result at PC "<<std::hex<<PC<<"\n";
+	reg->set(d,temp);
+	std::cerr<<"addu\t| "<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
 }
-void simulator::jr(Regidx s){
-	PC=reg[s];
+void Simulator::jr(Regidx s){
+	PC=reg->get(s);
 	std::cerr<<"jr\t| jump to memory address "<<std::hex<<PC<<"\n";
 }
 
-void simulator::ISAexception(){
+void Simulator::ISAexception(){
 	std::cerr<<"ISA exception at memory address "<<std::hex<<PC<<std::endl;
 	//debug info eg PC counter....
 	std::exit (-12);
 }
 
-void simulator::Mathexception(){
+void Simulator::Mathexception(){
 	std::cerr<<"Math exception at memory address "<<std::hex<<PC<<std::endl;
 	//debug info eg PC counter....
 	std::exit (-10);
 }
-void simulator::Memexception(){
+void Simulator::Memexception(){
 	std::cerr<<"Mem exception at memory address "<<std::hex<<PC<<std::endl;
 	//debug info eg PC counter....
 	std::exit (-11);
 }
 
-Mem simulator::getInstruction(){
+Word Simulator::getInstruction(){
 
 	if(PC<0x10000000 || PC>0x11000000){
 		Memexception();
