@@ -7,7 +7,7 @@ class Memory{
 
 public:
 	Word getInstruction(Word PC);
-  Memory();
+  Memory(char* instructionFile);
 
 private:
 	Word  memInstruction[0x10000]={0}; //0x1000000>>2 SEE note

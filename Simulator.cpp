@@ -1,9 +1,9 @@
 #include "Simulator.hpp"
 #include <iostream>
 
-Simulator::Simulator() {
+Simulator::Simulator(char* instructionFile) {
 
-	 mem = new Memory();
+	 mem = new Memory(instructionFile);
 
 	 reg = new Register();
  }
@@ -91,18 +91,18 @@ void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
 	reg->set(d,temp);
 }
 
-void mfhi(Regidx d ){
+void Simulator::mfhi(Regidx d ){
 	reg->set(d,reg->getHI());
 }
 
-void mflo(Regidx d ){
+void Simulator::mflo(Regidx d ){
 	reg->set(d,reg->getLO());
 }
 
-void multiply(Regidx s,Regidx t){
-	int temp=reg->get(s)*reg->get(t);
-	if ()
-}
+// void multiply(Regidx s,Regidx t){
+// 	int temp=reg->get(s)*reg->get(t);
+// 	if ()
+// }
 
 void Simulator::ISAexception(){
 	std::cerr<<"ISA exception at memory address "<<std::hex<<PC<<std::endl;

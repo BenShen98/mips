@@ -1,11 +1,13 @@
-#include <iostream>
 #include "Simulator.hpp"
+#include<iostream>
 // typedef unsigned char Regidx;
 // typedef unsigned int Word;
 
-int main()
+int main(int argc, char** argv)
 {
-	Simulator s1;
+	std::cerr << "init Simulator, trying to open "<< argv[1] << '\n';
+
+	Simulator s1(argv[1]);
 
 	s1.run();
 

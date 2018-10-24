@@ -6,7 +6,7 @@ class Simulator{
 	public:
 
 		void run();
-		Simulator();
+		Simulator(char* instructionFile);
 		~Simulator();
 
 	private:
@@ -30,6 +30,6 @@ class Simulator{
 		void xorbitwise(Regidx d,Regidx s,Regidx t);
 		void mfhi(Regidx d );
 		void mflo(Regidx d );
-		void multiply(Regidx s,Regidx t);
+		// void multiply(Regidx s,Regidx t);
 		void multiplyu(Regidx s,Regidx t);
 };
