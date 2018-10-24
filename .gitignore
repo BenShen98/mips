@@ -1,0 +1,4 @@
+*.log
+prog
+*.out
+ls17/*

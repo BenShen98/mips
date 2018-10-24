@@ -1,5 +1,6 @@
-all: Register.o Memory.o main.o
-	g++ Register.o Memory.o main.o -o prog
+
+all: Register.o Memory.o Simulator.o main.o
+	g++ Register.o Memory.o main.o Simulator.o -o prog
 
 Register.o: Register.cpp Register.hpp
 	g++ -c Register.cpp -std=c++11
@@ -10,6 +11,8 @@ Memory.o: Memory.cpp Memory.hpp
 main.o: main.cpp
 	g++ -c main.cpp -std=c++11
 
+Simulator.o: Simulator.cpp Simulator.hpp
+	g++ -c Simulator.cpp -std=c++11
 
 run: all
 	./prog
