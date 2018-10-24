@@ -30,6 +30,14 @@ class Simulator{
 		void xorbitwise(Regidx d,Regidx s,Regidx t);
 		void mfhi(Regidx d );
 		void mflo(Regidx d );
-		void multiply(Regidx s,Regidx t);
-		void multiplyu(Regidx s,Regidx t);
-};
+		// void multiply(Regidx s,Regidx t);
+		// void multiplyunsigned(Regidx s,Regidx t);
+		void LLshift(unsigned char shift,Regidx t, Regidx d);
+		void shiftLLVar(Regidx d , Regidx s, Regidx t);
+		void setlt(Regidx d , Regidx s, Regidx t);
+		void setltu(Regidx d , Regidx s, Regidx t);
+		void shiftRA(unsigned char shift,Regidx d,Regidx t);
+		void shiftRL(unsigned char shift,Regidx d,Regidx t);
+		void shiftRVar(Regidx d,Regidx t,Regidx s);
+
+	};

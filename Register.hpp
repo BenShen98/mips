@@ -6,10 +6,10 @@ public:
 	Word get(Regidx i);
 	Word getHI();
 	Word getLO();
-	void set(Regidx i, Word value); 
+	void set(Regidx i, Word value);
 
 	void RegException();
 
 private:
-	Word reg[34]={0};
+	Word reg[34]={0,1,2,3,0};
 };

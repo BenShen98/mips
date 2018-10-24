@@ -2,8 +2,6 @@
 #include <iostream>
 
 Word Memory::getInstruction(Word PC){
-  memInstruction[0]=0b000000000010001000010000100001;
-
 	if(PC<0x10000000 || PC>0x11000000){
 		Memexception(PC);
 	}
@@ -18,6 +16,10 @@ void Memory::Memexception(Word PC){
 }
 
 Memory::Memory(){
-	memInstruction[0]=0b00000000001000100001100000100001;
-	memInstruction[1]=0b00000000000000000000000000001000;
+	// memInstruction[0]=0b00000000001000100001100000100001;
+  memInstruction[0]=0b00000000001000110010100010000000;//this code left shifts 2
+  memInstruction[1]=0b00000000000000100011000010000000;//this code left shifts another register
+  memInstruction[2]=0b00000000101001100011100000100001;//add
+	memInstruction[3]=0b00000000000000000000000000001000;//This is jump
+
 }
