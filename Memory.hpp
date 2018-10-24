@@ -17,7 +17,7 @@ private:
 	void Memexception(Word PC);
 
 
-	//envoke with special address for external R/W
+	//invoke with special address for external R/W
 	void GETC();
 	void PUTC();
 };

@@ -3,12 +3,6 @@
 // typedef unsigned char Regidx;
 // typedef unsigned int Word;
 
-
-
-
-
-
-
 int main()
 {
 	Simulator s1;
@@ -19,11 +13,6 @@ int main()
 	//comand below should never get run
 	return -20;
 }
-
-
-
-
-
 
 
 

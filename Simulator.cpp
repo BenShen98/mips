@@ -25,6 +25,7 @@ void Simulator::run() {
 	}
 	std::cout<<"Function terminate without error!\n";
 
+	reg->set(2,0xaa);
   std::exit ( reg->get(2) &0xFF ); //return only the low 8-bits of the value in register $2
 }
 
@@ -69,9 +70,38 @@ void Simulator::addu(Regidx d,Regidx s,Regidx t){
 	reg->set(d,temp);
 	std::cerr<<"addu\t| "<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
 }
+
 void Simulator::jr(Regidx s){
 	PC=reg->get(s);
 	std::cerr<<"jr\t| jump to memory address "<<std::hex<<PC<<"\n";
+}
+
+void Simulator::andbitwise(Regidx d,Regidx s,Regidx t){
+	int temp = reg->get(s) & reg->get(t);
+	reg->set(d,temp);
+}
+
+void Simulator::orbitwise(Regidx d,Regidx s,Regidx t){
+	int temp = reg->get(s) | reg->get(t);
+	reg->set(d,temp);
+}
+
+void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
+	int temp = reg->get(s) ^ reg->get(t);
+	reg->set(d,temp);
+}
+
+void mfhi(Regidx d ){
+	reg->set(d,reg->getHI());
+}
+
+void mflo(Regidx d ){
+	reg->set(d,reg->getLO());
+}
+
+void multiply(Regidx s,Regidx t){
+	int temp=reg->get(s)*reg->get(t);
+	if ()
 }
 
 void Simulator::ISAexception(){
