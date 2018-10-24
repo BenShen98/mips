@@ -1,4 +1,5 @@
-*.log
+*.o
 prog
 *.out
 ls17/*
+
