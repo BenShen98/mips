@@ -10,19 +10,59 @@ Word Memory::getInstruction(Word PC){
   //TODO: test const ins memory with line below
   // memInstruction[0]=0b000000000010001000010000100001;
 
-	if(PC<0x10000000 || PC>0x11000000){
+	if(PC<0x10000000 || PC>=0x11000000){
 		Memexception(PC);
 	}
 
 	return memInstruction[(PC-0x10000000)>>2];
 }
 
-void Memory::Memexception(Word PC){
-	std::cerr<<"Mem exception at memory address "<<std::hex<<PC<<std::endl;
+void Memory::Memexception(Word addr){
+	std::cerr<<"Mem exception at memory address "<<std::hex<<addr<<std::endl;
 	//debug info eg PC counter....
 	std::exit (-11);
 }
 
+
+Word Memory::read(Word addr){
+	if(addr<0x11000000 && addr>=0x10000000){
+		return memInstruction[(addr-0x10000000)>>2];
+	}else if(addr<0x24000000 && addr>=0x10000000 ){
+		return memRW[(addr-0x20000000)>>2];
+	}else if(addr == 0x30000000){
+		return GETC();
+	}else{
+		Memexception(addr);
+	}
+}
+
+Word Memory::GETC(){
+	//although EOF is -1, but just to make sure
+	Word temp=std::getchar();
+	if (temp==EOF){
+		return Word(-1);
+	}else{
+		return temp;
+	}
+
+}
+
+void Memory::PUTC(Word wd){
+	// putchar function convert integer unsigned char
+	// https://www.programiz.com/cpp-programming/library-function/cstdio/putchar
+	std::putchar(wd);
+}
+
+void Memory::write(Word addr, Word wd){
+	if(addr<0x24000000 && addr>=0x10000000 ){
+		memRW[(addr-0x20000000)>>2]=wd;
+	}else if(addr == 0x30000000){
+		PUTC(wd);
+	}else{
+		//write to instruction address is not valid
+		Memexception(addr);
+	}
+}
 
 void Memory::_printInst(Word PC){
   Word inst=getInstruction(PC);
