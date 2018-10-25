@@ -21,5 +21,4 @@ Memory::Memory(){
   memInstruction[1]=0b00000000000000100011000010000000;//this code left shifts another register
   memInstruction[2]=0b00000000101001100011100000100001;//add
 	memInstruction[3]=0b00000000000000000000000000001000;//This is jump
-
 }
