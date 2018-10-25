@@ -16,8 +16,12 @@ private:
 
 	void Memexception(Word PC);
 
+  void _printInst(Word inst);
 
 	//invoke with special address for external R/W
+  //try for exception
 	void GETC();
 	void PUTC();
+
+
 };

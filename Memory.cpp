@@ -23,6 +23,36 @@ void Memory::Memexception(Word PC){
 	std::exit (-11);
 }
 
+void Memory::_printInst(Word PC){
+  Word inst=getInstruction(PC);
+
+  std::cerr << "mem[0x"<<std::hex<<PC<<"]\t";
+
+  if( ((getInstruction(PC) )>>26)==0b000000 ){
+    //R type
+    std::cerr << std::bitset<6>(inst>>26) << " "
+    << std::bitset<5>((inst&0x03E00000) >>21) << " "
+    << std::bitset<5>((inst&0x001F0000) >>16) << " "
+    << std::bitset<5>((inst&0x0000F800) >>11) << " "
+    << std::bitset<5>((inst&0x000007C0) >>6) << " "
+    << std::bitset<6>((inst&0x0000003f));
+
+
+  }else if( ((getInstruction(PC) )>>27)==0b1 ){
+    //J type
+    std::cerr << std::bitset<6>(inst>>26) <<" 0x"
+    << std::hex<<(inst&0x03ffffff);
+
+  }else{
+    //I type
+    std::cerr << std::bitset<6>(inst>>26) << " "
+    << std::bitset<5>((inst&0x03E00000) >>21) << " "
+    << std::bitset<5>((inst&0x001F0000) >>16) << " "
+    << std::bitset<16>((inst&0x0000Ffff) >>6);
+  }
+std::cerr << std::endl;
+}
+
 Memory::Memory(char* instructionFile){
 	std::cerr << "generating instruction memory" << '\n';
 
@@ -47,9 +77,17 @@ Memory::Memory(char* instructionFile){
 			instruct = ((memblock[i+1])<<16) | instruct;
 			instruct = ((memblock[i])<<24) | instruct;
 			memInstruction[insIdx]=instruct;
-			std::cerr << "at ins idx "<<insIdx<<"|"<<std::bitset<32>(memInstruction[insIdx]) << '\n';
 			insIdx++;
 		}
+
+    std::cerr << "below are the instruction memory input" << '\n';
+    for (int i=0;i<insIdx;i++){
+      _printInst((i<<2)+0x10000000);
+    }
+
+    // while(1){
+    //
+    // }
 
 		delete[] memblock;
 	}else{

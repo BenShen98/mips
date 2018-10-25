@@ -1,9 +1,9 @@
 #include <fstream>      // std::ifstream, std::ofstream
 
 int main () {
-  std::ofstream outfile ("ins.bin",std::ofstream::binary);
+  std::ofstream outfile("ins.bin",std::ofstream::binary);
 
-  int insLength=8;
+  const int insLength=2;
 
   unsigned int memInstruction[insLength]={
     0b00000000001000100001100000100001,
