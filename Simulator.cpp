@@ -25,7 +25,6 @@ void Simulator::run() {
 	}
 	std::cout<<"Function terminate without error!\n";
 
-	reg->set(2,0xaa);
   std::exit ( reg->get(2) &0xFF ); //return only the low 8-bits of the value in register $2
 }
 
