@@ -79,19 +79,38 @@ void Simulator::add(Regidx d,Regidx s,Regidx t){
 	// unsigned overflow
 	// BUG ???
 	int temp=reg->get(s)+reg->get(t);
-	if((int(reg->get(s))>0 && int(reg->get(t))>0 && (temp&0x80000000)) || (int(reg->get(s))<0 && int(reg->get(t))<0 && !(temp&0x80000000))){
+	if((Word(reg->get(s))>0 && Word(reg->get(t))>0 && (temp&0x80000000)) || (Word(reg->get(s))<0 && Word(reg->get(t))<0 && !(temp&0x80000000))){
 		Mathexception();
 	}
 	reg->set(d,temp);
 	std::cerr<<"add\t| "<<std::dec<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
 }
 
-void Simulator::addu(Regidx d,Regidx s,Regidx t){
-	//unsigned overflow
-	long temp=long(reg->get(s))+long(reg->get(t));
-	if((temp>>32)){
+void Simulator::sub(Regidx d,Regidx s,Regidx t){
+	//rs - rt => d
+	//postive - postive => NO overflow possible
+	//postive (0 INCLUSIVE) - negative => overflow if get negative 	******
+	//negative - postive => overflow if get postive									******
+	//negative - negative => NO overflow ???
+	//0 - most negative => most negative (overflow)
+	Word rs,rt;
+	rs=Word(reg->get(s));
+	rt=Word(reg->get(t));
+	Word temp=rs-rt;
+	if( (rs>=0 && rt<0 && temp<0) || (rs<0 && rt>0 && temp>0) ){
 		Mathexception();
 	}
+
+	reg->set(d,temp);
+
+	std::cerr<<"sub\t| "<<std::dec<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
+}
+
+void Simulator::addu(Regidx d,Regidx s,Regidx t){
+	//unsigned overflow
+	unsigned int temp = UWord(reg->get(s)) + UWord(reg->get(t));
+
+	//no exception handling required,overflow should be ignored
 
 	reg->set(d,temp);
 	std::cerr<<"addu\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";

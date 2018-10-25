@@ -1,4 +1,5 @@
-typedef unsigned int Word;
+typedef signed int Word;
+typedef unsigned int UWord;
 
 
 class Memory{
@@ -7,6 +8,12 @@ class Memory{
 
 public:
 	Word getInstruction(Word PC);
+
+	//Binary could read from instruction memory https://github.com/m8pple/arch2-2018-cw/issues/9
+	Word read(Word PC);
+	Word write(Word PC);
+
+
   Memory(char* instructionFile);
 
 private:

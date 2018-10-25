@@ -1,5 +1,6 @@
-typedef unsigned int Word;
 typedef unsigned char Regidx;
+typedef signed int Word;
+typedef unsigned int UWord;
 
 class Register{
 public:
