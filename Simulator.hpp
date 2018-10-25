@@ -3,12 +3,12 @@ typedef signed int Word;
 typedef unsigned int UWord;
 #include "Memory.hpp"
 #include "Register.hpp"
-class {
+class Simulator{
 	public:
 
 		void run();
-		(char* instructionFile);
-		~();
+		Simulator(char* instructionFile);
+ 		~Simulator();
 
 	private:
 		Register * reg;//HI/LO only access by mfhi/mfhlo
@@ -46,11 +46,14 @@ class {
 
 		void sub(Regidx d,Regidx s,Regidx t);
 
-		void addImm(Regidx t,Regidx s, UWord immediate);
+		void addImm(Regidx t,Regidx s, Word immediate);
 		void addImmUnsigned(Regidx t,Regidx s,UWord immediate);
 		void ANDI(Regidx t,Regidx s,UWord immediate);
 		void XORI(Regidx t,Regidx s,UWord immediate);
 		void ORI(Regidx t,Regidx s,UWord immediate);
+		void beq(Regidx t,Regidx s,Word immediate);
+		void bgez(Regidx s,Word immediate);
+		void bgezal(Regidx s,Word immediate);
 
 
 
