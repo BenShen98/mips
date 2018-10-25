@@ -1,5 +1,6 @@
 typedef unsigned char Regidx;
-typedef unsigned int Word;
+typedef signed int Word;
+typedef unsigned int UWord;
 #include "Memory.hpp"
 #include "Register.hpp"
 class Simulator{
@@ -41,5 +42,8 @@ class Simulator{
 		void shiftRA(unsigned char shift,Regidx d,Regidx t);
 		void shiftRL(unsigned char shift,Regidx d,Regidx t);
 		void shiftRVar(Regidx d,Regidx t,Regidx s);
+
+		void sub(Regidx d,Regidx s,Regidx t);
+
 
 	};
