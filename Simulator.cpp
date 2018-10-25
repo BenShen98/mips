@@ -19,7 +19,25 @@ void Simulator::run() {
 		switch(( mem->getInstruction(PC) )>>26){
 			case 0b000000:
 				Rswitch();break;
-			//other case here
+			case 0b001000:
+				addImm();PC+=4;break;
+			case 0b001001:
+				addImmUnsigned();PC+=4;break;
+			case 0b001100;
+				ANDI();PC+=4;break;
+			case 0b001110:
+				XORI();PC+=4;break;
+			case 0b001101:
+				ORI();PC+=4;break;
+			case 0b000100:
+				beq();PC+=4;break;
+			case 0b000001;:
+				switch ( mem->getInstruction(PC)){
+				bgez();PC+=4;break;
+				//branch on greater than or equal to 0
+				//TODO this has two different subfunctions
+			case 0b000001:
+				andI();PC+=4;break;
 			default: ISAexception();break;
 		}
 	}
@@ -30,16 +48,12 @@ void Simulator::run() {
 }
 
 
-
-void Simulator::Rswitch(){
+void Simulator::Iswitch(){
 	Word const instruction=mem->getInstruction(PC);
-	Regidx s, t, d;
-	unsigned char shift;
+	Regidx s, t;
 
 	s=(instruction&0x03E00000) >>21;
 	t=(instruction&0x001F0000) >>16;
-	d=(instruction&0x0000F800) >>11;
-	shift=(instruction&0x000007C0) >>6;
 
 	switch(instruction&0x3F){
 		case 0b100000: add(d,s,t);PC+=4;break;

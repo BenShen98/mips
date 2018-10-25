@@ -23,14 +23,7 @@ void Memory::Memexception(Word PC){
 	std::exit (-11);
 }
 
-<<<<<<< HEAD
-Memory::Memory(){
-	// memInstruction[0]=0b00000000001000100001100000100001;
-  memInstruction[0]=0b00000000001000110010100010000000;//this code left shifts 2
-  memInstruction[1]=0b00000000000000100011000010000000;//this code left shifts another register
-  memInstruction[2]=0b00000000101001100011100000100001;//add
-	memInstruction[3]=0b00000000000000000000000000001000;//This is jump
-=======
+
 void Memory::_printInst(Word PC){
   Word inst=getInstruction(PC);
 
@@ -103,5 +96,4 @@ Memory::Memory(char* instructionFile){
 		std::exit(-20);
 	}
 
->>>>>>> 279f070bbfa73a915bf32758e14aca13a28cc381
 }
