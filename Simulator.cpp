@@ -1,9 +1,9 @@
 #include "Simulator.hpp"
 #include <iostream>
 
-Simulator::Simulator() {
+Simulator::Simulator(char* instructionFile) {
 
-	 mem = new Memory();
+	 mem = new Memory(instructionFile);
 
 	 reg = new Register();
  }

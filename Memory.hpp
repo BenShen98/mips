@@ -7,7 +7,7 @@ class Memory{
 
 public:
 	Word getInstruction(Word PC);
-  Memory();
+  Memory(char* instructionFile);
 
 private:
 	Word  memInstruction[0x10000]={0}; //0x1000000>>2 SEE note
@@ -16,8 +16,12 @@ private:
 
 	void Memexception(Word PC);
 
+  void _printInst(Word inst);
 
 	//invoke with special address for external R/W
+  //try for exception
 	void GETC();
 	void PUTC();
+
+
 };

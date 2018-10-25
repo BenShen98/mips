@@ -15,4 +15,8 @@ Simulator.o: Simulator.cpp Simulator.hpp
 	g++ -c Simulator.cpp -std=c++11
 
 run: all
-	./prog
+	./prog ${i}
+
+clean:
+	rm ./*.o
+	rm ./prog

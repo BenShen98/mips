@@ -6,7 +6,7 @@ class Simulator{
 	public:
 
 		void run();
-		Simulator();
+		Simulator(char* instructionFile);
 		~Simulator();
 
 	private:
@@ -31,6 +31,8 @@ class Simulator{
 		void mfhi(Regidx d );
 		void mflo(Regidx d );
 		// void multiply(Regidx s,Regidx t);
+		// void multiplyu(Regidx s,Regidx t);
+
 		// void multiplyunsigned(Regidx s,Regidx t);
 		void LLshift(unsigned char shift,Regidx t, Regidx d);
 		void shiftLLVar(Regidx d , Regidx s, Regidx t);

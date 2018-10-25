@@ -11,5 +11,5 @@ public:
 	void RegException();
 
 private:
-	Word reg[34]={0,1,2,3,0};
+	Word reg[34]={0};
 };
