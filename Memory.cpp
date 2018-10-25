@@ -72,7 +72,7 @@ Memory::Memory(char* instructionFile){
 
 		for (int i=0; i<size;i=i+4){
 			//big endian
-			Word instruct=memblock[3];
+			Word instruct=memblock[i+3];
 			instruct = ((memblock[i+2])<<8) | instruct;
 			instruct = ((memblock[i+1])<<16) | instruct;
 			instruct = ((memblock[i])<<24) | instruct;
