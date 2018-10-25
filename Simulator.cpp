@@ -3,57 +3,91 @@
 
 Simulator::Simulator(char* instructionFile) {
 
-	 mem = new Memory(instructionFile);
+	mem = new Memory(instructionFile);
 
-	 reg = new Register();
- }
+	reg = new Register();
+}
 
- Simulator::~Simulator() {
- 	 delete mem;
-	 delete reg;
-  }
+Simulator::~Simulator() {
+	delete mem;
+	delete reg;
+}
 
 void Simulator::run() {
 	//TODO: if
 	while (PC!=0) {
+		Word const instruction=mem->getInstruction(PC);
+		Regidx s, t;
+		s=(instruction&0x03E00000) >>21;
+		t=(instruction&0x001F0000) >>16;
+		UWord immediate = (instruction&0xFFFF);
+
 		switch(( mem->getInstruction(PC) )>>26){
 			case 0b000000:
-				Rswitch();break;
+			Rswitch();break;
 			case 0b001000:
-				addImm();PC+=4;break;
+			addImm(t,s,immediate);PC+=4;break;
 			case 0b001001:
-				addImmUnsigned();PC+=4;break;
+			addImmUnsigned(t,s,immediate);PC+=4;break;
 			case 0b001100;
-				ANDI();PC+=4;break;
+			ANDI(t,s,immediate);PC+=4;break;
 			case 0b001110:
-				XORI();PC+=4;break;
+			XORI(t,s,immediate);PC+=4;break;
 			case 0b001101:
-				ORI();PC+=4;break;
+			ORI(t,s,immediate);PC+=4;break;
 			case 0b000100:
-				beq();PC+=4;break;
+			beq(t,s,immediate);break;
 			case 0b000001;:
-				switch ( mem->getInstruction(PC)){
-				bgez();PC+=4;break;
-				//branch on greater than or equal to 0
-				//TODO this has two different subfunctions
-			case 0b000001:
-				andI();PC+=4;break;
+
+			case 0b000111:
+			bgtz();PC+=4;break;
+			case 0b000110:
+			blez();PC+=4;break;
+			case 0b100000:
+			loadbyte();PC+=4;break;
 			default: ISAexception();break;
+
 		}
 	}
 	std::cout<<"Function terminate without error!\n";
 
 	reg->set(2,0xaa);
-  std::exit ( reg->get(2) &0xFF ); //return only the low 8-bits of the value in register $2
+	std::exit ( reg->get(2) &0xFF ); //return only the low 8-bits of the value in register $2
 }
 
-
 void Simulator::Iswitch(){
+
+	switch (( mem->getInstruction(PC) )>>26)
+	case 0b001000:
+	addImm(t,s,immediate);PC+=4;break;
+	case 0b001001:
+	addImmUnsigned(t,s,immediate);PC+=4;break;
+	case 0b001100;
+	ANDI(t,s,immediate);PC+=4;break;
+	case 0b001110:
+	XORI(t,s,immediate);PC+=4;break;
+	case 0b001101:
+	ORI(t,s,immediate);PC+=4;break;
+	case 0b000100:
+	beq(t,s,immediate);break;
+	case 0b000001;
+	BranchSwitch();break;
+	case 0b000111:
+	bgtz();PC+=4;break;
+	case 0b000110:
+	blez();PC+=4;break;
+	case 0b100000:
+	loadbyte();PC+=4;break;
+	default: ISAexception();break;
+}
+void Simulator::Rswitch(){
 	Word const instruction=mem->getInstruction(PC);
 	Regidx s, t;
 
 	s=(instruction&0x03E00000) >>21;
 	t=(instruction&0x001F0000) >>16;
+	d=(instruction&0xF800) >>11;
+	shift=(instruction&0x7C0) >>6;
 
 	switch(instruction&0x3F){
 		case 0b100000: add(d,s,t);PC+=4;break;
@@ -71,7 +105,19 @@ void Simulator::Iswitch(){
 		case 0b000011: shiftRA(shift,d,t);PC+=4;break;
 		case 0b000010: shiftRL(shift,d,t);PC+=4;break;
 		case 0b000110: shiftRVar(d,t,s);PC+=4;break;
-	default: ISAexception();
+		default: ISAexception();
+	}
+}
+void Simulator::BranchSwitch(){
+	switch ( mem->getInstruction(PC)&0x1F0000){
+		case 0b00001;
+		bgez(s,immediate);PC+=4;break;
+		case 0b10001;
+		bgezal();PC+=4;break;
+		case 0b00000;
+		bltz();PC+=4;break;
+		case 0b10000;
+		bltzal();PC+=4;break;
 	}
 }
 
@@ -221,6 +267,73 @@ void Simulator::shiftRVar(Regidx d,Regidx t,Regidx s){
 	reg->set(d,(reg->get(t)>>reg->get(s)));
 	//TODO might have exception here
 	std::cerr<<"shiftRVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::addImm(Regidx t,Regidx s, Word immediate){
+	Word temp=(Word)reg->get(s)+(Word)immediate;
+	if((Word)reg->get(s)>0 && (Word)immediate>0 && (temp&0x80000000)) || (Word)reg->get(s)<0 && (Word)immediate<0 &&  !(temp&0x80000000))){
+		Mathexception();
+	}
+	reg->set(t,temp);
+	std::cerr<<"addImm\t| "<<std::dec<<reg->get(t)<<" is result at PC "<<std::hex<<PC<<"\n";
+}
+
+void Simulator::addImmUnsigned(Regidx t,Regidx s,UWord immediate){
+	//unsigned overflow
+	UWord temp = (UWord) (reg->get(s)) + immediate;
+
+	//no exception handling required,overflow should be ignored
+
+	reg->set(t,temp);
+	std::cerr<<"addImmUnsigned\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::ANDI(Regidx t,Regidx s,UWord immediate){
+	int temp = reg->get(s) & immediate;
+	reg->set(t,temp);
+	std::cerr<<"ANI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::XORI(Regidx t,Regidx s,UWord immediate){
+	int temp = reg->get(s) ^ immediate;
+	reg->set(t,temp);
+	std::cerr<<"XORI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::ORI(Regidx t,Regidx s,UWord immediate){
+	int temp = reg->get(s) | immediate;
+	reg->set(t,temp);
+	std::cerr<<"ORI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::beq(Regidx t,Regidx s,Word immediate){
+	//BUG NO IMPLEMENTATION OF DELAY BRANCH !!
+	if (reg->get(t)==reg->get(s)){
+		PC+=immediate<<2;
+	}
+	else(
+		PC+=4;
+	)
+}
+
+void Simulator::bgez(Regidx s,Word immediate){
+	//BUG NO IMPLEMENTATION OF DELAY BRANCH !!
+	if ((Word)reg->get(s)>=0){
+		PC+=immediate<<2;
+	}
+	else(
+		PC+=4;
+	)
+}
+
+void Simulator::bgezal(Regidx s,Word immediate){
+	//BUG NO IMPLEMENTATION OF DELAY BRANCH !!
+	if ((Word)reg->get(s)>=0){
+		PC+=immediate<<2;
+	}
+	else(
+		PC+=4;
+	)
 }
 
 void Simulator::ISAexception(){
