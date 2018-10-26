@@ -1,4 +1,4 @@
-typedef unsigned char Regidx;
+typedef unsigned int Regidx;
 typedef signed int Word;
 typedef unsigned int UWord;
 #include "Memory.hpp"
