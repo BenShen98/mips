@@ -250,7 +250,7 @@ void Simulator::shiftRVar(Regidx d,Regidx t,Regidx s){
 
 void Simulator::addImm(Regidx t,Regidx s, Word immediate){
 	Word temp=(Word)reg->get(s)+(Word)immediate;
-	if((Word)reg->get(s)>0 && (Word)immediate>0 && (temp&0x80000000) || (Word)reg->get(s)<0 && (Word)immediate<0 &&  !(temp&0x80000000)){
+	if(((Word)reg->get(s)>0 && ((Word)immediate<<16)>0 && (temp&0x80000000)) || ((Word)reg->get(s)<0 && ((Word)immediate<<16)<0 &&  !(temp&0x80000000))){
 		Mathexception();
 	}
 	reg->set(t,temp);

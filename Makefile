@@ -22,5 +22,6 @@ clean:
 	rm ./prog
 
 bin:
-	g++ -std=c++11 iotest/write.cpp
+	g++ -std=c++11 iotest/write.cpp -o ./iotest/a.out
 	./iotest/a.out
+	rm ./iotest/a.out

@@ -69,28 +69,30 @@ void Memory::_printInst(Word PC){
 
   std::cerr << "mem[0x"<<std::hex<<PC<<"]\t";
 
-  if( ((getInstruction(PC) )>>26)==0b000000 ){
-    //R type
-    std::cerr << std::bitset<6>(inst>>26) << " "
-    << std::bitset<5>((inst&0x03E00000) >>21) << " "
-    << std::bitset<5>((inst&0x001F0000) >>16) << " "
-    << std::bitset<5>((inst&0x0000F800) >>11) << " "
-    << std::bitset<5>((inst&0x000007C0) >>6) << " "
-    << std::bitset<6>((inst&0x0000003f));
+	std::cerr <<std::bitset<8>((inst&0xff000000)>>24) <<" " <<std::bitset<8>((inst&0x00ff0000)>>16)<<" " <<std::bitset<8>((inst&0x0000ff00)>>8) <<" "<<std::bitset<8>((inst&0x000000ff)) << '\n';
 
-
-  }else if( ((getInstruction(PC) )>>27)==0b1 ){
-    //J type
-    std::cerr << std::bitset<6>(inst>>26) <<" 0x"
-    << std::hex<<(inst&0x03ffffff);
-
-  }else{
-    //I type
-    std::cerr << std::bitset<6>(inst>>26) << " "
-    << std::bitset<5>((inst&0x03E00000) >>21) << " "
-    << std::bitset<5>((inst&0x001F0000) >>16) << " "
-    << std::bitset<16>((inst&0x0000Ffff) >>6);
-  }
+  // if( ((getInstruction(PC) )>>26)==0b000000 ){
+  //   //R type
+  //   std::cerr << std::bitset<6>(inst>>26) << " "
+  //   << std::bitset<5>((inst&0x03E00000) >>21) << " "
+  //   << std::bitset<5>((inst&0x001F0000) >>16) << " "
+  //   << std::bitset<5>((inst&0x0000F800) >>11) << " "
+  //   << std::bitset<5>((inst&0x000007C0) >>6) << " "
+  //   << std::bitset<6>((inst&0x0000003f));
+	//
+	//
+  // }else if( ((getInstruction(PC) )>>27)==0b1 ){
+  //   //J type
+  //   std::cerr << std::bitset<6>(inst>>26) <<" 0x"
+  //   << std::hex<<(inst&0x03ffffff);
+	//
+  // }else{
+  //   //I type
+  //   std::cerr << std::bitset<6>(inst>>26) << " "
+  //   << std::bitset<5>((inst&0x03E00000) >>21) << " "
+  //   << std::bitset<5>((inst&0x001F0000) >>16) << " "
+  //   << std::bitset<16>((inst&0x0000Ffff) >>6);
+  // }
 std::cerr << std::endl;
 }
 
