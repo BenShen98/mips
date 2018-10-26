@@ -3,9 +3,11 @@
 int main () {
   std::ofstream outfile("ins.bin",std::ofstream::binary);
 
-  const int insLength=2;
+  const int insLength=4;
 
   unsigned int memInstruction[insLength]={
+    0b00100000001000000001101100100000,
+    0b00100000010000000011111110000011,
     0b00000000001000100001100000100001,
     0b00000000000000000000000000001000
   };

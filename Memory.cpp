@@ -113,15 +113,17 @@ Memory::Memory(char* instructionFile){
 
 		for (int i=0; i<size;i=i+4){
 			//big endian
-			Word instruct=memblock[i+3];
-			instruct = ((memblock[i+2])<<8) | instruct;
-			instruct = ((memblock[i+1])<<16) | instruct;
-			instruct = ((memblock[i])<<24) | instruct;
-			memInstruction[insIdx]=instruct;
+			// DONT edit (pitfall caused by type cast of char and int)
+			Word a,b,c,d;
+		 a= memblock[i+3];
+		 b= memblock[i+2];
+		 c= memblock[i+1];
+		 d= memblock[i];
+			memInstruction[insIdx]=(a<<24) | (b<<16) | (c<<8) | d;
 			insIdx++;
 		}
 
-    std::cerr << "below are the instruction memory input" << '\n';
+    std::cerr << "below are the instruction memory inputx" << '\n';
     for (int i=0;i<insIdx;i++){
       _printInst((i<<2)+0x10000000);
     }
