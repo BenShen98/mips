@@ -20,3 +20,7 @@ run: all
 clean:
 	rm ./*.o
 	rm ./prog
+
+bin:
+	g++ -std=c++11 iotest/write.cpp
+	./iotest/a.out

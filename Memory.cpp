@@ -114,11 +114,12 @@ Memory::Memory(char* instructionFile){
 		for (int i=0; i<size;i=i+4){
 			//big endian
 			// DONT edit (pitfall caused by type cast of char and int)
-			Word a,b,c,d;
-		 a= memblock[i+3];
-		 b= memblock[i+2];
-		 c= memblock[i+1];
-		 d= memblock[i];
+			UWord a,b,c,d;
+		 a= (unsigned char)memblock[i];
+		 b= (unsigned char)memblock[i+1];
+		 c= (unsigned char)memblock[i+2];
+		 d= (unsigned char)memblock[i+3];
+		 std::cout << std::bitset<8>(a) << " " << std::bitset<8>(b) << " " << std::bitset<8>(c) << " " << std::bitset<8>(d) << '\n';
 			memInstruction[insIdx]=(a<<24) | (b<<16) | (c<<8) | d;
 			insIdx++;
 		}
