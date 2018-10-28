@@ -16,7 +16,7 @@ Simulator::~Simulator() {
 void Simulator::run() {
 	//TODO: if
 	while (PC!=0) {
-		Word const instruction=mem->getInstruction(PC);
+		UWord const instruction=mem->getInstruction(PC);
 		Regidx s, t;
 		s=(instruction&0x03E00000) >>21;
 		t=(instruction&0x001F0000) >>16;
@@ -25,7 +25,7 @@ void Simulator::run() {
 		// std::cout << (( mem->getInstruction(PC) )>>26) << '\n';
 
 
-		switch(( mem->getInstruction(PC) )>>26){
+		switch(instruction>>26){
 			case 0b000000:
 			Rswitch();break;
 			case 0b001000:
@@ -46,9 +46,24 @@ void Simulator::run() {
 			// bgtz();PC+=4;break;
 			// case 0b000110:
 			// blez();PC+=4;break;
-			// case 0b100000:
-			// loadbyte();PC+=4;break;
-			default: ISAexception();break;
+			case 0b100000:
+			std::cerr << "/* message */" << '\n';
+			loadbyte(t,s,immediate);PC+=4;break;
+			// case 0b001111:
+			// loadupperImm();PC+=4;break;
+			// case 0b100011:
+			// loadword();PC+=4;break;
+			// case 0b101000:
+			// storebyte();PC+=4;break;
+			// case 0b101011:
+			// storeword();PC+=4;break;
+			case 0b001010:
+			setlessthan_Imm_signed(t,s,immediate);PC+=4;break;
+			case 0b001011:
+			setlessthan_Imm_Usigned(t,s,immediate);PC+=4;break;
+			default:
+			std::cerr << std::bitset<32>( instruction >>26) << '\n';
+			ISAexception();break;
 
 		}
 	}
@@ -58,7 +73,7 @@ void Simulator::run() {
 }
 
 void Simulator::Rswitch(){
-	Word const instruction=mem->getInstruction(PC);
+	UWord const instruction=mem->getInstruction(PC);
 	Regidx s, t,d;
 	unsigned char shift;
 	s=(instruction&0x03E00000) >>21;
@@ -86,12 +101,12 @@ void Simulator::Rswitch(){
 	}
 }
 void Simulator::BranchSwitch(){
-	Word const instruction=mem->getInstruction(PC);
+	UWord const instruction=mem->getInstruction(PC);
 	Regidx s;
 	UWord immediate = (instruction&0xFFFF);
 	s=(instruction&0x03E00000) >>21;
 
-	switch ( mem->getInstruction(PC)&0x1F0000){
+	switch ( instruction&0x1F0000){
 		case 0b00001:
 		bgez(s,immediate);PC+=4;break;
 		// case 0b10001:
@@ -318,6 +333,70 @@ void Simulator::bgezal(Regidx s,Word immediate){
 	else{
 		PC+=4;
 	}
+}
+
+void Simulator::loadbyte(Regidx t, Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	std::cerr << std::bitset<32>(immediate) << '\n';
+
+	//signed extend it otherwise no change
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
+	Word temp=mem->read(byteAddr);
+	std::cerr << "word temp" <<std::dec << temp << '\n';
+	Word result = word2Sbyte(temp,byteAddr%4);
+
+	reg->set(t,result);
+	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+inline signed char Simulator::word2Sbyte(Word word, int idx){
+	Word temp=word >> (8*(3-idx) ) & 0xFF;
+	std::cout << "byte from word2byte"<<temp << '\n';
+	return (signed char)(temp);
+}
+
+void Simulator::storebyte(Regidx t, Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	std::cerr << std::bitset<32>(immediate) << '\n';
+
+	//signed extend it otherwise no change
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
+	Word temp=mem->read(byteAddr);
+	std::cerr << "word temp" <<std::dec << temp << '\n';
+	Word result = word2Sbyte(temp,byteAddr%4);
+
+	reg->set(t,result);
+	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::setlessthan_Imm_signed(Regidx t, Regidx s, Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	if (Word(reg->get(s))<Word(immediate)){
+		reg->set(t,1);
+	}
+	else {
+		reg->set(t,0);
+	}
+	std::cerr<<"setlessthan_Imm_signed\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::setlessthan_Imm_Usigned(Regidx t, Regidx s, UWord immediate){
+	if (UWord(reg->get(s))<UWord(immediate)){
+		reg->set(t,1);
+	}
+	else {
+		reg->set(t,0);
+	}
+	std::cerr<<"setlessthan_Imm_Usigned\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::ISAexception(){

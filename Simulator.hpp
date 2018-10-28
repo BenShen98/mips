@@ -55,6 +55,17 @@ class Simulator{
 		void bgez(Regidx s,Word immediate);
 		void bgezal(Regidx s,Word immediate);
 
+		void loadbyte(Regidx t, Regidx s,Word immediate);
+
+		void loadupperImm(Regidx t,UWord immediate);
+		void loadword(Regidx t, Regidx s, Word addr);
+		void storebyte(Regidx t, Regidx s, Word addr);
+		void storeword(Regidx t, Regidx s, Word addr);
+		void setlessthan_Imm_signed(Regidx t, Regidx s, Word immediate);
+		void setlessthan_Imm_Usigned(Regidx t, Regidx s, UWord immediate);
+
+		inline signed char word2Sbyte(Word word, int idx);
+
 
 
 	};
