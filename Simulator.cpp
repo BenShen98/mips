@@ -1,6 +1,6 @@
 #include "Simulator.hpp"
 #include <iostream>
-
+#include <bitset>
 Simulator::Simulator(char* instructionFile) {
 
 	mem = new Memory(instructionFile);
@@ -21,6 +21,9 @@ void Simulator::run() {
 		s=(instruction&0x03E00000) >>21;
 		t=(instruction&0x001F0000) >>16;
 		UWord immediate = (instruction&0xFFFF);
+
+		// std::cout << (( mem->getInstruction(PC) )>>26) << '\n';
+
 
 		switch(( mem->getInstruction(PC) )>>26){
 			case 0b000000:
@@ -185,9 +188,7 @@ void Simulator::mflo(Regidx d ){
 
 void Simulator::LLshift(unsigned char shift,Regidx t, Regidx d){
 	long temp = (long(reg->get(t))<<shift);
-	if (temp>>32){
-		Mathexception();
-	}
+	//no exception detection for unsigned op
 	reg->set(d,(int)temp);
 	std::cerr<<"shiftLL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
@@ -249,8 +250,12 @@ void Simulator::shiftRVar(Regidx d,Regidx t,Regidx s){
 }
 
 void Simulator::addImm(Regidx t,Regidx s, Word immediate){
-	Word temp=(Word)reg->get(s)+(Word)immediate;
-	if(((Word)reg->get(s)>0 && ((Word)immediate<<16)>0 && (temp&0x80000000)) || ((Word)reg->get(s)<0 && ((Word)immediate<<16)<0 &&  !(temp&0x80000000))){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+		//std::cerr << "immediate" <<std::bitset<32>(immediate)<< '\n';
+	}
+	Word temp=Word(reg->get(s))+Word(immediate);
+	if((Word(reg->get(s))>0 && Word(immediate>0) && (temp&0x80000000)) || (Word(reg->get(s))<0 && Word(immediate<0) &&  !(temp&0x80000000))){
 		Mathexception();
 	}
 	reg->set(t,temp);

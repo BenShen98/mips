@@ -1,4 +1,3 @@
-
 all: Register.o Memory.o Simulator.o main.o
 	g++ Register.o Memory.o main.o Simulator.o -o prog
 
