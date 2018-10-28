@@ -1,0 +1,15 @@
+
+t1.mips.elf:     file format elf32-tradbigmips
+
+
+Disassembly of section .text:
+
+10000000 <.text>:
+10000000:	00a00008 	jr	a1
+10000004:	00430820 	add	at,v0,v1
+10000008:	10000001 	b	0x10000010
+1000000c:	00000000 	nop
+10000010:	00000008 	jr	zero
+10000014:	00000000 	nop
+10000018:	00000008 	jr	zero
+1000001c:	00000000 	nop

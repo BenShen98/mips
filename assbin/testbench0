@@ -1,0 +1,10 @@
+#! /bin/sh
+#below are ref used for this bash script
+#
+#
+
+
+message1="x"
+message1="$message1 . Expect return , get "
+
+echo $message1
