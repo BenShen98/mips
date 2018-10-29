@@ -121,7 +121,7 @@ Memory::Memory(char* instructionFile){
 		 b= (unsigned char)memblock[i+1];
 		 c= (unsigned char)memblock[i+2];
 		 d= (unsigned char)memblock[i+3];
-		 std::cout << std::bitset<8>(a) << " " << std::bitset<8>(b) << " " << std::bitset<8>(c) << " " << std::bitset<8>(d) << '\n';
+		 std::cerr << std::bitset<8>(a) << " " << std::bitset<8>(b) << " " << std::bitset<8>(c) << " " << std::bitset<8>(d) << '\n';
 			memInstruction[insIdx]=(a<<24) | (b<<16) | (c<<8) | d;
 			insIdx++;
 		}

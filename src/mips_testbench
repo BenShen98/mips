@@ -1,25 +1,19 @@
-#! /bin/sh
+#!/bin/sh
 #
 #
 
-asc2hex(){
-	echo $1 | xxd -r
-}
 
 
-cat case.csv | while IFS=, read -r fileName instr expReturn inchar expOutChar; do
+cat bin/case.csv | while IFS=, read -r fileName instr expReturn inchar expOutChar; do
 
 	state=Pass
+	message1="x"
 
 	#convert cin from hex to ascii, run the test binary, get output
 	cout=$(echo $inchar | xxd -r | $1 ins.bin 2> echo)
 
-	echo "\n\n\n"$cout
-
 	#check error
 	if [ "$?" -ne "$expReturn" ]; then
-		message1="x"
-		echo $message
 		message1="$message1. Expect return $expReturn, get $?"
 		state=Fail
 	fi
@@ -31,5 +25,4 @@ cat case.csv | while IFS=, read -r fileName instr expReturn inchar expOutChar; d
 	fi
 
 	echo "$fileName, $instr, $state, team OOP, $($message1 |tr '\n' ' '),"
-
 done

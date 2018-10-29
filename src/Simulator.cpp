@@ -22,7 +22,7 @@ void Simulator::run() {
 		t=(instruction&0x001F0000) >>16;
 		UWord immediate = (instruction&0xFFFF);
 
-		// std::cout << (( mem->getInstruction(PC) )>>26) << '\n';
+		// std::cerr << (( mem->getInstruction(PC) )>>26) << '\n';
 		switch(instruction>>26){
 			case 0b000000:
 			Rswitch();break;
@@ -65,7 +65,7 @@ void Simulator::run() {
 
 		}
 	}
-	std::cout<<"Function terminate without error!\n";
+	std::cerr<<"Function terminate without error!\n";
 
   std::exit ( reg->get(2) &0xFF ); //return only the low 8-bits of the value in register $2
 }
@@ -378,7 +378,7 @@ void Simulator::loadbyte(Regidx t, Regidx s,Word immediate){
 
 inline signed char Simulator::word2Sbyte(Word word, int idx){
 	Word temp=word >> (8*(3-idx) ) & 0xFF;
-	std::cout << "byte from word2byte"<<temp << '\n';
+	std::cerr << "byte from word2byte"<<temp << '\n';
 	return (signed char)(temp);
 }
 
