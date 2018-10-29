@@ -23,13 +23,64 @@ void Memory::Memexception(Word addr){
 	std::exit (-11);
 }
 
+/*
+	The return value shoule have type of byte, but here is return as Word (32 bit signed) for implementation
+	The Least Sigificant 8 bits (2bytes) of word is used to store the char
+	The return wd should be 0x00 00 00 00 00 00 00 xx, where xx is a chosen bit
+*/
+Word Memory::readByte(Word addr){
+	Word currentWord = readWord(addr&0xfffffffc);
+	//reminder 0 => shift 24; 1 => shift 16; 2=> shift 8; 0 => shift 0
+	Word byte=currentWord >> (8* (3-(addr%4)) ) & 0xFF;
+	return byte;
+}
+
+/*
+	The wd shoule have type of byte, but here is stored as Word (32 bit signed)
+	The Least Sigificant 8 bits (2bytes) of word is used to store the char
+	The input wd should be 0x00 00 00 00 00 00 00 xx, where xx is a chosen bit
+*/
+void Memory::writeByte(Word addr, Word wd){
+	// to write byte, read the word contaning the byte and replace the requried byte
+
+	if(wd&0xFFFFFF00){std::cerr << "ERROR, writing word at 0x"<<std::hex<<addr<<" with writeByte function" << '\n';}
+
+	wd=wd&0xFF; //ensure it is only the char
+	Word wordIdx=addr&0xfffffffc;
+	if(wordIdx==0x30000004){
+		//special case when write byte to 0x30000004 (output address)
+		//as it is writeable BUT not readable
+		//TODO: If the write fails, the appropriate Error should be signalled. WHAT KIND OF ERROR?
+		if(addr%4==3){
+			PUTC(wd);
+		}else{
+			//only the LS byte is sent as output,
+			PUTC(0);
+		}
+
+	}else{
+		//normal cause, where the writeable address is readable
+		//i.e. CAN ONLY BE ADDR_DATA
+		if(wordIdx<0x24000000 && wordIdx>=0x20000000 ){
+			Word currentWord=memRW[(wordIdx-0x20000000)>>2];
+			int reminder = addr%4;
+			Word mask = 0xFF << (3-reminder)*8;
+			//write to memory
+			memRW[(wordIdx-0x20000000)>>2] = (wd << (3-reminder)*8) | (currentWord & ~mask);
+		}else{
+			Memexception(addr);
+		}
+
+	}
+}
+
 // if addr is not divisiable by 4, reminder of addr is ignored
 Word Memory::readWord(Word addr){
 	if(addr<0x11000000 && addr>=0x10000000){
 		return memInstruction[(addr-0x10000000)>>2];
-	}else if(addr<0x24000000 && addr>=0x10000000 ){
+	}else if(addr<0x24000000 && addr>=0x20000000 ){
 		return memRW[(addr-0x20000000)>>2];
-	}else if((addr>>2) == (0x30000000>>2)){
+	}else if(addr == 0x30000000){
 		return GETC();
 	}else{
 		Memexception(addr);
@@ -48,15 +99,15 @@ Word Memory::GETC(){
 }
 
 void Memory::PUTC(Word wd){
-	// putchar function convert integer unsigned char
+	// putchar function convert integer to unsigned char
 	// https://www.programiz.com/cpp-programming/library-function/cstdio/putchar
 	std::putchar(wd);
 }
 
 void Memory::writeWord(Word addr, Word wd){
-	if(addr<0x24000000 && addr>=0x10000000 ){
+	if(addr<0x24000000 && addr>=0x20000000 ){
 		memRW[(addr-0x20000000)>>2]=wd;
-	}else if((addr>>2) == (0x30000004>>2)){
+	}else if(addr == 0x30000004){
 		PUTC(wd);
 	}else{
 		//write to instruction address is not valid

@@ -12,8 +12,8 @@ public:
 	//Binary could read from instruction memory https://github.com/m8pple/arch2-2018-cw/issues/9
 	Word readWord(Word addr);
 	void writeWord(Word addr,Word wd);
-	// Word readByte(Word addr);
-	// void writeByte(Word addr, Word wd);
+	Word readByte(Word addr);
+	void writeByte(Word addr, Word wd);
 
 
   Memory(char* instructionFile);
