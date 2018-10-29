@@ -7,6 +7,8 @@ public:
 	Word get(Regidx i);
 	Word getHI();
 	Word getLO();
+	Word setHI(Word value);
+	Word setLO(Word value);
 	void set(Regidx i, Word value);
 
 	void RegException();

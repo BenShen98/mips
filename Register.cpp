@@ -18,6 +18,14 @@ Word Register::getHI(){
 	return reg[33];
 }
 
+Word Register::setHI(Word value){
+	reg[33]=value;
+}
+
+Word Register::setLO(Word value){
+	reg[32]=value;
+}
+
 Word Register::getLO(){
 	return reg[32];
 }

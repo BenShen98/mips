@@ -23,8 +23,6 @@ void Simulator::run() {
 		UWord immediate = (instruction&0xFFFF);
 
 		// std::cout << (( mem->getInstruction(PC) )>>26) << '\n';
-
-
 		switch(instruction>>26){
 			case 0b000000:
 			Rswitch();break;
@@ -49,8 +47,8 @@ void Simulator::run() {
 			case 0b100000:
 			std::cerr << "/* message */" << '\n';
 			loadbyte(t,s,immediate);PC+=4;break;
-			// case 0b001111:
-			// loadupperImm();PC+=4;break;
+			case 0b001111:
+			loadupperImm(t,immediate);PC+=4;break;
 			// case 0b100011:
 			// loadword();PC+=4;break;
 			// case 0b101000:
@@ -84,6 +82,10 @@ void Simulator::Rswitch(){
 	switch(instruction&0x3F){
 		case 0b100000: add(d,s,t);PC+=4;break;
 		case 0b100001: addu(d,s,t);PC+=4;break;
+		case 0b100010: sub(d,s,t);PC+=4;break;
+		case 0b100011: subu(d,s,t);PC+=4;break;
+		case 0b011000: multiply(s,t);PC+=4;break;
+		case 0b011001: multiplyunsigned(s,t);PC+=4;break;
 		case 0b001000: jr(s);break; //no +4
 		case 0b100100: andbitwise(d,s,t);PC+=4;break;
 		case 0b100101: orbitwise(d,s,t);PC+=4;break;
@@ -97,16 +99,18 @@ void Simulator::Rswitch(){
 		case 0b000011: shiftRA(shift,d,t);PC+=4;break;
 		case 0b000010: shiftRL(shift,d,t);PC+=4;break;
 		case 0b000110: shiftRVar(d,t,s);PC+=4;break;
+		case 0b011011: divideunsigned(s,t);PC+=4;break;
 		default: ISAexception();
 	}
 }
+
 void Simulator::BranchSwitch(){
 	UWord const instruction=mem->getInstruction(PC);
 	Regidx s;
 	UWord immediate = (instruction&0xFFFF);
 	s=(instruction&0x03E00000) >>21;
 
-	switch ( instruction&0x1F0000){
+	switch (instruction&0x1F0000){
 		case 0b00001:
 		bgez(s,immediate);PC+=4;break;
 		// case 0b10001:
@@ -147,6 +151,11 @@ void Simulator::sub(Regidx d,Regidx s,Regidx t){
 	reg->set(d,temp);
 
 	std::cerr<<"sub\t| "<<std::dec<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
+}
+
+void Simulator::subu(Regidx d,Regidx s,Regidx t){
+	//no exceptions here checked with PDF
+	reg->set(d,UWord(reg->get(s))-UWord(reg->get(t)));
 }
 
 void Simulator::addu(Regidx d,Regidx s,Regidx t){
@@ -192,14 +201,27 @@ void Simulator::mflo(Regidx d ){
 	std::cerr<<"mflo\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
-// void Simulator::multiplyunsigned(Regidx s,Regidx t){
-// 	long temp=long(reg->get(s))*long(reg->get(t));
-// 	if((temp>>32)){
-// 		Mathexception();
-// 	}
-// 	reg->set(d,temp);
-// 	std::cerr<<"multiplyunsignedu\t| "<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
-// }
+void Simulator::multiply(Regidx s,Regidx t){
+	//no exception here checked with PDF
+	signed long temp = (signed long)(reg->get(s)*(signed long)(reg->get(t)));
+	reg->setLO(temp&0xFFFFFFFF);
+	reg->setHI(UWord(temp>>32));
+	std::cerr<<"multiplysigned\t| "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::multiplyunsigned(Regidx s,Regidx t){
+	//no exception here checked with PDF
+	long temp = long(reg->get(s))*long(reg->get(t));
+	reg->setLO(temp&0xFFFFFFFF);
+	reg->setHI(UWord(temp>>32));
+	std::cerr<<"multiplyunsigned\t| "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::divideunsigned(Regidx s, Regidx t){
+	//no exceptions here checked with PDF
+	reg->setLO(reg->get(s)/reg->get(t));
+	reg->setHI(reg->get(s)%reg->get(t));
+}
 
 void Simulator::LLshift(unsigned char shift,Regidx t, Regidx d){
 	long temp = (long(reg->get(t))<<shift);
@@ -263,6 +285,8 @@ void Simulator::shiftRVar(Regidx d,Regidx t,Regidx s){
 	//TODO might have exception here
 	std::cerr<<"shiftRVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
+
+//---------------------------------**********  I Type functions  **********------------------------------
 
 void Simulator::addImm(Regidx t,Regidx s, Word immediate){
 	if (immediate & 0x8000){
@@ -344,7 +368,7 @@ void Simulator::loadbyte(Regidx t, Regidx s,Word immediate){
 	//signed extend it otherwise no change
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
-	Word temp=mem->read(byteAddr);
+	Word temp=mem->readWord(byteAddr);
 	std::cerr << "word temp" <<std::dec << temp << '\n';
 	Word result = word2Sbyte(temp,byteAddr%4);
 
@@ -367,12 +391,17 @@ void Simulator::storebyte(Regidx t, Regidx s,Word immediate){
 	//signed extend it otherwise no change
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
-	Word temp=mem->read(byteAddr);
+	Word temp=mem->readWord(byteAddr);
 	std::cerr << "word temp" <<std::dec << temp << '\n';
 	Word result = word2Sbyte(temp,byteAddr%4);
 
 	reg->set(t,result);
-	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"storebyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::loadupperImm(Regidx t,UWord immediate){
+	Word temp=Word(immediate<<16);
+	reg->set(t,temp);
 }
 
 void Simulator::setlessthan_Imm_signed(Regidx t, Regidx s, Word immediate){
@@ -398,6 +427,8 @@ void Simulator::setlessthan_Imm_Usigned(Regidx t, Regidx s, UWord immediate){
 	}
 	std::cerr<<"setlessthan_Imm_Usigned\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
+
+//**********************************  Exception functions *****************************************************
 
 void Simulator::ISAexception(){
 	std::cerr<<"ISA exception at memory address 0x"<<std::hex<<PC<<std::endl;

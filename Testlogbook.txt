@@ -1,0 +1,68 @@
+Test 1:
+
+#$5=0xF
+addi $5,$0,16
+addiu $6,$0,65535
+sll  $1,$6,16
+and  $3,$1,$6
+addi $2,$3,1
+
+add $0,$0,$0
+jr $0
+
+
+***************************************************
+
+results :
+addImm	| 16 is result at PC 10000000
+addImm	| -1 is result at PC 10000004
+shiftLL	| ffff0000 is result at PC 0x10000008
+and	| ffff0000 is result at PC 0x1000000c
+addImmUnsigned	| -65535 is result at PC 0x10000010
+jr	| jump to memory address 0x0
+Function terminate without error!
+
+Test 2 :
+#$5=0xF
+addi $5,$0,16
+addi $6,$0,65535
+sll  $1,$6,16
+or   $3,$6,65535
+addiu $2,$3,1
+
+add $0,$0,$0
+jr $0
+
+***************************************************
+
+addImm	| 16 is result at PC 10000000
+addImm	| -1 is result at PC 10000004
+shiftLL	| ffff0000 is result at PC 0x10000008
+ORI	| -1 is result at PC 0x1000000c
+addImmUnsigned	| 0 is result at PC 0x10000010
+jr	| jump to memory address 0x0
+Function terminate without error!
+
+Test 3:
+
+#$5=0xF
+addi $5,$0,16
+addi $6,$0,5656
+sll  $1,$6,20
+mult $1,$1
+mfhi $5
+mflo $6
+
+add $0,$0,$0
+jr $0
+
+***************************************************
+
+addImm	| 16 is result at PC 10000000
+addImm	| 5656 is result at PC 10000004
+shiftLL	| 1635778560 is result at PC 0x10000008
+multiplysigned	| 0 is result at PC 0x1000000c
+mfhi	| 623001600 is result at PC 0x10000010
+mflo	| 0 is result at PC 0x10000014
+jr	| jump to memory address 0x0
+Function terminate without error!

@@ -24,7 +24,7 @@ void Memory::Memexception(Word addr){
 }
 
 // if addr is not divisiable by 4, reminder of addr is ignored
-Word Memory::read(Word addr){
+Word Memory::readWord(Word addr){
 	if(addr<0x11000000 && addr>=0x10000000){
 		return memInstruction[(addr-0x10000000)>>2];
 	}else if(addr<0x24000000 && addr>=0x10000000 ){
@@ -53,7 +53,7 @@ void Memory::PUTC(Word wd){
 	std::putchar(wd);
 }
 
-void Memory::write(Word addr, Word wd){
+void Memory::writeWord(Word addr, Word wd){
 	if(addr<0x24000000 && addr>=0x10000000 ){
 		memRW[(addr-0x20000000)>>2]=wd;
 	}else if((addr>>2) == (0x30000004>>2)){
