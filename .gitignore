@@ -2,3 +2,5 @@
 prog
 *.out
 ls17/*
+bin/*
+test/*
