@@ -11,9 +11,8 @@ add $0,$0,$0
 jr $0
 
 
-***************************************************
-
 results :
+
 addImm	| 16 is result at PC 10000000
 addImm	| -1 is result at PC 10000004
 shiftLL	| ffff0000 is result at PC 0x10000008
@@ -22,6 +21,7 @@ addImmUnsigned	| -65535 is result at PC 0x10000010
 jr	| jump to memory address 0x0
 Function terminate without error!
 
+***************************************************
 Test 2 :
 #$5=0xF
 addi $5,$0,16
@@ -33,7 +33,7 @@ addiu $2,$3,1
 add $0,$0,$0
 jr $0
 
-***************************************************
+results:
 
 addImm	| 16 is result at PC 10000000
 addImm	| -1 is result at PC 10000004
@@ -43,6 +43,7 @@ addImmUnsigned	| 0 is result at PC 0x10000010
 jr	| jump to memory address 0x0
 Function terminate without error!
 
+***************************************************
 Test 3:
 
 #$5=0xF
@@ -56,7 +57,7 @@ mflo $6
 add $0,$0,$0
 jr $0
 
-***************************************************
+results:
 
 addImm	| 16 is result at PC 10000000
 addImm	| 5656 is result at PC 10000004
@@ -68,22 +69,26 @@ jr	| jump to memory address 0x0
 Function terminate without error!
 
 ***************************************************
-
 Test 4:
 
-#$5=0xF
+#$5=0xFFFF
 addiu $5,$0,65535
 addi $6,$0,5656
 sll  $1,$5,15
 or   $3,$1,$5
 add  $2,$3,$3
+
 add $0,$0,$0
 jr $0
 
-Results:
+Results：
+
 addImmUnsigned	| 65535 is result at PC 0x10000000
 addImm	| 5656 is result at PC 10000004
 shiftLL	| 2147450880 is result at PC 0x10000008
 oru	| 2147483647 is result at PC 0x1000000c
 Math exception at memory address 0x10000010
 
+alan@alan-B360M-D3V:~/Desktop/mips$ echo $?
+
+246
