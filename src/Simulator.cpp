@@ -49,12 +49,12 @@ void Simulator::run() {
 			loadbyte(t,s,immediate);PC+=4;break;
 			case 0b001111:
 			loadupperImm(t,immediate);PC+=4;break;
-			// case 0b100011:
-			// loadword();PC+=4;break;
-			// case 0b101000:
-			// storebyte();PC+=4;break;
-			// case 0b101011:
-			// storeword();PC+=4;break;
+			case 0b100011:
+			loadword(t,s,immediate);PC+=4;break;
+			case 0b101000:
+			storebyte(t,s,immediate);PC+=4;break;
+			case 0b101011:
+			storeword(t,s,immediate);PC+=4;break;
 			case 0b001010:
 			setlessthan_Imm_signed(t,s,immediate);PC+=4;break;
 			case 0b001011:
@@ -397,6 +397,32 @@ void Simulator::storebyte(Regidx t, Regidx s,Word immediate){
 
 	reg->set(t,result);
 	std::cerr<<"storebyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::loadword(Regidx t, Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	std::cerr << std::bitset<32>(immediate) << '\n';
+	//check immediate overflow
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
+	Word temp=mem->readWord(byteAddr);
+	std::cerr << "word temp" <<std::dec << temp << '\n';
+	reg->set(t,temp);
+	std::cerr<<"loadword\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::storeword(Regidx t, Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	std::cerr << std::bitset<32>(immediate) << '\n';
+	//check immediate overflow
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
+	mem->writeWord(byteAddr,reg->get(t));
+	std::cerr<<"storeword\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::loadupperImm(Regidx t,UWord immediate){
