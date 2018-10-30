@@ -15,6 +15,10 @@ class Simulator{
 		//TODO register zero = 0 !
 		Memory * mem;
 		int PC=0x10000000;
+    bool advPCbool=true;
+
+    inline void executeInstruction();
+    inline void advPC();
 
 		void Rswitch();
 		void BranchSwitch();

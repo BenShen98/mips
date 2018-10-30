@@ -14,6 +14,11 @@ Word Memory::getInstruction(Word PC){
 		Memexception(PC);
 	}
 
+	if(PC&0x3){
+		//last 2 bit are not 0
+		Memexception(PC);
+	}
+
 	return memInstruction[(PC-0x10000000)>>2];
 }
 

@@ -16,58 +16,70 @@ Simulator::~Simulator() {
 void Simulator::run() {
 	//TODO: if
 	while (PC!=0) {
-		UWord const instruction=mem->getInstruction(PC);
-		Regidx s, t;
-		s=(instruction&0x03E00000) >>21;
-		t=(instruction&0x001F0000) >>16;
-		UWord immediate = (instruction&0xFFFF);
-
-		// std::cerr << (( mem->getInstruction(PC) )>>26) << '\n';
-		switch(instruction>>26){
-			case 0b000000:
-			Rswitch();break;
-			case 0b001000:
-			addImm(t,s,immediate);PC+=4;break;
-			case 0b001001:
-			addImmUnsigned(t,s,immediate);PC+=4;break;
-			case 0b001100:
-			ANDI(t,s,immediate);PC+=4;break;
-			case 0b001110:
-			XORI(t,s,immediate);PC+=4;break;
-			case 0b001101:
-			ORI(t,s,immediate);PC+=4;break;
-			case 0b000100:
-			beq(t,s,immediate);break;
-			case 0b000001:
-			BranchSwitch();break;
-			// case 0b000111:
-			// bgtz();PC+=4;break;
-			// case 0b000110:
-			// blez();PC+=4;break;
-			case 0b100000:
-			std::cerr << "/* message */" << '\n';
-			loadbyte(t,s,immediate);PC+=4;break;
-			case 0b001111:
-			loadupperImm(t,immediate);PC+=4;break;
-			case 0b100011:
-			loadword(t,s,immediate);PC+=4;break;
-			case 0b101000:
-			storebyte(t,s,immediate);PC+=4;break;
-			case 0b101011:
-			storeword(t,s,immediate);PC+=4;break;
-			case 0b001010:
-			setlessthan_Imm_signed(t,s,immediate);PC+=4;break;
-			case 0b001011:
-			setlessthan_Imm_Usigned(t,s,immediate);PC+=4;break;
-			default:
-			std::cerr << std::bitset<32>( instruction >>26) << '\n';
-			ISAexception();break;
-
-		}
+		executeInstruction();
+		advPC();
 	}
 	std::cerr<<"Function terminate without error!\n";
 
   std::exit ( reg->get(2) &0xFF ); //return only the low 8-bits of the value in register $2
+}
+
+inline void Simulator::executeInstruction(){
+	UWord const instruction=mem->getInstruction(PC);
+	Regidx s, t;
+	s=(instruction&0x03E00000) >>21;
+	t=(instruction&0x001F0000) >>16;
+	UWord immediate = (instruction&0xFFFF);
+
+	// std::cerr << (( mem->getInstruction(PC) )>>26) << '\n';
+	switch(instruction>>26){
+		case 0b000000:
+		Rswitch();break;
+		case 0b001000:
+		addImm(t,s,immediate);break;
+		case 0b001001:
+		addImmUnsigned(t,s,immediate);break;
+		case 0b001100:
+		ANDI(t,s,immediate);break;
+		case 0b001110:
+		XORI(t,s,immediate);break;
+		case 0b001101:
+		ORI(t,s,immediate);break;
+		case 0b000100:
+		beq(t,s,immediate);break;
+		case 0b000001:
+		BranchSwitch();break;
+		// case 0b000111:
+		// bgtz();break;
+		// case 0b000110:
+		// blez();break;
+		case 0b100000:
+		std::cerr << "/* message */" << '\n';
+		loadbyte(t,s,immediate);break;
+		case 0b001111:
+		loadupperImm(t,immediate);break;
+		case 0b100011:
+		loadword(t,s,immediate);break;
+		case 0b101000:
+		storebyte(t,s,immediate);break;
+		case 0b101011:
+		storeword(t,s,immediate);break;
+		case 0b001010:
+		setlessthan_Imm_signed(t,s,immediate);break;
+		case 0b001011:
+		setlessthan_Imm_Usigned(t,s,immediate);break;
+		default:
+		std::cerr << std::bitset<32>( instruction >>26) << '\n';
+		ISAexception();break;
+	}
+}
+
+inline void Simulator::advPC(){
+	if(advPCbool){
+		PC+=4;
+	}else{
+		advPCbool=true;
+	}
 }
 
 void Simulator::Rswitch(){
@@ -80,26 +92,26 @@ void Simulator::Rswitch(){
 	shift=(instruction&0x7C0) >>6;
 
 	switch(instruction&0x3F){
-		case 0b100000: add(d,s,t);PC+=4;break;
-		case 0b100001: addu(d,s,t);PC+=4;break;
-		case 0b100010: sub(d,s,t);PC+=4;break;
-		case 0b100011: subu(d,s,t);PC+=4;break;
-		case 0b011000: multiply(s,t);PC+=4;break;
-		case 0b011001: multiplyunsigned(s,t);PC+=4;break;
+		case 0b100000: add(d,s,t);break;
+		case 0b100001: addu(d,s,t);break;
+		case 0b100010: sub(d,s,t);break;
+		case 0b100011: subu(d,s,t);break;
+		case 0b011000: multiply(s,t);break;
+		case 0b011001: multiplyunsigned(s,t);break;
 		case 0b001000: jr(s);break; //no +4
-		case 0b100100: andbitwise(d,s,t);PC+=4;break;
-		case 0b100101: orbitwise(d,s,t);PC+=4;break;
-		case 0b100110: xorbitwise(d,s,t);PC+=4;break;
-		case 0b010000: mfhi(d);PC+=4;break;
-		case 0b010010: mflo(d);PC+=4;break;
-		case 0b000000: LLshift(shift,t,d);PC+=4;break;
-		case 0b000100: shiftLLVar(d,s,t);PC+=4;break;
-		case 0b101010: setlt(d,s,t);PC+=4;break;
-		case 0b101011: setltu(d,s,t);PC+=4;break;
-		case 0b000011: shiftRA(shift,d,t);PC+=4;break;
-		case 0b000010: shiftRL(shift,d,t);PC+=4;break;
-		case 0b000110: shiftRVar(d,t,s);PC+=4;break;
-		case 0b011011: divideunsigned(s,t);PC+=4;break;
+		case 0b100100: andbitwise(d,s,t);break;
+		case 0b100101: orbitwise(d,s,t);break;
+		case 0b100110: xorbitwise(d,s,t);break;
+		case 0b010000: mfhi(d);break;
+		case 0b010010: mflo(d);break;
+		case 0b000000: LLshift(shift,t,d);break;
+		case 0b000100: shiftLLVar(d,s,t);break;
+		case 0b101010: setlt(d,s,t);break;
+		case 0b101011: setltu(d,s,t);break;
+		case 0b000011: shiftRA(shift,d,t);break;
+		case 0b000010: shiftRL(shift,d,t);break;
+		case 0b000110: shiftRVar(d,t,s);break;
+		case 0b011011: divideunsigned(s,t);break;
 		default: ISAexception();
 	}
 }
@@ -112,13 +124,13 @@ void Simulator::BranchSwitch(){
 
 	switch (instruction&0x1F0000){
 		case 0b00001:
-		bgez(s,immediate);PC+=4;break;
+		bgez(s,immediate);break;
 		// case 0b10001:
-		// bgezal();PC+=4;break;
+		// bgezal();break;
 		// case 0b00000:
-		// bltz();PC+=4;break;
+		// bltz();break;
 		// case 0b10000:
-		// bltzal();PC+=4;break;
+		// bltzal();break;
 	}
 }
 
@@ -170,6 +182,7 @@ void Simulator::addu(Regidx d,Regidx s,Regidx t){
 
 void Simulator::jr(Regidx s){
 	PC=reg->get(s);
+	advPCbool=false;
 	std::cerr<<"jr\t| jump to memory address 0x"<<std::hex<<PC<<"\n";
 }
 
@@ -331,11 +344,20 @@ void Simulator::ORI(Regidx t,Regidx s,UWord immediate){
 
 void Simulator::beq(Regidx t,Regidx s,Word immediate){
 	//BUG NO IMPLEMENTATION OF DELAY BRANCH !!
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	advPC();
+	executeInstruction();
+
 	if (reg->get(t)==reg->get(s)){
+		advPCbool=false;
+		std::cerr << "current advPCbool "<<advPCbool << '\n';
 		PC+=immediate<<2;
 	}
 	else{
-		PC+=4;
+		//do noting
 	}
 }
 
