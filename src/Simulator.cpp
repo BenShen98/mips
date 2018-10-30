@@ -98,11 +98,13 @@ void Simulator::Rswitch(){
 		case 0b100011: subu(d,s,t);break;
 		case 0b011000: multiply(s,t);break;
 		case 0b011001: multiplyunsigned(s,t);break;
-		case 0b001000: jr(s);break; //no +4
+		case 0b001000: jr(s);break;
 		case 0b100100: andbitwise(d,s,t);break;
 		case 0b100101: orbitwise(d,s,t);break;
 		case 0b100110: xorbitwise(d,s,t);break;
 		case 0b010000: mfhi(d);break;
+		//TODO case of move to HI LO regisiter
+		//Currently have setHI setLO -> clear them ?
 		case 0b010010: mflo(d);break;
 		case 0b000000: LLshift(shift,t,d);break;
 		case 0b000100: shiftLLVar(d,s,t);break;
@@ -125,12 +127,12 @@ void Simulator::BranchSwitch(){
 	switch (instruction&0x1F0000){
 		case 0b00001:
 		bgez(s,immediate);break;
-		// case 0b10001:
-		// bgezal();break;
-		// case 0b00000:
-		// bltz();break;
-		// case 0b10000:
-		// bltzal();break;
+		case 0b10001:
+		bgezal(s,immediate);break;
+		case 0b00000:
+		bltz(s,immediate);break;
+		case 0b10000:
+		bltzal(s,immediate);break;
 	}
 }
 
@@ -343,7 +345,6 @@ void Simulator::ORI(Regidx t,Regidx s,UWord immediate){
 }
 
 void Simulator::beq(Regidx t,Regidx s,Word immediate){
-	//BUG NO IMPLEMENTATION OF DELAY BRANCH !!
 	if (immediate & 0x8000){
 		immediate = (immediate | (0xFFFF0000));
 	}
@@ -362,22 +363,72 @@ void Simulator::beq(Regidx t,Regidx s,Word immediate){
 }
 
 void Simulator::bgez(Regidx s,Word immediate){
-	//BUG NO IMPLEMENTATION OF DELAY BRANCH !!
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	advPC();
+	executeInstruction();
+
 	if ((Word)reg->get(s)>=0){
+		advPCbool=false;
 		PC+=immediate<<2;
 	}
 	else{
-		PC+=4;
+		//do noting
 	}
 }
 
 void Simulator::bgezal(Regidx s,Word immediate){
-	//BUG NO IMPLEMENTATION OF DELAY BRANCH !!
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	advPC();
+	reg->set(32,PC+4);
+	executeInstruction();
+
 	if ((Word)reg->get(s)>=0){
+		advPCbool=false;
 		PC+=immediate<<2;
 	}
 	else{
-		PC+=4;
+	// do nothing
+	}
+}
+
+void Simulator::bltz(Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	advPC();
+	executeInstruction();
+
+	if ((Word)reg->get(s)<0){
+		advPCbool=false;
+		PC+=immediate<<2;
+	}
+	else{
+		//do noting
+	}
+}
+
+void Simulator::bltzal(Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	advPC();
+	reg->set(32,PC+4);
+	executeInstruction();
+
+	if ((Word)reg->get(s)<0){
+		advPCbool=false;
+		PC+=immediate<<2;
+	}
+	else{
+		//do noting
 	}
 }
 

@@ -1,5 +1,6 @@
-addi $2,$0,5
-test:addi $1,$1,1
-beq $2,$1, end
-j test
-end: JR $0
+addi $2,$0,2
+add $2,$2,$2
+bgez $2,end
+add $2,$2,$2
+end: add $3,$2,$2
+jr $0

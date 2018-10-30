@@ -59,6 +59,9 @@ class Simulator{
 		void beq(Regidx t,Regidx s,Word immediate);
 		void bgez(Regidx s,Word immediate);
 		void bgezal(Regidx s,Word immediate);
+		void bltz(Regidx s,Word immediate);
+		void bltzal(Regidx s,Word immediate);
+	
 		//Below are memory instructions
 		void loadbyte(Regidx t, Regidx s,Word immediate);
 		void loadupperImm(Regidx t,UWord immediate);

@@ -87,3 +87,91 @@ shiftLL	| 2147450880 is result at PC 0x10000008
 oru	| 2147483647 is result at PC 0x1000000c
 Math exception at memory address 0x10000010
 
+Test 5:
+jr PC not ending with 00 -> addr exception
+write testbench for this case
+
+
+Test 6:
+.s:
+addi $2,$0,5
+test:addi $1,$1,1
+beq $2,$1, end
+j test
+end: JR $0
+***********mips.s:
+10000000 <test-0x4>:
+10000000:       20020005        addi    v0,zero,5
+
+10000004 <test>:
+10000004:       20210001        addi    at,at,1
+10000008:       10410003        beq     v0,at,10000018 <end>
+1000000c:       00000000        nop
+10000010:       1000fffc        b       10000004 <test>
+10000014:       00000000        nop
+
+10000018 <end>:
+10000018:       00000008        jr      zero
+1000001c:       00000000        nop
+./bin/mips_simulator ./bin/caseBin/branch.mips.bin
+init Simulator, trying to open ./bin/caseBin/branch.mips.bin
+generating instruction memory
+00100000 00000010 00000000 00000101
+00100000 00100001 00000000 00000001
+00010000 01000001 00000000 00000011
+00000000 00000000 00000000 00000000
+00010000 00000000 11111111 11111100
+00000000 00000000 00000000 00000000
+00000000 00000000 00000000 00001000
+00000000 00000000 00000000 00000000
+below are the instruction memory inputx
+mem[0x10000000] 00100000 00000010 00000000 00000101
+
+mem[0x10000004] 00100000 00100001 00000000 00000001
+
+mem[0x10000008] 00010000 01000001 00000000 00000011
+
+mem[0x1000000c] 00000000 00000000 00000000 00000000
+
+mem[0x10000010] 00010000 00000000 11111111 11111100
+
+mem[0x10000014] 00000000 00000000 00000000 00000000
+
+mem[0x10000018] 00000000 00000000 00000000 00001000
+
+mem[0x1000001c] 00000000 00000000 00000000 00000000
+
+addImm  | 5 is result at PC 10000000
+addImm  | 1 is result at PC 10000004
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x1000000c
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x10000014
+current advPCbool 0
+addImm  | 2 is result at PC 10000004
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x1000000c
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x10000014
+current advPCbool 0
+addImm  | 3 is result at PC 10000004
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x1000000c
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x10000014
+current advPCbool 0
+addImm  | 4 is result at PC 10000004
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x1000000c
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x10000014
+current advPCbool 0
+addImm  | 5 is result at PC 10000004
+WARNING: writting to register 0 at PC
+shiftLL | 0 is result at PC 0x1000000c
+current advPCbool 0
+jr      | jump to memory address 0x0
+Function terminate without error!
+
+Test 7 :
+branch and link
