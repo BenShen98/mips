@@ -33,6 +33,9 @@ MIPS_Linker = $(src)/linker.ld
 #https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html
 .PHONY testbench: $(testcases)
 
+#short cut for debug
+all: clean simulator testbench
+
 # for rebuild
 clean:
 	rm -rf ./bin
@@ -57,10 +60,31 @@ main.sim.o: $(src)/main.cpp
 %.sim.o: $(src)/%.cpp $(src)/%.hpp
 	$(CC) $(CPPFLAGS) -c $< -std=c++11 -o $(bin)/$@
 
+#below are code to test single function
+#code copied from $(testcases)
+%.test:
+	echo "Compile test case $(mipsCase)/$(basename $@)"
+	$(MIPS_CC) $(MIPS_CPPFLAGS) -c $(mipsCase)/$(basename $@).s -o $(mipsCase)/$(basename $@).mips.o
+	$(MIPS_CC) $(MIPS_CPPFLAGS) $(MIPS_LDFLAGS) -T $(MIPS_Linker) $(mipsCase)/$(basename $@).s -o $(mipsCase)/$(basename $@).mips.elf
+	$(MIPS_OBJCOPY) -O binary --only-section=.text $(mipsCase)/$(basename $@).mips.elf $(mipsBinOut)/$(basename $@).mips.bin
+	$(MIPS_OBJDUMP) -j .text -D $(mipsCase)/$(basename $@).mips.elf > $(mipsAssemblyOut)/$(basename $@).mips.s
+	rm $(mipsCase)/$(basename $@).mips.o
+	rm $(mipsCase)/$(basename $@).mips.elf
+
+	echo "below are the instruction code from $(mipsAssemblyOut)/$(basename $@).mips.s"
+	cat $(mipsAssemblyOut)/$(basename $@).mips.s
+
+	./bin/mips_simulator $(mipsBinOut)/$(basename $@).mips.bin
+	echo "***** Simulator returned $$? *****"
+
+
+
+# below are for testbench
+
 clearCase:
 	rm -f $(caseFile)
 
-# below are for testbench
+
 testbench: clearCase makedir $(testcases)
 	# rm -f $(bin)/case.csv
 	# echo $(testcases)
