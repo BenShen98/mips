@@ -4,4 +4,4 @@ prog
 ls17/*
 bin/*
 test/*
-*/.DS_Store
+.DS_Store
