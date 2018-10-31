@@ -18,7 +18,7 @@ cat bin/case.csv | while IFS=, read -r fileName instr expReturn inchar expOutCha
 		state=Fail
 	fi
 
-	if  [ "$?" -ne "$expOutChar" ]; then
+	if  [ "$?" -ne "$expOutChar | xxd -r" ]; then
 	# if [ $? -ne $expReturn ]; then
 		message1="${message1}. Expect cout $expReturn, get $cout"
 		state=Fail

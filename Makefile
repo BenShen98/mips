@@ -16,14 +16,14 @@ CPPFLAGS = -std=c++11 -W -Wall
 #for cross compile on mac (with brew version)
 #brew install FiloSottile/musl-cross/musl-cross --without-x86_64 --with-mips
 #https://blog.filippo.io/easy-windows-and-linux-cross-compilers-for-macos/
-# MIPS_CC = mips-linux-musl-gcc
-# MIPS_OBJCOPY = mips-linux-musl-objcopy
-# MIPS_OBJDUMP = mips-linux-musl-objdump
+MIPS_CC = mips-linux-musl-gcc
+MIPS_OBJCOPY = mips-linux-musl-objcopy
+MIPS_OBJDUMP = mips-linux-musl-objdump
 
 # for cross compile on Linux
-MIPS_CC = mips-linux-gnu-gcc
-MIPS_OBJCOPY = mips-linux-gnu-objcopy
-MIPS_OBJDUMP = mips-linux-gnu-objdump
+# MIPS_CC = mips-linux-gnu-gcc
+# MIPS_OBJCOPY = mips-linux-gnu-objcopy
+# MIPS_OBJDUMP = mips-linux-gnu-objdump
 
 MIPS_CPPFLAGS = -W -Wall -O3 -fno-builtin -march=mips1 -mfp32
 MIPS_LDFLAGS = -nostdlib -Wl,-melf32btsmip -march=mips1 -nostartfiles -mno-check-zero-division -Wl,--gpsize=0 -static -Wl,-Bstatic -Wl,--build-id=none
@@ -71,11 +71,25 @@ main.sim.o: $(src)/main.cpp
 	rm $(mipsCase)/$(basename $@).mips.o
 	rm $(mipsCase)/$(basename $@).mips.elf
 
-	echo "below are the instruction code from $(mipsAssemblyOut)/$(basename $@).mips.s"
-	cat $(mipsAssemblyOut)/$(basename $@).mips.s
+	@echo "***********************************************************************"
+	@echo "***** below are the source code from $(mipsCase)/$(basename $@).s *****"
+	@echo "***********************************************************************"
+	@cat $(mipsCase)/$(basename $@).s
 
-	./bin/mips_simulator $(mipsBinOut)/$(basename $@).mips.bin
-	echo "***** Simulator returned $$? *****"
+	@echo "****************************************************************************************"
+	@echo "***** below are the instruction code from $(mipsAssemblyOut)/$(basename $@).mips.s *****"
+	@echo "****************************************************************************************"
+	@cat $(mipsAssemblyOut)/$(basename $@).mips.s
+
+	@echo "***************************************************************************"
+	@echo "***** running testcase from  $(mipsAssemblyOut)/$(basename $@).mips.s *****"
+	@echo "***************************************************************************"
+
+
+	./bin/mips_simulator $(mipsBinOut)/$(basename $@).mips.bin 2> echo | xxd -ps | xargs printf "\n**********************************\n***** get 0x%s from cout *****\n"
+	@echo "***** Simulator returned $$? *****"
+	@echo "**********************************"
+
 
 
 
@@ -86,11 +100,11 @@ clearCase:
 
 
 testbench: clearCase makedir $(testcases)
-	# rm -f $(bin)/case.csv
-	# echo $(testcases)
-	# for basenamePath in $(testcase); do \
-	# 	 head -1 $(basenamePath).s | tr -d " #" >> $(bin)/csv ; \
-	# done
+	rm -f $(bin)/case.csv
+	echo $(testcases)
+	for basenamePath in $(testcase); do \
+		 head -1 $(basenamePath).s | tr -d " #" >> $(bin)/csv ; \
+	done
 	cp $(src)/mips_testbench $(bin)/mips_testbench
 
 $(testcases):

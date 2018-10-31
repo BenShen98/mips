@@ -126,34 +126,7 @@ void Memory::writeWord(Word addr, Word wd){
 
 void Memory::_printInst(Word PC){
   Word inst=getInstruction(PC);
-
-  std::cerr << "mem[0x"<<std::hex<<PC<<"]\t";
-
-	std::cerr <<std::bitset<8>((inst&0xff000000)>>24) <<" " <<std::bitset<8>((inst&0x00ff0000)>>16)<<" " <<std::bitset<8>((inst&0x0000ff00)>>8) <<" "<<std::bitset<8>((inst&0x000000ff)) << '\n';
-
-  // if( ((getInstruction(PC) )>>26)==0b000000 ){
-  //   //R type
-  //   std::cerr << std::bitset<6>(inst>>26) << " "
-  //   << std::bitset<5>((inst&0x03E00000) >>21) << " "
-  //   << std::bitset<5>((inst&0x001F0000) >>16) << " "
-  //   << std::bitset<5>((inst&0x0000F800) >>11) << " "
-  //   << std::bitset<5>((inst&0x000007C0) >>6) << " "
-  //   << std::bitset<6>((inst&0x0000003f));
-	//
-	//
-  // }else if( ((getInstruction(PC) )>>27)==0b1 ){
-  //   //J type
-  //   std::cerr << std::bitset<6>(inst>>26) <<" 0x"
-  //   << std::hex<<(inst&0x03ffffff);
-	//
-  // }else{
-  //   //I type
-  //   std::cerr << std::bitset<6>(inst>>26) << " "
-  //   << std::bitset<5>((inst&0x03E00000) >>21) << " "
-  //   << std::bitset<5>((inst&0x001F0000) >>16) << " "
-  //   << std::bitset<16>((inst&0x0000Ffff) >>6);
-  // }
-std::cerr << std::endl;
+  std::cerr << "mem[0x"<<std::hex<<PC<<"]\t0x"<<inst<<"\n";
 }
 
 Memory::Memory(char* instructionFile){
@@ -181,7 +154,6 @@ Memory::Memory(char* instructionFile){
 		 b= (unsigned char)memblock[i+1];
 		 c= (unsigned char)memblock[i+2];
 		 d= (unsigned char)memblock[i+3];
-		 std::cerr << std::bitset<8>(a) << " " << std::bitset<8>(b) << " " << std::bitset<8>(c) << " " << std::bitset<8>(d) << '\n';
 			memInstruction[insIdx]=(a<<24) | (b<<16) | (c<<8) | d;
 			insIdx++;
 		}
@@ -190,6 +162,7 @@ Memory::Memory(char* instructionFile){
     for (int i=0;i<insIdx;i++){
       _printInst((i<<2)+0x10000000);
     }
+		std::cerr << '\n';
 
     // while(1){
     //
