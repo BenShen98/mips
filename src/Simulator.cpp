@@ -229,7 +229,7 @@ void Simulator::andbitwise(Regidx d,Regidx s,Regidx t){
 void Simulator::orbitwise(Regidx d,Regidx s,Regidx t){
 	int temp = reg->get(s) | reg->get(t);
 	reg->set(d,temp);
-	std::cerr<<"oru\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"or\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
@@ -248,12 +248,12 @@ void Simulator::mtlo(Regidx d){
 
 void Simulator::mfhi(Regidx d ){
 	reg->set(d,reg->getHI());
-	std::cerr<<"mfhi\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"mfhi\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::mflo(Regidx d ){
 	reg->set(d,reg->getLO());
-	std::cerr<<"mflo\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"mflo\t| "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::multiply(Regidx s,Regidx t){
