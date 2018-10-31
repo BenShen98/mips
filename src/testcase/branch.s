@@ -1,6 +1,6 @@
 addi $2,$0,2
 add $2,$2,$2
-bgez $2,end
+bgezal $2,end
 add $2,$2,$2
-end: add $3,$2,$2
+end: addi $2,$31,0
 jr $0

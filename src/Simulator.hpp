@@ -34,6 +34,7 @@ class Simulator{
 		void subu(Regidx d,Regidx s,Regidx t);
 		void multiply(Regidx s,Regidx t);
 		void multiplyunsigned(Regidx s,Regidx t);
+		void dividesigned(Regidx s,Regidx t);
 		void divideunsigned(Regidx s,Regidx t);
 		void jr(Regidx s);
 		void andbitwise(Regidx d,Regidx s,Regidx t);
@@ -41,7 +42,8 @@ class Simulator{
 		void xorbitwise(Regidx d,Regidx s,Regidx t);
 		void mfhi(Regidx d );
 		void mflo(Regidx d );
-
+		void mtlo(Regidx d);
+		void mthi(Regidx d);
 		void LLshift(unsigned char shift,Regidx t, Regidx d);
 		void shiftLLVar(Regidx d , Regidx s, Regidx t);
 		void setlt(Regidx d , Regidx s, Regidx t);
@@ -49,6 +51,7 @@ class Simulator{
 		void shiftRA(unsigned char shift,Regidx d,Regidx t);
 		void shiftRL(unsigned char shift,Regidx d,Regidx t);
 		void shiftRVar(Regidx d,Regidx t,Regidx s);
+		void jalr(Regidx d,Regidx s);
 		//Below are immediate instructions
 		void addImm(Regidx t,Regidx s, Word immediate);
 		void addImmUnsigned(Regidx t,Regidx s,UWord immediate);
@@ -61,9 +64,16 @@ class Simulator{
 		void bgezal(Regidx s,Word immediate);
 		void bltz(Regidx s,Word immediate);
 		void bltzal(Regidx s,Word immediate);
-	
+		void bgtz(Regidx s,Word immediate);
+		void blez(Regidx s,Word immediate);
+		void bne(Regidx t,Regidx s,Word immediate);
+
+		//below are Jumo instruction
+		void j();
+		void jal();
 		//Below are memory instructions
 		void loadbyte(Regidx t, Regidx s,Word immediate);
+		void loadUbyte(Regidx t, Regidx s,Word immediate);
 		void loadupperImm(Regidx t,UWord immediate);
 		void loadword(Regidx t, Regidx s, Word addr);
 		void storebyte(Regidx t, Regidx s, Word addr);

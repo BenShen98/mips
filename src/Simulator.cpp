@@ -49,12 +49,13 @@ inline void Simulator::executeInstruction(){
 		beq(t,s,immediate);break;
 		case 0b000001:
 		BranchSwitch();break;
-		// case 0b000111:
-		// bgtz();break;
-		// case 0b000110:
-		// blez();break;
+		case 0b000111:
+		bgtz(s,immediate);break;
+		case 0b000110:
+		blez(s,immediate);break;
+		case 0b000101:
+		bne(t,s,immediate);break;
 		case 0b100000:
-		std::cerr << "/* message */" << '\n';
 		loadbyte(t,s,immediate);break;
 		case 0b001111:
 		loadupperImm(t,immediate);break;
@@ -68,6 +69,10 @@ inline void Simulator::executeInstruction(){
 		setlessthan_Imm_signed(t,s,immediate);break;
 		case 0b001011:
 		setlessthan_Imm_Usigned(t,s,immediate);break;
+		case 0b000010:
+		j();break;
+		case 0b000011:
+		jal();break;
 		default:
 		std::cerr << std::bitset<32>( instruction >>26) << '\n';
 		ISAexception();break;
@@ -103,9 +108,9 @@ void Simulator::Rswitch(){
 		case 0b100101: orbitwise(d,s,t);break;
 		case 0b100110: xorbitwise(d,s,t);break;
 		case 0b010000: mfhi(d);break;
-		//TODO case of move to HI LO regisiter
-		//Currently have setHI setLO -> clear them ?
+		case 0b010001: mthi(d);break;
 		case 0b010010: mflo(d);break;
+		case 0b010011: mtlo(d);break;
 		case 0b000000: LLshift(shift,t,d);break;
 		case 0b000100: shiftLLVar(d,s,t);break;
 		case 0b101010: setlt(d,s,t);break;
@@ -113,7 +118,9 @@ void Simulator::Rswitch(){
 		case 0b000011: shiftRA(shift,d,t);break;
 		case 0b000010: shiftRL(shift,d,t);break;
 		case 0b000110: shiftRVar(d,t,s);break;
+		case 0b011010: dividesigned(s,t);break;
 		case 0b011011: divideunsigned(s,t);break;
+		case 0b001001: jalr(d,s);break;
 		default: ISAexception();
 	}
 }
@@ -124,10 +131,11 @@ void Simulator::BranchSwitch(){
 	UWord immediate = (instruction&0xFFFF);
 	s=(instruction&0x03E00000) >>21;
 
-	switch (instruction&0x1F0000){
+	switch ((instruction&0x1F0000)>>16){
 		case 0b00001:
 		bgez(s,immediate);break;
 		case 0b10001:
+		std::cerr << "/* error message */" << '\n';
 		bgezal(s,immediate);break;
 		case 0b00000:
 		bltz(s,immediate);break;
@@ -183,9 +191,21 @@ void Simulator::addu(Regidx d,Regidx s,Regidx t){
 }
 
 void Simulator::jr(Regidx s){
+	advPC();
+	executeInstruction();
 	PC=reg->get(s);
 	advPCbool=false;
 	std::cerr<<"jr\t| jump to memory address 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::jalr(Regidx d,Regidx s){
+	advPC();
+	executeInstruction();
+	reg->set(d,PC+4);
+	PC=reg->get(s);
+	advPCbool=false;
+	std::cerr<<"jalr\t| jump to memory address 0x"<<std::hex<<PC<<"\n";
+
 }
 
 void Simulator::andbitwise(Regidx d,Regidx s,Regidx t){
@@ -204,6 +224,14 @@ void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
 	int temp = reg->get(s) ^ reg->get(t);
 	reg->set(d,temp);
 	std::cerr<<"xor\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::mthi(Regidx d){
+	reg->setHI(reg->get(d));
+}
+
+void Simulator::mtlo(Regidx d){
+	reg->setLO(reg->get(d));
 }
 
 void Simulator::mfhi(Regidx d ){
@@ -236,6 +264,15 @@ void Simulator::divideunsigned(Regidx s, Regidx t){
 	//no exceptions here checked with PDF
 	reg->setLO(reg->get(s)/reg->get(t));
 	reg->setHI(reg->get(s)%reg->get(t));
+	std::cerr<<"divideunsigned\t| getting LO value and HI"<<std::dec<<reg->getLO()<<"   "<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::dividesigned(Regidx s, Regidx t){
+	//no exceptions here checked with PDF
+	reg->setLO(Word(reg->get(s))/Word(reg->get(t)));
+	reg->setHI(Word(reg->get(s))%Word(reg->get(t)));
+	std::cerr<<"dividesigned\t| getting LO value and HI"<<std::dec<<reg->getLO()<<"   "<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+
 }
 
 void Simulator::LLshift(unsigned char shift,Regidx t, Regidx d){
@@ -385,7 +422,8 @@ void Simulator::bgezal(Regidx s,Word immediate){
 	}
 
 	advPC();
-	reg->set(32,PC+4);
+	reg->set(31,PC+4);
+	std::cerr << "reg 31 0x"<<std::hex<<reg->get(31)<<'\n';
 	executeInstruction();
 
 	if ((Word)reg->get(s)>=0){
@@ -395,6 +433,7 @@ void Simulator::bgezal(Regidx s,Word immediate){
 	else{
 	// do nothing
 	}
+	std::cerr<<"bgezal\t| "<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::bltz(Regidx s,Word immediate){
@@ -420,7 +459,7 @@ void Simulator::bltzal(Regidx s,Word immediate){
 	}
 
 	advPC();
-	reg->set(32,PC+4);
+	reg->set(31,PC+4);
 	executeInstruction();
 
 	if ((Word)reg->get(s)<0){
@@ -432,20 +471,85 @@ void Simulator::bltzal(Regidx s,Word immediate){
 	}
 }
 
+void Simulator::bgtz(Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	advPC();
+	executeInstruction();
+
+	if ((Word)reg->get(s)>0){
+		advPCbool=false;
+		PC+=immediate<<2;
+	}
+	else{
+		//do noting
+	}
+}
+
+void Simulator::blez(Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	advPC();
+	executeInstruction();
+
+	if ((Word)reg->get(s)<=0){
+		advPCbool=false;
+		PC+=immediate<<2;
+	}
+	else{
+		//do noting
+	}
+}
+void Simulator::bne(Regidx t,Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+
+	advPC();
+	executeInstruction();
+
+	if (reg->get(t)!=reg->get(s)){
+		advPCbool=false;
+		std::cerr << "current advPCbool "<<advPCbool << '\n';
+		PC+=immediate<<2;
+	}
+	else{
+		//do noting
+	}
+}
+
 void Simulator::loadbyte(Regidx t, Regidx s,Word immediate){
 	if (immediate & 0x8000){
 		immediate = (immediate | (0xFFFF0000));
 	}
-	std::cerr << std::bitset<32>(immediate) << '\n';
+	//signed extend it otherwise no change
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
+	Word temp=mem->readByte(byteAddr);
+	//memory->readbyte can handle the correct address
 
+	if (temp&0x80){
+		temp=temp|0xFFFFFF00;
+	}
+	//checking byte +- => signed extension
+	reg->set(t,temp);
+	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::loadUbyte(Regidx t, Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
 	//signed extend it otherwise no change
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
 	Word temp=mem->readWord(byteAddr);
-	std::cerr << "word temp" <<std::dec << temp << '\n';
-	Word result = word2Sbyte(temp,byteAddr%4);
 
-	reg->set(t,result);
+	reg->set(t,temp);
 	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
@@ -525,6 +629,32 @@ void Simulator::setlessthan_Imm_Usigned(Regidx t, Regidx s, UWord immediate){
 		reg->set(t,0);
 	}
 	std::cerr<<"setlessthan_Imm_Usigned\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+//*********************************   Jump instructions *******************************************************
+
+void Simulator::j(){
+	UWord instruction= mem->getInstruction(PC);
+	UWord target=instruction&0x3FFFFFF;
+	advPC();
+	UWord temp=mem->getInstruction(PC);
+	temp=temp&0xF0000000;
+	executeInstruction();
+	advPCbool=false;
+	PC=(target<<2)|temp;
+	std::cerr << "current advPCbool "<<advPCbool << '\n';
+}
+
+void Simulator::jal(){
+	UWord instruction= mem->getInstruction(PC);
+	UWord target=instruction&0x3FFFFFF;
+	advPC();
+	UWord temp=mem->getInstruction(PC);
+	temp=temp&0xF0000000;
+	reg->set(31,PC+4);
+	executeInstruction();
+	advPCbool=false;
+	PC=(target<<2)|temp;
+	std::cerr << "current advPCbool "<<advPCbool << '\n';
 }
 
 //**********************************  Exception functions *****************************************************
