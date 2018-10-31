@@ -1,27 +1,25 @@
-#!/bin/sh
+#!/bin/bash
 #
 #
 
 
 
-cat bin/case.csv | while IFS=, read -r fileName instr expReturn inchar expOutChar; do
+cat bin/case.csv | while IFS=, read -r fileName instr expReturn inchar expOutChar message1; do
 
 	state=Pass
-	message1="x"
 
-	#convert cin from hex to ascii, run the test binary, get output
-	cout=$(echo $inchar | xxd -r | $1 ins.bin 2> echo)
-
+	#convert cin from hex to ascii, run the test binary, get output, produce log file
+	cout=$(echo $inchar | xxd -r | $1 bin/caseBin/$fileName.mips.bin 2> test/output/$fileName.log | xxd -ps | xargs printf "0x%s"; exit ${PIPESTATUS[2]})
 	#check error
-	if [ "$?" -ne "$expReturn" ]; then
+	if [ "$?" != "$expReturn" ]; then
 		message1="$message1. Expect return $expReturn, get $?"
 		state=Fail
 	fi
 
-	if  [ "$cout" -ne "$expOutChar | xxd -r" ]; then
-		message1="${message1}. Expect cout $expOutChar, get 0x$($cout | xxd -ps)"
+	if  [ $cout != "$expOutChar" ]; then
+		message1="$message1. Expect cout $expOutChar, get $cout"
 		state=Fail
 	fi
 
-	echo "$fileName, $instr, $state, team OOP, $($message1 |tr '\n' ' '),"
+	echo "$fileName, $instr, $state, team OOP, $message1,"
 done
