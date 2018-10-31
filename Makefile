@@ -16,14 +16,14 @@ CPPFLAGS = -std=c++11 -W -Wall
 #for cross compile on mac (with brew version)
 #brew install FiloSottile/musl-cross/musl-cross --without-x86_64 --with-mips
 #https://blog.filippo.io/easy-windows-and-linux-cross-compilers-for-macos/
-MIPS_CC = mips-linux-musl-gcc
-MIPS_OBJCOPY = mips-linux-musl-objcopy
-MIPS_OBJDUMP = mips-linux-musl-objdump
+# MIPS_CC = mips-linux-musl-gcc
+# MIPS_OBJCOPY = mips-linux-musl-objcopy
+# MIPS_OBJDUMP = mips-linux-musl-objdump
 
 # for cross compile on Linux
-#MIPS_CC = mips-linux-gnu-gcc
-#MIPS_OBJCOPY = mips-linux-gnu-objcopy
-#MIPS_OBJDUMP = mips-linux-gnu-objdump
+MIPS_CC = mips-linux-gnu-gcc
+MIPS_OBJCOPY = mips-linux-gnu-objcopy
+MIPS_OBJDUMP = mips-linux-gnu-objdump
 
 MIPS_CPPFLAGS = -W -Wall -O3 -fno-builtin -march=mips1 -mfp32
 MIPS_LDFLAGS = -nostdlib -Wl,-melf32btsmip -march=mips1 -nostartfiles -mno-check-zero-division -Wl,--gpsize=0 -static -Wl,-Bstatic -Wl,--build-id=none

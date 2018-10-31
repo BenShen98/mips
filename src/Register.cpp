@@ -34,7 +34,7 @@ void Register::set(Regidx i, Word value){
 
 	//error check
 	if(i==0){
-		std::cerr << "WARNING: writting to register 0 at PC "<< '\n';
+		std::cerr << "WARNING: writting to register 0 at PC 0x"<< '\n';
 	}
 
 	if(i>31){
