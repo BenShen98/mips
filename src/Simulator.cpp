@@ -605,24 +605,20 @@ void Simulator::loadhalfword(Regidx t, Regidx s,Word immediate){
 		immediate = (immediate | (0xFFFF0000));
 	}
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
-	wordindex=(byteAddr>>1)&0x1;
-	if (wordindex){
-		Word temp = mem->readWord(byteAddr);
+	Word temp = mem->readWord(byteAddr&0xfffffffd);
+	Word result;
+	if (byteAddr&0x2){
 		Word result = temp &0xFFFF;
-		if (result&0x8000){
-			result = (result | (0xFFFF0000));
-		}
-		reg->set(t,result);
 	}
 	else {
-		Word temp = mem->readWord(byteAddr);
-		Word result = (temp &0xFFFF0000)>>16;
-		if (result&0x8000){
-			result = (result | (0xFFFF0000));
-		}
-		//signed extension
-		reg->set(t,result);
+		Word result = temp>>16;
 	}
+	//signed extension
+	if (result&0x8000){
+		result = (result | (0xFFFF0000));
+	}
+
+	reg->set(t,result);
 }
 
 void Simulator::loadhalfwordU(Regidx t, Regidx s,Word immediate){
@@ -630,17 +626,15 @@ void Simulator::loadhalfwordU(Regidx t, Regidx s,Word immediate){
 		immediate = (immediate | (0xFFFF0000));
 	}
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	Word temp = mem->readWord(byteAddr&0xfffffffd);
 	if (byteAddr&0x2){
-		Word temp = mem->readWord(byteAddr&0xfffffffd);
 		Word result = temp &0xFFFF;
 		reg->set(t,result);
 	}else {
-		Word temp = mem->readWord(byteAddr);//byteAddr eqv to byteAddr&0xfffffffd
-		Word result = (temp &0xFFFF0000)>>16;
-		//signed extension
+		Word result = temp>>16;
 		reg->set(t,result);
 	}
-
+}
 
 void Simulator::storeword(Regidx t, Regidx s,Word immediate){
 	if (immediate & 0x8000){
@@ -676,8 +670,8 @@ void Simulator::loadwordleft(Regidx s, Regidx t, Word immediate){
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	int index=byteAddr%4;
 	//first part of OR => the required word from memory | 2nd part => the register to keep
-	UWord result=(mem->readWord(byteAddr&0xfffffffc) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-idx)));
-	reg->put(t,result);
+	UWord result=(mem->readWord(byteAddr&0xfffffffc) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-index)));
+	reg->set(t,result);
 }
 
 void Simulator::loadwordright(Regidx s, Regidx t, Word immediate){
@@ -689,7 +683,7 @@ void Simulator::loadwordright(Regidx s, Regidx t, Word immediate){
 	int index=byteAddr%4;
 	//first part of OR => the required word from memory | 2nd part => the register to keep
 	UWord result=(mem->readWord(byteAddr&0xfffffffc) << 8*(3-index)) | (reg->get(t) & (UWord(0xFFFFFFFF)>>8*index));
-	reg->put(t,result);
+	reg->set(t,result);
 }
 
 void Simulator::loadupperImm(Regidx t,UWord immediate){

@@ -81,7 +81,7 @@ class Simulator{
 		void loadwordleft(Regidx s, Regidx t, Word immediate);
 		void loadwordright(Regidx s, Regidx t, Word immediate);
 		void storebyte(Regidx t, Regidx s, Word immediate);
-		void storehalfword();
+		void storehalfword(Regidx t, Regidx s,Word immediate);
 		void storeword(Regidx t, Regidx s, Word immediate);
 		void setlessthan_Imm_signed(Regidx t, Regidx s, Word immediate);
 		void setlessthan_Imm_Usigned(Regidx t, Regidx s, UWord immediate);
