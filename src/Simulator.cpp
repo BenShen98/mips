@@ -57,14 +57,26 @@ inline void Simulator::executeInstruction(){
 		bne(t,s,immediate);break;
 		case 0b100000:
 		loadbyte(t,s,immediate);break;
+		case 0b100100:
+		loadUbyte(t,s,immediate);break;
 		case 0b001111:
 		loadupperImm(t,immediate);break;
 		case 0b100011:
 		loadword(t,s,immediate);break;
+		case 0b100001:
+		loadhalfword(t,s,immediate);break;
+		case 0b100101:
+		loadhalfwordU(t,s,immediate);break;
+		case 0b100010:
+		loadwordleft(t,s,immediate);break;
+		case 0b100110:
+		loadwordright(t,s,immediate);break;
 		case 0b101000:
 		storebyte(t,s,immediate);break;
 		case 0b101011:
 		storeword(t,s,immediate);break;
+		case 0b101001:
+		storehalfword(t,s,immediate);break;
 		case 0b001010:
 		setlessthan_Imm_signed(t,s,immediate);break;
 		case 0b001011:
@@ -552,12 +564,13 @@ void Simulator::loadUbyte(Regidx t, Regidx s,Word immediate){
 	reg->set(t,temp);
 	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
-
+/*this function is not needed
 inline signed char Simulator::word2Sbyte(Word word, int idx){
 	Word temp=word >> (8*(3-idx) ) & 0xFF;
 	std::cerr << "byte from word2byte"<<temp << '\n';
 	return (signed char)(temp);
 }
+*/
 
 void Simulator::storebyte(Regidx t, Regidx s,Word immediate){
 	if (immediate & 0x8000){
@@ -568,13 +581,10 @@ void Simulator::storebyte(Regidx t, Regidx s,Word immediate){
 	//signed extend it otherwise no change
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
-	Word temp=mem->readWord(byteAddr);
-	std::cerr << "word temp" <<std::dec << temp << '\n';
-	Word result = word2Sbyte(temp,byteAddr%4);
-
-	reg->set(t,result);
-	std::cerr<<"storebyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	mem->writeByte(byteAddr,reg->get(t));
+	std::cerr<<"storebyte\t| 0x"<<mem->readWord(byteAddr)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
+
 
 void Simulator::loadword(Regidx t, Regidx s,Word immediate){
 	if (immediate & 0x8000){
@@ -590,6 +600,48 @@ void Simulator::loadword(Regidx t, Regidx s,Word immediate){
 	std::cerr<<"loadword\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
+void Simulator::loadhalfword(Regidx t, Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	wordindex=(byteAddr>>1)&0x1;
+	if (wordindex){
+		Word temp = mem->readWord(byteAddr);
+		Word result = temp &0xFFFF;
+		if (result&0x8000){
+			result = (result | (0xFFFF0000));
+		}
+		reg->set(t,result);
+	}
+	else {
+		Word temp = mem->readWord(byteAddr);
+		Word result = (temp &0xFFFF0000)>>16;
+		if (result&0x8000){
+			result = (result | (0xFFFF0000));
+		}
+		//signed extension
+		reg->set(t,result);
+	}
+}
+
+void Simulator::loadhalfwordU(Regidx t, Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	if (byteAddr&0x2){
+		Word temp = mem->readWord(byteAddr&0xfffffffd);
+		Word result = temp &0xFFFF;
+		reg->set(t,result);
+	}else {
+		Word temp = mem->readWord(byteAddr);//byteAddr eqv to byteAddr&0xfffffffd
+		Word result = (temp &0xFFFF0000)>>16;
+		//signed extension
+		reg->set(t,result);
+	}
+
+
 void Simulator::storeword(Regidx t, Regidx s,Word immediate){
 	if (immediate & 0x8000){
 		immediate = (immediate | (0xFFFF0000));
@@ -599,7 +651,45 @@ void Simulator::storeword(Regidx t, Regidx s,Word immediate){
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
 	mem->writeWord(byteAddr,reg->get(t));
-	std::cerr<<"storeword\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"storeword\t| 0x"<<std::hex<<mem->readWord(byteAddr)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::storehalfword(Regidx t, Regidx s,Word immediate){
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	std::cerr << std::bitset<32>(immediate) << '\n';
+	//check immediate overflow
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	std::cerr << "byteAddr" <<std::dec << byteAddr << '\n';
+
+	Word result=(reg->get(t)&0xFFFF) | (mem->readWord(byteAddr)&0xffff0000);
+	mem->writeWord(byteAddr,result);
+	std::cerr<<"storehalfword\t| 0x"<<std::hex<<mem->readWord(byteAddr)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+}
+
+void Simulator::loadwordleft(Regidx s, Regidx t, Word immediate){
+	//add case !
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	int index=byteAddr%4;
+	//first part of OR => the required word from memory | 2nd part => the register to keep
+	UWord result=(mem->readWord(byteAddr&0xfffffffc) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-idx)));
+	reg->put(t,result);
+}
+
+void Simulator::loadwordright(Regidx s, Regidx t, Word immediate){
+	//add case !
+	if (immediate & 0x8000){
+		immediate = (immediate | (0xFFFF0000));
+	}
+	Word byteAddr = Word(reg->get(s))+Word(immediate);
+	int index=byteAddr%4;
+	//first part of OR => the required word from memory | 2nd part => the register to keep
+	UWord result=(mem->readWord(byteAddr&0xfffffffc) << 8*(3-index)) | (reg->get(t) & (UWord(0xFFFFFFFF)>>8*index));
+	reg->put(t,result);
 }
 
 void Simulator::loadupperImm(Regidx t,UWord immediate){

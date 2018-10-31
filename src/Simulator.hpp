@@ -51,7 +51,6 @@ class Simulator{
 		void shiftRA(unsigned char shift,Regidx d,Regidx t);
 		void shiftRL(unsigned char shift,Regidx d,Regidx t);
 		void shiftRVar(Regidx d,Regidx t,Regidx s);
-		void jalr(Regidx d,Regidx s);
 		//Below are immediate instructions
 		void addImm(Regidx t,Regidx s, Word immediate);
 		void addImmUnsigned(Regidx t,Regidx s,UWord immediate);
@@ -71,13 +70,19 @@ class Simulator{
 		//below are Jumo instruction
 		void j();
 		void jal();
+		void jalr(Regidx d,Regidx s);
 		//Below are memory instructions
 		void loadbyte(Regidx t, Regidx s,Word immediate);
 		void loadUbyte(Regidx t, Regidx s,Word immediate);
+		void loadhalfword(Regidx t, Regidx s,Word immediate);
+		void loadhalfwordU(Regidx t, Regidx s,Word immediate);
 		void loadupperImm(Regidx t,UWord immediate);
 		void loadword(Regidx t, Regidx s, Word addr);
-		void storebyte(Regidx t, Regidx s, Word addr);
-		void storeword(Regidx t, Regidx s, Word addr);
+		void loadwordleft(Regidx s, Regidx t, Word immediate);
+		void loadwordright(Regidx s, Regidx t, Word immediate);
+		void storebyte(Regidx t, Regidx s, Word immediate);
+		void storehalfword();
+		void storeword(Regidx t, Regidx s, Word immediate);
 		void setlessthan_Imm_signed(Regidx t, Regidx s, Word immediate);
 		void setlessthan_Imm_Usigned(Regidx t, Regidx s, UWord immediate);
 

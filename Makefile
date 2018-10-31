@@ -71,11 +71,25 @@ main.sim.o: $(src)/main.cpp
 	rm $(mipsCase)/$(basename $@).mips.o
 	rm $(mipsCase)/$(basename $@).mips.elf
 
-	echo "below are the instruction code from $(mipsAssemblyOut)/$(basename $@).mips.s"
-	cat $(mipsAssemblyOut)/$(basename $@).mips.s
+	@echo "***********************************************************************"
+	@echo "***** below are the source code from $(mipsCase)/$(basename $@).s *****"
+	@echo "***********************************************************************"
+	@cat $(mipsCase)/$(basename $@).s
 
-	./bin/mips_simulator $(mipsBinOut)/$(basename $@).mips.bin
-	echo "***** Simulator returned $$? *****"
+	@echo "****************************************************************************************"
+	@echo "***** below are the instruction code from $(mipsAssemblyOut)/$(basename $@).mips.s *****"
+	@echo "****************************************************************************************"
+	@cat $(mipsAssemblyOut)/$(basename $@).mips.s
+
+	@echo "***************************************************************************"
+	@echo "***** running testcase from  $(mipsAssemblyOut)/$(basename $@).mips.s *****"
+	@echo "***************************************************************************"
+
+
+	./bin/mips_simulator $(mipsBinOut)/$(basename $@).mips.bin 2> echo | xxd -ps | xargs printf "\n**********************************\n***** get 0x%s from cout *****\n"
+	@echo "***** Simulator returned $$? *****"
+	@echo "**********************************"
+
 
 
 
@@ -86,11 +100,11 @@ clearCase:
 
 
 testbench: clearCase makedir $(testcases)
-	# rm -f $(bin)/case.csv
-	# echo $(testcases)
-	# for basenamePath in $(testcase); do \
-	# 	 head -1 $(basenamePath).s | tr -d " #" >> $(bin)/csv ; \
-	# done
+	rm -f $(bin)/case.csv
+	echo $(testcases)
+	for basenamePath in $(testcase); do \
+		 head -1 $(basenamePath).s | tr -d " #" >> $(bin)/csv ; \
+	done
 	cp $(src)/mips_testbench $(bin)/mips_testbench
 
 $(testcases):
