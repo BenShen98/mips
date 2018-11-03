@@ -1,0 +1,20 @@
+./bin/mips_testbench ./bin/mips_simulator,,,,,
+multu_basic,multu,Pass,team OOP,comment,
+here,,,,,
+,,,team OOP,,
+addoverflow,addoverflow,Fail,team OOP,here,
+is,for,comment,,,
+.,team OOP,Expect,,,
+return,0,,get,team OOP,0
+mult_basic,mult,Pass,team OOP,comment,
+here,,,,,
+,,,team OOP,,
+jump,jump,Fail,team OOP,here,
+is,for,comment,,,
+.,team OOP,Expect,,,
+return,567,,get,team OOP,0
+sw_cout,sw,Fail,team OOP,here,
+is,for,comment..,team OOP,Expect,
+return,255,,get,team OOP,0
+Expect,cout,0x,,team OOP,get
+0x43,,,team OOP,,

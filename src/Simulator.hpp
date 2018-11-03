@@ -25,7 +25,6 @@ class Simulator{
 		//Exception functions here
 		void ISAexception();
 		void Mathexception();/* code */
-		void Memexception();
 
 		//All functions here
 		void add(Regidx d,Regidx s,Regidx t);
@@ -49,6 +48,7 @@ class Simulator{
 		void setlt(Regidx d , Regidx s, Regidx t);
 		void setltu(Regidx d , Regidx s, Regidx t);
 		void shiftRA(unsigned char shift,Regidx d,Regidx t);
+		void shiftRAVar(Regidx d, Regidx s,Regidx t);
 		void shiftRL(unsigned char shift,Regidx d,Regidx t);
 		void shiftRVar(Regidx d,Regidx t,Regidx s);
 		//Below are immediate instructions

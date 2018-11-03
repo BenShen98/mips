@@ -63,6 +63,12 @@ main.sim.o: $(src)/main.cpp
 
 #below are code to test single function
 #code copied from $(testcases)
+%.debug:
+	./bin/mips_simulator $(mipsBinOut)/$(basename $@).mips.bin
+
+Test:
+	./bin/mips_testbench ./bin/mips_simulator
+
 %.test:
 	echo "Compile test case $(mipsCase)/$(basename $@)"
 	$(MIPS_CC) $(MIPS_CPPFLAGS) -c $(mipsCase)/$(basename $@).s -o $(mipsCase)/$(basename $@).mips.o
@@ -87,7 +93,7 @@ main.sim.o: $(src)/main.cpp
 	@echo "***************************************************************************"
 
 
-	./bin/mips_simulator $(mipsBinOut)/$(basename $@).mips.bin 2> echo | xxd -ps | xargs printf "\n**********************************\n***** get 0x%s from cout *****\n"
+	./bin/mips_simulator $(mipsBinOut)/$(basename $@).mips.bin
 	@echo "***** Simulator returned $$? *****"
 	@echo "**********************************"
 

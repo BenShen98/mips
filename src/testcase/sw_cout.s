@@ -1,4 +1,4 @@
-#sw,255,,,here is for comment.
+#sw,255,,43ff,testing output PUTC
 
 addi $2,$0,0x43
 
