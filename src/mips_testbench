@@ -8,12 +8,14 @@ cat bin/case.csv | while IFS=, read -r fileName instr expReturn inchar expOutCha
 	state=Pass
 
 	#convert cin from hex to ascii, run the test binary, get output, produce log file
-	cout=$(echo $inchar | xxd -r | $1 bin/caseBin/$fileName.mips.bin 2> test/output/$fileName.log | xxd -ps | xargs printf "%s"; exit ${PIPESTATUS[2]})
+	cout=$(echo 0x$inchar | xxd -r | $1 bin/caseBin/$fileName.mips.bin 2> test/output/$fileName.log | xxd -ps | xargs printf "%s"; exit ${PIPESTATUS[2]})
+	exitcode=$?
+
 	#check error
-	if [[ $? != $expReturn ]]; then
+	if [[ $exitcode != $expReturn ]]; then
 		# $? here is not the ? from exit code
 		# message1="$message1. Expect return $expReturn, get $?"
-		message1="$message1. Expect return $expReturn, get notcorrect"
+		message1="$message1. Expect return $expReturn, get $exitcode"
 		state=Fail
 	fi
 

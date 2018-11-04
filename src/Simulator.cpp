@@ -296,11 +296,7 @@ void Simulator::LLshift(unsigned char shift,Regidx t, Regidx d){
 }
 
 void Simulator::shiftLLVar(Regidx d , Regidx s, Regidx t){
-	long temp = (long(reg->get(t))<<reg->get(s));
-	if (temp>>32){
-		Mathexception();
-	}
-	reg->set(d,(int)temp);
+	reg->set(d,(reg->get(t))<<(reg->get(s)));
 	std::cerr<<"shiftLLVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
@@ -327,26 +323,12 @@ void Simulator::setltu(Regidx d , Regidx s, Regidx t){
 }
 
 void Simulator::shiftRA(unsigned char shift,Regidx d,Regidx t){
-	if (((signed int)reg->get(t))>=0){
-		reg->set(d,(reg->get(t)>>shift));
-	}
-	else{
-		int power=1;
-		power=power<<shift;
-		reg->set(d,((signed int)reg->get(t)/power));
-	}
+	reg->set(d,Word(reg->get(t))>>shift);
 	std::cerr<<"shiftRArithmitic\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftRAVar(Regidx d,Regidx s,Regidx t){
-	if (((signed int)reg->get(t))>=0){
-		reg->set(d,(reg->get(t)>>reg->get(s)));
-	}
-	else{
-		int power=1;
-		power=power<<reg->get(s);
-		reg->set(d,((signed int)reg->get(t)/power));
-	}
+	reg->set(d,Word(reg->get(t))>>(reg->get(s)));
 	std::cerr<<"shiftRArithmiticVar\t| "<<std::hex<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 

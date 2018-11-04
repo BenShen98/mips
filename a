@@ -1,6 +1,25 @@
-./bin/mips_testbench ./bin/mips_simulator
-multu_basic,multu,Pass,team OOP,comment here
-addoverflow,addoverflow,Fail,team OOP,here is for comment. Expect return 0, get notcorrect
-mult_basic,mult,Pass,team OOP,comment here
-jump,jump,Fail,team OOP,here is for comment. Expect return 567, get notcorrect
-sw_cout,sw,Pass,team OOP,here is for comment.
+./src/testcase/sub.s: Assembler messages:
+./src/testcase/sub.s:2: Warning: used $at without ".set noat"
+./src/testcase/sub.s:3: Warning: used $at without ".set noat"
+./src/testcase/sub.s: Assembler messages:
+./src/testcase/sub.s:2: Warning: used $at without ".set noat"
+./src/testcase/sub.s:3: Warning: used $at without ".set noat"
+/usr/lib/gcc-cross/mips-linux-gnu/7/../../../../mips-linux-gnu/bin/ld: warning: cannot find entry symbol _entry; defaulting to 0000000010000000
+init Simulator, trying to open ./bin/caseBin/sub.mips.bin
+generating instruction memory
+below are the instruction memory inputx
+mem[0x10000000]	0x2401ffff
+mem[0x10000004]	0x11bc0
+mem[0x10000008]	0x3463ffff
+mem[0x1000000c]	0x24620001
+mem[0x10000010]	0x8
+mem[0x10000014]	0x2042ffff
+mem[0x10000018]	0x0
+mem[0x1000001c]	0x0
+
+addImmUnsigned	| 65535 is result at PC 0x10000000
+shiftLL	| 2147450880 is result at PC 0x10000004
+ORI	| 2147483647 is result at PC 0x10000008
+addImmUnsigned	| -2147483648 is result at PC 0x1000000c
+Math exception at memory address 0x10000014
+make: *** [sub.test] Error 246
