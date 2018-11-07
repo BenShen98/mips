@@ -67,15 +67,19 @@ class Simulator{
 		void blez(Regidx s,Word immediate);
 		void bne(Regidx t,Regidx s,Word immediate);
 
+		inline void checkSignedOverflow(Word a, Word b, Word result);
+		inline Word sgnExtend16(Word input);
+		inline Word sgnExtend8(Word input);
+
 		//below are Jumo instruction
-		void j();
-		void jal();
+		void j(Word instr_index);
+		void jal(Word instr_index);
 		void jalr(Regidx d,Regidx s);
 		//Below are memory instructions
-		void loadbyte(Regidx t, Regidx s,Word immediate);
-		void loadUbyte(Regidx t, Regidx s,Word immediate);
-		void loadhalfword(Regidx t, Regidx s,Word immediate);
-		void loadhalfwordU(Regidx t, Regidx s,Word immediate);
+		void loadbyte(Regidx t, Regidx s,Word offest);
+		void loadUbyte(Regidx t, Regidx s,Word offest);
+		void loadhalfword(Regidx t, Regidx s,Word offest);
+		void loadhalfwordU(Regidx t, Regidx s,Word offest);
 		void loadupperImm(Regidx t,UWord immediate);
 		void loadword(Regidx t, Regidx s, Word addr);
 		void loadwordleft(Regidx s, Regidx t, Word immediate);
