@@ -402,7 +402,7 @@ void Simulator::beq(Regidx t,Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
@@ -417,7 +417,7 @@ void Simulator::bgez(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
@@ -449,7 +449,7 @@ void Simulator::bltz(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
@@ -465,7 +465,7 @@ void Simulator::bltzal(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
@@ -495,7 +495,7 @@ void Simulator::blez(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 void Simulator::bne(Regidx t,Regidx s,Word immediate){
@@ -509,7 +509,7 @@ void Simulator::bne(Regidx t,Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
@@ -538,9 +538,7 @@ void Simulator::loadUbyte(Regidx t, Regidx s,Word offset){
 }
 
 void Simulator::storebyte(Regidx t, Regidx s,Word immediate){
-	if (immediate & 0x8000){
-		immediate = (immediate | (0xFFFF0000));
-	}
+	immediate=sgnExtend16(immediate);
 	//signed extend it otherwise no change
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	mem->writeByte(byteAddr,reg->get(t));
