@@ -339,25 +339,54 @@ void Simulator::setltu(Regidx d , Regidx s, Regidx t){
 }
 
 void Simulator::shiftRA(unsigned char shift,Regidx d,Regidx t){
-	reg->set(d,Word(reg->get(t))>>shift);
+	Word result;
+	//if is required here due to shift with E2 greater than type length is undefined
+	if(shift<32){
+		result=( Word(reg->get(t))>>shift );
+	}else{
+		// such if MSB of reg[t] is 0, will result 0x0 ; is 1, will get 0xFFFFFFFF
+		result=( Word(reg->get(t))>>31 );
+	}
+	reg->set(d,result);
 	std::cerr<<"shiftRArithmitic\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftRAVar(Regidx d,Regidx s,Regidx t){
-	reg->set(d,Word(reg->get(t))>>(reg->get(s)));
+	unsigned char shift=reg->get(s);
+	Word result;
+	//if is required here due to shift with E2 greater than type length is undefined
+	if(shift<32){
+		result=( Word(reg->get(t))>>shift );
+	}else{
+		// such if MSB of reg[t] is 0, will result 0x0 ; is 1, will get 0xFFFFFFFF
+		result=( Word(reg->get(t))>>31 );
+	}
+	reg->set(d,result);
+
 	std::cerr<<"shiftRArithmiticVar\t| "<<std::hex<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftRL(unsigned char shift,Regidx d,Regidx t){
-	reg->set(d,(reg->get(t)>>shift));
-	//TODO might have exception here
+	Word result;
+	if(shift<32){
+		result=( UWord(reg->get(t))>>shift );
+	}else{
+		result=0;
+	}
+
+	reg->set(d,result);
 	std::cerr<<"shiftRL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftRVar(Regidx d,Regidx t,Regidx s){
-	//BUG here sequence not consistent with other functions
-	reg->set(d,(reg->get(t)>>reg->get(s)));
-	//TODO might have exception here
+	unsigned char shift=reg->get(s);
+	Word result;
+	if(shift<32){
+		result=( UWord(reg->get(t))>>shift );
+	}else{
+		result=0;
+	}
+	reg->set(d,result);
 	std::cerr<<"shiftRVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 

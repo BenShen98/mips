@@ -75,7 +75,7 @@ void Memory::writeHalfword(Word addr, Word wd){
 	The input wd should be 0x00 00 00 00 00 00 00 xx, where xx is a chosen bit
 */
 void Memory::writeByte(Word addr, Word wd){
-	// to write byte, read the word contaning the byte and replace the requried byte
+	// to write byte, read the word contaning the byte and replace the required byte
 
 	if(wd&0xFFFFFF00){std::cerr << "ERROR, writing word at 0x"<<std::hex<<addr<<" with writeByte function (data on [31:8] will be ignored)" << '\n';}
 	wd=wd&0xFF; //ensure it is only the char
