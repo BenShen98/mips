@@ -237,7 +237,7 @@ void Simulator::orbitwise(Regidx d,Regidx s,Regidx t){
 }
 
 void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
-	int temp = reg->get(s) ^ reg->get(t);
+	Word temp = (reg->get(s)) ^ (reg->get(t));
 	reg->set(d,temp);
 	std::cerr<<"xor\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
@@ -418,7 +418,7 @@ void Simulator::ANDI(Regidx t,Regidx s,UWord immediate){
 }
 
 void Simulator::XORI(Regidx t,Regidx s,UWord immediate){
-	int temp = reg->get(s) ^ immediate;
+	Word temp = (reg->get(s)) ^ immediate;
 	reg->set(t,temp);
 	std::cerr<<"XORI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
@@ -618,10 +618,7 @@ void Simulator::loadhalfwordU(Regidx t, Regidx s,Word offset){
 }
 
 void Simulator::storeword(Regidx t, Regidx s,Word immediate){
-	if (immediate & 0x8000){
-		immediate = (immediate | (0xFFFF0000));
-	}
-	//check immediate overflow
+	immediate=hp::sgnExtend16(immediate);
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	mem->writeWord(byteAddr,reg->get(t));
 	std::cerr<<"storeword\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
@@ -653,7 +650,7 @@ void Simulator::loadwordright(Regidx s, Regidx t, Word immediate){
 	//first part of OR => the required word from memory | 2nd part => the register to keep
 	UWord result=(mem->readWord(byteAddr&0xfffffffc) << 8*(3-index)) | (reg->get(t) & (UWord(0xFFFFFFFF)>>8*index));
 	reg->set(t,result);
-	std::cerr<<"loadwordleft\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"loadwordright\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::loadupperImm(Regidx t,UWord immediate){

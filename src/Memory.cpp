@@ -200,7 +200,7 @@ Memory::Memory(char* instructionFile){
 		delete[] memblock;
 	}else{
 		std::cerr << "unable to read instruction bin" << '\n';
-		std::exit(-20);
+		std::exit(-21);
 	}
 
 }
