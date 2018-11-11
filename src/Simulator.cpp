@@ -317,7 +317,7 @@ void Simulator::shiftLLVar(Regidx d , Regidx s, Regidx t){
 }
 
 void Simulator::setlt(Regidx d , Regidx s, Regidx t){
-	if(((signed int)reg->get(s))<((signed int)reg->get(t))){
+	if(((Word)reg->get(s))<((Word)reg->get(t))){
 		reg->set(d,1);
 	}
 	else {
@@ -328,7 +328,7 @@ void Simulator::setlt(Regidx d , Regidx s, Regidx t){
 }
 
 void Simulator::setltu(Regidx d , Regidx s, Regidx t){
-	if(((unsigned int)reg->get(s))<((unsigned int)reg->get(t))){
+	if(((UWord)reg->get(s))<((UWord)reg->get(t))){
 		reg->set(d,1);
 	}
 	else {
@@ -634,9 +634,7 @@ void Simulator::loadupperImm(Regidx t,UWord immediate){
 }
 
 void Simulator::setlessthan_Imm_signed(Regidx t, Regidx s, Word immediate){
-	if (immediate & 0x8000){
-		immediate = (immediate | (0xFFFF0000));
-	}
+	immediate=hp::sgnExtend16(immediate);
 
 	if (Word(reg->get(s))<Word(immediate)){
 		reg->set(t,1);
