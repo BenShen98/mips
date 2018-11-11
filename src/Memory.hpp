@@ -14,6 +14,8 @@ public:
 	void writeWord(Word addr,Word wd);
 	Word readByte(Word addr);
 	void writeByte(Word addr, Word wd);
+	void writeHalfword(Word addr, Word wd);
+
 
 
   Memory(char* instructionFile);

@@ -43,13 +43,39 @@ Word Memory::readByte(Word addr){
 	return byte;
 }
 
+//least 16 bit of wd is used
+void Memory::writeHalfword(Word addr, Word wd){
+	if(addr&0x1){Memexception(addr);}
+
+	Word wordIdx=addr&0xfffffffc;
+	if(wordIdx==0x30000004){
+		if(addr&0x2){
+			//lower half WD
+			PUTC(wd);
+		}else{
+			//higher half WD
+			PUTC(0);
+		}
+	}else{
+		Word result=readWord(wordIdx);
+		if(addr&0x2){
+			//write lower WD
+			result=(result&0xffff0000) | (wd&0xffff);
+		}else{
+			//write upper WD
+			result=(result&0x0000ffff) | (wd<<16);
+		}
+		writeWord(wordIdx,result);
+	}
+}
+
 /*
 	The wd shoule have type of byte, but here is stored as Word (32 bit signed)
 	The Least Sigificant 8 bits (2bytes) of word is used to store the char
 	The input wd should be 0x00 00 00 00 00 00 00 xx, where xx is a chosen bit
 */
 void Memory::writeByte(Word addr, Word wd){
-	// to write byte, read the word contaning the byte and replace the requried byte
+	// to write byte, read the word contaning the byte and replace the required byte
 
 	if(wd&0xFFFFFF00){std::cerr << "ERROR, writing word at 0x"<<std::hex<<addr<<" with writeByte function (data on [31:8] will be ignored)" << '\n';}
 	wd=wd&0xFF; //ensure it is only the char
@@ -174,7 +200,7 @@ Memory::Memory(char* instructionFile){
 		delete[] memblock;
 	}else{
 		std::cerr << "unable to read instruction bin" << '\n';
-		std::exit(-20);
+		std::exit(-21);
 	}
 
 }
