@@ -53,7 +53,7 @@ class Simulator{
 		void shiftRVar(Regidx d,Regidx t,Regidx s);
 		//Below are immediate instructions
 		void addImm(Regidx t,Regidx s, Word immediate);
-		void addImmUnsigned(Regidx t,Regidx s,UWord immediate);
+		void addImmUnsigned(Regidx t,Regidx s,Word immediate);
 		void ANDI(Regidx t,Regidx s,UWord immediate);
 		void XORI(Regidx t,Regidx s,UWord immediate);
 		void ORI(Regidx t,Regidx s,UWord immediate);
@@ -76,10 +76,10 @@ class Simulator{
 		void jal(Word instr_index);
 		void jalr(Regidx d,Regidx s);
 		//Below are memory instructions
-		void loadbyte(Regidx t, Regidx s,Word offest);
-		void loadUbyte(Regidx t, Regidx s,Word offest);
-		void loadhalfword(Regidx t, Regidx s,Word offest);
-		void loadhalfwordU(Regidx t, Regidx s,Word offest);
+		void loadbyte(Regidx t, Regidx s,Word offset);
+		void loadUbyte(Regidx t, Regidx s,Word offset);
+		void loadhalfword(Regidx t, Regidx s,Word offset);
+		void loadhalfwordU(Regidx t, Regidx s,Word offset);
 		void loadupperImm(Regidx t,UWord immediate);
 		void loadword(Regidx t, Regidx s, Word addr);
 		void loadwordleft(Regidx s, Regidx t, Word immediate);

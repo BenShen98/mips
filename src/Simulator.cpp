@@ -480,7 +480,7 @@ void Simulator::bgtz(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
@@ -520,18 +520,18 @@ inline Word Simulator::sgnExtend8(Word input){
 	return input;
 }
 
-void Simulator::loadbyte(Regidx t, Regidx s,Word offest){
-	offest=sgnExtend16(offest);
-	Word byteAddr = Word(reg->get(s))+Word(offest);
+void Simulator::loadbyte(Regidx t, Regidx s,Word offset){
+	offset=sgnExtend16(offset);
+	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp=mem->readByte(byteAddr); //memory->readbyte can handle the correct address
 	temp=sgnExtend8(temp);
 	reg->set(t,temp);
 	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
-void Simulator::loadUbyte(Regidx t, Regidx s,Word offest){
-	offest=sgnExtend16(offest);
-	Word byteAddr = Word(reg->get(s))+Word(offest);
+void Simulator::loadUbyte(Regidx t, Regidx s,Word offset){
+	offset=sgnExtend16(offset);
+	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp=mem->readWord(byteAddr);
 	reg->set(t,temp);
 	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
@@ -557,8 +557,8 @@ void Simulator::loadword(Regidx t, Regidx s,Word immediate){
 }
 
 void Simulator::loadhalfword(Regidx t, Regidx s,Word offset){
-	offest=sgnExtend16(offest);
-	Word byteAddr = Word(reg->get(s))+Word(offest);
+	offset=sgnExtend16(offset);
+	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp = mem->readWord(byteAddr&0xfffffffd);
 	Word result;
 	if (byteAddr&0x2){
@@ -574,7 +574,7 @@ void Simulator::loadhalfword(Regidx t, Regidx s,Word offset){
 }
 
 void Simulator::loadhalfwordU(Regidx t, Regidx s,Word offset){
-	offest=sgnExtend16(offest);
+	offset=sgnExtend16(offset);
 	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp = mem->readWord(byteAddr&0xfffffffd);
 	Word result;

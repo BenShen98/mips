@@ -13,6 +13,7 @@ sw,sw,Pass,team OOP,testing all loadw and storew
 addoverflow,addoverflow,Pass,team OOP,here is for comment
 bgez,bgez,Pass,team OOP,testing bgez
 sltu,sltu,Pass,team OOP,comment
+add,add,Pass,team OOP,here is for comment
 srl,srl,Pass,team OOP,testing logical right shift
 lw,lw,Pass,team OOP,testing all loadb
 srav,srav,Pass,team OOP,testing arithmitic shift
@@ -20,8 +21,9 @@ bltz,bltz,Pass,team OOP,testing bltz
 multu_basic,multu,Pass,team OOP,comment here
 bitwiseimm,bitwise,Pass,team OOP,$2 50 $4 65535 $5 65485
 sub,sub,Pass,team OOP, overflow => math exception
+sw_cout,sw,Pass,team OOP,testing output PUTC
 lb,lb,Pass,team OOP,testing all loadb and storeb
 jump,jump,Pass,team OOP,here is for comment
 div,div,Pass,team OOP,R -1 Q 0
-sw_cout,sw,Pass,team OOP,testing output PUTC
+jr,addiu $2,Fail,team OOP,. Expect return $0, get 45
 bne,bne,Pass,team OOP,testing bne
