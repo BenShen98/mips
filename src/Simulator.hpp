@@ -68,8 +68,6 @@ class Simulator{
 		void bne(Regidx t,Regidx s,Word immediate);
 
 		inline void checkSignedOverflow(Word a, Word b, Word result);
-		inline Word sgnExtend16(Word input);
-		inline Word sgnExtend8(Word input);
 
 		//below are Jumo instruction
 		void j(Word instr_index);

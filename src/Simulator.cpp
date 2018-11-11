@@ -1,6 +1,7 @@
 #include "Simulator.hpp"
 #include <iostream>
 #include <bitset>
+#include "helper.cpp"
 Simulator::Simulator(char* instructionFile) {
 
 	mem = new Memory(instructionFile);
@@ -236,7 +237,7 @@ void Simulator::orbitwise(Regidx d,Regidx s,Regidx t){
 }
 
 void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
-	int temp = reg->get(s) ^ reg->get(t);
+	Word temp = (reg->get(s)) ^ (reg->get(t));
 	reg->set(d,temp);
 	std::cerr<<"xor\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
@@ -290,20 +291,33 @@ void Simulator::dividesigned(Regidx s, Regidx t){
 
 }
 
+// shift more /equal to the length of the type
+//http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3485.pdf, CH 5.8
 void Simulator::LLshift(unsigned char shift,Regidx t, Regidx d){
-	long temp = (long(reg->get(t))<<shift);
-	//no exception detection for unsigned op
-	reg->set(d,(int)temp);
+	UWord result;
+	if(shift<32){
+		 result=( (reg->get(t))<<shift);
+	}else{
+		result=0;
+	}
+	reg->set(d,result);
 	std::cerr<<"shiftLL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftLLVar(Regidx d , Regidx s, Regidx t){
-	reg->set(d,(reg->get(t))<<(reg->get(s)));
+	int shift=reg->get(s);
+	UWord result;
+	if(shift<32){
+		 result=( (reg->get(t))<<shift);
+	}else{
+		result=0;
+	}
+	reg->set(d,result);
 	std::cerr<<"shiftLLVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::setlt(Regidx d , Regidx s, Regidx t){
-	if(((signed int)reg->get(s))<((signed int)reg->get(t))){
+	if(((Word)reg->get(s))<((Word)reg->get(t))){
 		reg->set(d,1);
 	}
 	else {
@@ -314,7 +328,7 @@ void Simulator::setlt(Regidx d , Regidx s, Regidx t){
 }
 
 void Simulator::setltu(Regidx d , Regidx s, Regidx t){
-	if(((unsigned int)reg->get(s))<((unsigned int)reg->get(t))){
+	if(((UWord)reg->get(s))<((UWord)reg->get(t))){
 		reg->set(d,1);
 	}
 	else {
@@ -325,39 +339,63 @@ void Simulator::setltu(Regidx d , Regidx s, Regidx t){
 }
 
 void Simulator::shiftRA(unsigned char shift,Regidx d,Regidx t){
-	reg->set(d,Word(reg->get(t))>>shift);
+	Word result;
+	//if is required here due to shift with E2 greater than type length is undefined
+	if(shift<32){
+		result=( Word(reg->get(t))>>shift );
+	}else{
+		// such if MSB of reg[t] is 0, will result 0x0 ; is 1, will get 0xFFFFFFFF
+		result=( Word(reg->get(t))>>31 );
+	}
+	reg->set(d,result);
 	std::cerr<<"shiftRArithmitic\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftRAVar(Regidx d,Regidx s,Regidx t){
-	reg->set(d,Word(reg->get(t))>>(reg->get(s)));
+	unsigned char shift=reg->get(s);
+	Word result;
+	//if is required here due to shift with E2 greater than type length is undefined
+	if(shift<32){
+		result=( Word(reg->get(t))>>shift );
+	}else{
+		// such if MSB of reg[t] is 0, will result 0x0 ; is 1, will get 0xFFFFFFFF
+		result=( Word(reg->get(t))>>31 );
+	}
+	reg->set(d,result);
+
 	std::cerr<<"shiftRArithmiticVar\t| "<<std::hex<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftRL(unsigned char shift,Regidx d,Regidx t){
-	reg->set(d,(reg->get(t)>>shift));
-	//TODO might have exception here
+	Word result;
+	if(shift<32){
+		result=( UWord(reg->get(t))>>shift );
+	}else{
+		result=0;
+	}
+
+	reg->set(d,result);
 	std::cerr<<"shiftRL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftRVar(Regidx d,Regidx t,Regidx s){
-	//BUG here sequence not consistent with other functions
-	reg->set(d,(reg->get(t)>>reg->get(s)));
-	//TODO might have exception here
+	unsigned char shift=reg->get(s);
+	Word result;
+	if(shift<32){
+		result=( UWord(reg->get(t))>>shift );
+	}else{
+		result=0;
+	}
+	reg->set(d,result);
 	std::cerr<<"shiftRVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 //---------------------------------**********  I Type functions  **********------------------------------
 
-inline Word Simulator::sgnExtend16(Word input){
-	if (input & 0x8000){
-		input = (input | (0xFFFF0000));
-	}
-	return input;
-}
+
 
 void Simulator::addImm(Regidx t,Regidx s, Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 	Word temp=Word(reg->get(s))+Word(immediate);
 	checkSignedOverflow(reg->get(s),immediate,temp);
 	reg->set(t,temp);
@@ -365,7 +403,7 @@ void Simulator::addImm(Regidx t,Regidx s, Word immediate){
 }
 
 void Simulator::addImmUnsigned(Regidx t,Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 	UWord temp = (UWord)(reg->get(s)) + (UWord)immediate;
 	// no overflow by reference
 	reg->set(t,temp);
@@ -380,7 +418,7 @@ void Simulator::ANDI(Regidx t,Regidx s,UWord immediate){
 }
 
 void Simulator::XORI(Regidx t,Regidx s,UWord immediate){
-	int temp = reg->get(s) ^ immediate;
+	Word temp = (reg->get(s)) ^ immediate;
 	reg->set(t,temp);
 	std::cerr<<"XORI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
@@ -392,7 +430,7 @@ void Simulator::ORI(Regidx t,Regidx s,UWord immediate){
 }
 
 void Simulator::beq(Regidx t,Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 
 	advPC();
 	executeInstruction();
@@ -402,12 +440,12 @@ void Simulator::beq(Regidx t,Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
 void Simulator::bgez(Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 
 	advPC();
 	executeInstruction();
@@ -417,12 +455,12 @@ void Simulator::bgez(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
 void Simulator::bgezal(Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 	reg->set(31,PC+8);
 
 	advPC();
@@ -439,7 +477,7 @@ void Simulator::bgezal(Regidx s,Word immediate){
 }
 
 void Simulator::bltz(Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 
 	advPC();
 	executeInstruction();
@@ -449,12 +487,12 @@ void Simulator::bltz(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
 void Simulator::bltzal(Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 	reg->set(31,PC+8);
 
 	advPC();
@@ -465,12 +503,12 @@ void Simulator::bltzal(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
 void Simulator::bgtz(Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 
 	advPC();
 	executeInstruction();
@@ -485,7 +523,7 @@ void Simulator::bgtz(Regidx s,Word immediate){
 }
 
 void Simulator::blez(Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 
 	advPC();
 	executeInstruction();
@@ -495,11 +533,11 @@ void Simulator::blez(Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 void Simulator::bne(Regidx t,Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 
 	advPC();
 	executeInstruction();
@@ -509,28 +547,22 @@ void Simulator::bne(Regidx t,Regidx s,Word immediate){
 		PC+=immediate<<2;
 	}
 	else{
-		//do noting
+		//do nothing
 	}
 }
 
-inline Word Simulator::sgnExtend8(Word input){
-	if (input&0x80){
-		input=input|0xFFFFFF00;
-	}
-	return input;
-}
 
 void Simulator::loadbyte(Regidx t, Regidx s,Word offset){
-	offset=sgnExtend16(offset);
+	offset=hp::sgnExtend16(offset);
 	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp=mem->readByte(byteAddr); //memory->readbyte can handle the correct address
-	temp=sgnExtend8(temp);
+	temp=hp::sgnExtend8(temp);
 	reg->set(t,temp);
 	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::loadUbyte(Regidx t, Regidx s,Word offset){
-	offset=sgnExtend16(offset);
+	offset=hp::sgnExtend16(offset);
 	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp=mem->readWord(byteAddr);
 	reg->set(t,temp);
@@ -538,9 +570,7 @@ void Simulator::loadUbyte(Regidx t, Regidx s,Word offset){
 }
 
 void Simulator::storebyte(Regidx t, Regidx s,Word immediate){
-	if (immediate & 0x8000){
-		immediate = (immediate | (0xFFFF0000));
-	}
+	immediate=hp::sgnExtend16(immediate);
 	//signed extend it otherwise no change
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	mem->writeByte(byteAddr,reg->get(t));
@@ -549,7 +579,7 @@ void Simulator::storebyte(Regidx t, Regidx s,Word immediate){
 
 
 void Simulator::loadword(Regidx t, Regidx s,Word immediate){
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	Word temp=mem->readWord(byteAddr);
 	reg->set(t,temp);
@@ -557,7 +587,7 @@ void Simulator::loadword(Regidx t, Regidx s,Word immediate){
 }
 
 void Simulator::loadhalfword(Regidx t, Regidx s,Word offset){
-	offset=sgnExtend16(offset);
+	offset=hp::sgnExtend16(offset);
 	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp = mem->readWord(byteAddr&0xfffffffd);
 	Word result;
@@ -569,12 +599,12 @@ void Simulator::loadhalfword(Regidx t, Regidx s,Word offset){
 		//HIGH half word
 		result = temp>>16;
 	}
-	result=sgnExtend16(result);
+	result=hp::sgnExtend16(result);
 	reg->set(t,result);
 }
 
 void Simulator::loadhalfwordU(Regidx t, Regidx s,Word offset){
-	offset=sgnExtend16(offset);
+	offset=hp::sgnExtend16(offset);
 	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp = mem->readWord(byteAddr&0xfffffffd);
 	Word result;
@@ -588,47 +618,42 @@ void Simulator::loadhalfwordU(Regidx t, Regidx s,Word offset){
 }
 
 void Simulator::storeword(Regidx t, Regidx s,Word immediate){
-	if (immediate & 0x8000){
-		immediate = (immediate | (0xFFFF0000));
-	}
-	//check immediate overflow
+	immediate=hp::sgnExtend16(immediate);
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	mem->writeWord(byteAddr,reg->get(t));
 	std::cerr<<"storeword\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::storehalfword(Regidx t, Regidx s,Word immediate){
-	if (immediate & 0x8000){
-		immediate = (immediate | (0xFFFF0000));
-	}
-	//check immediate overflow
-	Word byteAddr = Word(reg->get(s))+Word(immediate);
-	Word result=(reg->get(t)&0xFFFF) | (mem->readWord(byteAddr)&0xffff0000);
-	mem->writeWord(byteAddr,result);
+	immediate=hp::sgnExtend16(immediate);
+	Word HWAddr = Word(reg->get(s))+Word(immediate);
+	mem->writeHalfword(HWAddr,reg->get(t)&0xFFFF);
 	std::cerr<<"storehalfword\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::loadwordleft(Regidx t, Regidx s, Word immediate){
 	//TODO not reviewed: write testcase
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	int index=byteAddr%4;
-	//first part of OR => the required word from memory | 2nd part => the register to keep
-	UWord result=((UWord)mem->readWord(byteAddr&0xfffffffc) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-index)));
+
+	//first part of OR => the required word from memory (shift word) | 2nd part => the register to keep (shift mask)
+	UWord result=( UWord(mem->readWord(byteAddr&0xfffffffc)) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-index)));
+
 	reg->set(t,result);
 	std::cerr<<"loadwordleft\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::loadwordright(Regidx t, Regidx s, Word immediate){
 	//add case !
-	immediate=sgnExtend16(immediate);
+	immediate=hp::sgnExtend16(immediate);
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	int index=byteAddr%4;
-	//first part of OR => the required word from memory | 2nd part => the register to keep
-	UWord result=((UWord)mem->readWord(byteAddr&0xfffffffc) >> 8*(3-index)) | (reg->get(t) & (UWord(0xFFFFFF00)<<8*index));
-	std::cerr << "/* error message */" <<result<< '\n';
+	//first part of OR => the required word from memory (shift word) | 2nd part => the register to keep (shift mask)
+	UWord result=( UWord(mem->readWord(byteAddr&0xfffffffc)) >> 8*(3-index) ) | (reg->get(t) & (UWord(0xFFFFFF00)<<8*index));
+
 	reg->set(t,result);
-	std::cerr<<"loadwordleft\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"loadwordright\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::loadupperImm(Regidx t,UWord immediate){
@@ -638,9 +663,7 @@ void Simulator::loadupperImm(Regidx t,UWord immediate){
 }
 
 void Simulator::setlessthan_Imm_signed(Regidx t, Regidx s, Word immediate){
-	if (immediate & 0x8000){
-		immediate = (immediate | (0xFFFF0000));
-	}
+	immediate=hp::sgnExtend16(immediate);
 
 	if (Word(reg->get(s))<Word(immediate)){
 		reg->set(t,1);
