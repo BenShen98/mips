@@ -34,6 +34,9 @@ void Memory::Memexception(Word addr){
 	The return wd should be 0x00 00 00 00 00 00 00 xx, where xx is a chosen bit
 */
 Word Memory::readByte(Word addr){
+	//Should work with GETC, but not tested
+	//TODO: NEED TEST WITH 0x30000000...2 (return 0x00 or 0xff on EOF)
+	//TODO: NEED TEST WITH 0x30000003 (return input_char or 0xff on EOF)
 	Word currentWord = readWord(addr&0xfffffffc);
 	//reminder 0 => shift 24; 1 => shift 16; 2=> shift 8; 0 => shift 0
 	Word byte=currentWord >> (8* (3-(addr%4)) ) & 0xFF;

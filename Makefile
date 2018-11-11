@@ -13,6 +13,8 @@ caseFile = $(bin)/case.csv
 CC = g++
 CPPFLAGS = -std=c++11 -W -Wall
 
+.NOTPARALLEL: $(testcases)
+
 #for cross compile on mac (with brew version)
 #brew install FiloSottile/musl-cross/musl-cross --without-x86_64 --with-mips
 #https://blog.filippo.io/easy-windows-and-linux-cross-compilers-for-macos/
