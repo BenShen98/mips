@@ -613,8 +613,8 @@ void Simulator::loadwordleft(Regidx t, Regidx s, Word immediate){
 	immediate=sgnExtend16(immediate);
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	int index=byteAddr%4;
-	//first part of OR => the required word from memory | 2nd part => the register to keep
-	UWord result=((UWord)mem->readWord(byteAddr&0xfffffffc) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-index)));
+	//first part of OR => the required word from memory (shift word) | 2nd part => the register to keep (shift mask)
+	UWord result=( UWord(mem->readWord(byteAddr&0xfffffffc)) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-index)));
 	reg->set(t,result);
 	std::cerr<<"loadwordleft\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
@@ -624,8 +624,8 @@ void Simulator::loadwordright(Regidx t, Regidx s, Word immediate){
 	immediate=sgnExtend16(immediate);
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	int index=byteAddr%4;
-	//first part of OR => the required word from memory | 2nd part => the register to keep
-	UWord result=((UWord)mem->readWord(byteAddr&0xfffffffc) >> 8*(3-index)) | (reg->get(t) & (UWord(0xFFFFFF00)<<8*index));
+	//first part of OR => the required word from memory (shift word) | 2nd part => the register to keep (shift mask)
+	UWord result=( UWord(mem->readWord(byteAddr&0xfffffffc)) >> 8*(3-index) ) | (reg->get(t) & (UWord(0xFFFFFF00)<<8*index));
 	std::cerr << "/* error message */" <<result<< '\n';
 	reg->set(t,result);
 	std::cerr<<"loadwordleft\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
