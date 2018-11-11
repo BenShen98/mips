@@ -291,15 +291,28 @@ void Simulator::dividesigned(Regidx s, Regidx t){
 
 }
 
+// shift more /equal to the length of the type
+//http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3485.pdf, CH 5.8
 void Simulator::LLshift(unsigned char shift,Regidx t, Regidx d){
-	long temp = (long(reg->get(t))<<shift);
-	//no exception detection for unsigned op
-	reg->set(d,(int)temp);
+	UWord result;
+	if(shift<32){
+		 result=( (reg->get(t))<<shift);
+	}else{
+		result=0;
+	}
+	reg->set(d,result);
 	std::cerr<<"shiftLL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::shiftLLVar(Regidx d , Regidx s, Regidx t){
-	reg->set(d,(reg->get(t))<<(reg->get(s)));
+	int shift=reg->get(s);
+	UWord result;
+	if(shift<32){
+		 result=( (reg->get(t))<<shift);
+	}else{
+		result=0;
+	}
+	reg->set(d,result);
 	std::cerr<<"shiftLLVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
