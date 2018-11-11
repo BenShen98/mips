@@ -1,7 +1,5 @@
-#sub,246,,, overflow => math exception
+#sub,254,,,
 addiu $1,$0,65535
-sll  $3,$1,15
-ori $3,$3,65535
-addu  $2,$3,1
-sub  $2,$2,1
+#this is -1
+sub  $2,$1,1
 jr    $0
