@@ -1,30 +1,30 @@
-srlv,srl,Pass,team OOP,testing logical right shift
-slt,slt,Pass,team OOP,comment
-lh_insMem,lh,Fail,team OOP,using instrcution mem for testing. Expect return 5, get 245
-sra,sra,Pass,team OOP,testing arithmitic shift
-mult_basic,mult,Pass,team OOP,$LO should return 1
-bitwiselogic,bitwise,Pass,team OOP,testing all bit wise logic
-divpro,divpro,Pass,team OOP,R 535 Q 1
-subu,subu,Pass,team OOP,normal sub should return $2 0xFF
-bgtz,bgtz,Pass,team OOP,testing bgtz
-shiftcase,shiftleft,Pass,team OOP,left shift no exceptions
-lwr_insMem,lwl,Fail,team OOP,using instrcution mem for testing. Expect return 65, get 244
-divu,divu,Pass,team OOP,R 200 Q 6
-sw,sw,Pass,team OOP,testing all loadw and storew
-addoverflow,addoverflow,Pass,team OOP,here is for comment
-bgez,bgez,Pass,team OOP,testing bgez with negative output
-sltu,sltu,Pass,team OOP,comment
-add,add,Pass,team OOP,here is for comment
-srl,srl,Pass,team OOP,testing logical right shift
-lw,lw,Pass,team OOP,testing loadword
-srav,srav,Fail,team OOP,testing arithmitic shift. Expect return 255, get 0
-bltz,bltz,Pass,team OOP,testing bltz
-multu_basic,multu,Pass,team OOP,comment here
-bitwiseimm,bitwise,Pass,team OOP,$2 50 $4 65535 $5 65485
-sub,sub,Pass,team OOP,
-lwl_insMem,lwl,Fail,team OOP,using instrcution mem for testing. Expect return 0, get 245
-lb,lb,Pass,team OOP,testing all loadb and storeb
-jump,jump,Pass,team OOP,here is for comment
-div,div,Pass,team OOP,R -1 Q 0
-sw_cout,sw,Pass,team OOP,testing output PUTC
-bne,bne,Pass,team OOP,testing bne
+srlv,srl,Fail,team OOP,testing logical right shift. Expect return 255, get 127
+slt,slt,Fail,team OOP,comment. Expect return 1, get 127
+lh_insMem,lh,Fail,team OOP,using instrcution mem for testing. Expect return 5, get 127
+sra,sra,Fail,team OOP,testing arithmitic shift. Expect return 255, get 127
+mult_basic,mult,Fail,team OOP,$LO should return 1. Expect return 1, get 127
+bitwiselogic,bitwise,Fail,team OOP,testing all bit wise logic. Expect return 255, get 127
+divpro,divpro,Fail,team OOP,R 535 Q 1. Expect return 1, get 127
+subu,subu,Fail,team OOP,normal sub should return $2 0xFF. Expect return 255, get 127
+bgtz,bgtz,Fail,team OOP,testing bgtz. Expect return 100, get 127
+shiftcase,shiftleft,Fail,team OOP,left shift no exceptions. Expect return 0, get 127
+lwr_insMem,lwl,Fail,team OOP,using instrcution mem for testing. Expect return 65, get 127
+divu,divu,Fail,team OOP,R 200 Q 6. Expect return 6, get 127
+sw,sw,Fail,team OOP,testing all loadw and storew. Expect return 101, get 127. Expect cout 0x65, get 0x
+addoverflow,addoverflow,Fail,team OOP,here is for comment. Expect return 0, get 127
+bgez,bgez,Fail,team OOP,testing bgez with negative output. Expect return 156, get 127
+sltu,sltu,Fail,team OOP,comment. Expect return 0, get 127
+add,add,Fail,team OOP,here is for comment. Expect return 0, get 127
+srl,srl,Fail,team OOP,testing logical right shift. Expect return 255, get 127
+lw,lw,Fail,team OOP,testing loadword. Expect return 100, get 127
+srav,srav,Fail,team OOP,testing arithmitic shift. Expect return 255, get 127
+bltz,bltz,Fail,team OOP,testing bltz. Expect return 0, get 127
+multu_basic,multu,Fail,team OOP,comment here. Expect return 1, get 127
+bitwiseimm,bitwise,Fail,team OOP,$2 50 $4 65535 $5 65485. Expect return 254, get 127
+sub,sub,Fail,team OOP,. Expect return 254, get 127
+lwl_insMem,lwl,Fail,team OOP,using instrcution mem for testing. Expect return 0, get 127
+lb,lb,Fail,team OOP,testing all loadb and storeb. Expect return 16, get 127
+jump,jump,Fail,team OOP,here is for comment. Expect return 20, get 127
+div,div,Fail,team OOP,R -1 Q 0. Expect return 0, get 127
+sw_cout,sw,Fail,team OOP,testing output PUTC. Expect return 255, get 127. Expect cout 0x43ff, get 0x
+bne,bne,Fail,team OOP,testing bne. Expect return 0, get 127

@@ -21,9 +21,9 @@ public:
   Memory(char* instructionFile);
 
 private:
-	Word memInstruction[0x10000]={0}; //0x1000000>>2 SEE note
+	Word memInstruction[0x400000]={0}; //0x1000000>>2 SEE note
   // Word const  memInstruction[0x10000]={0}; //0x1000000>>2 SEE note
-	Word memRW[0x40000]={0};	//0x4000000>>2 SEE note
+	Word memRW[0x1000000]={0};	//0x4000000>>2 SEE note
 
 	void Memexception(Word addr);
 
