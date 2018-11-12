@@ -3,7 +3,7 @@
 #
 
 
-
+# cat here genearting a unwanted \n
 cat bin/case.csv | while IFS=, read -r fileName instr expReturn inchar expOutChar message1; do
 	state=Pass
 
@@ -15,16 +15,16 @@ cat bin/case.csv | while IFS=, read -r fileName instr expReturn inchar expOutCha
 	if [[ $exitcode != $expReturn ]]; then
 		# $? here is not the ? from exit code
 		# message1="$message1. Expect return $expReturn, get $?"
-		message1="$message1. Expect return $expReturn, get $exitcode"
+		message1="$message1. Expect return $expReturn get $exitcode"
 		state=Fail
 	fi
 
 	if  [[ $cout != $expOutChar ]]; then
-		message1="$message1. Expect cout 0x$expOutChar, get 0x$cout"
+		message1="$message1. Expect cout 0x$expOutChar get 0x$cout"
 		state=Fail
 	fi
 
-
-	echo "$fileName,$instr,$state,team OOP,$message1"
-	# printf "%s,%s,%s,team OOP,%s \n" $fileName $instr $state $message1
+	message1=${message1//$'\r'/}
+	#echo "$fileName,$instr,$state,team OOP,$message1"
+	printf "%s,%s,%s,team OOP,%s \n" $fileName $instr $state "${message1}"
 done
