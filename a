@@ -1,7 +1,6 @@
-./bin/mips_testbench ./bin/mips_simulator
 srlv,srl,Pass,team OOP,testing logical right shift
 slt,slt,Pass,team OOP,comment
-lh_insMem,lh,Pass,team OOP,using instrcution mem for testing
+lh_insMem,lh,Fail,team OOP,using instrcution mem for testing. Expect return 5, get 245
 sra,sra,Pass,team OOP,testing arithmitic shift
 mult_basic,mult,Pass,team OOP,$LO should return 1
 bitwiselogic,bitwise,Pass,team OOP,testing all bit wise logic
@@ -9,7 +8,7 @@ divpro,divpro,Pass,team OOP,R 535 Q 1
 subu,subu,Pass,team OOP,normal sub should return $2 0xFF
 bgtz,bgtz,Pass,team OOP,testing bgtz
 shiftcase,shiftleft,Pass,team OOP,left shift no exceptions
-lwr_insMem,lwl,Pass,team OOP,using instrcution mem for testing
+lwr_insMem,lwl,Fail,team OOP,using instrcution mem for testing. Expect return 65, get 244
 divu,divu,Pass,team OOP,R 200 Q 6
 sw,sw,Pass,team OOP,testing all loadw and storew
 addoverflow,addoverflow,Pass,team OOP,here is for comment
@@ -18,12 +17,12 @@ sltu,sltu,Pass,team OOP,comment
 add,add,Pass,team OOP,here is for comment
 srl,srl,Pass,team OOP,testing logical right shift
 lw,lw,Pass,team OOP,testing loadword
-srav,srav,Pass,team OOP,testing arithmitic shift
+srav,srav,Fail,team OOP,testing arithmitic shift. Expect return 255, get 0
 bltz,bltz,Pass,team OOP,testing bltz
 multu_basic,multu,Pass,team OOP,comment here
 bitwiseimm,bitwise,Pass,team OOP,$2 50 $4 65535 $5 65485
 sub,sub,Pass,team OOP,
-lwl_insMem,lwl,Pass,team OOP,using instrcution mem for testing
+lwl_insMem,lwl,Fail,team OOP,using instrcution mem for testing. Expect return 0, get 245
 lb,lb,Pass,team OOP,testing all loadb and storeb
 jump,jump,Pass,team OOP,here is for comment
 div,div,Pass,team OOP,R -1 Q 0
