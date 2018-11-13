@@ -31,10 +31,10 @@ class Simulator{
 		void addu(Regidx d,Regidx s,Regidx t);
 		void sub(Regidx d,Regidx s,Regidx t);
 		void subu(Regidx d,Regidx s,Regidx t);
-		void multiply(Regidx s,Regidx t);
-		void multiplyunsigned(Regidx s,Regidx t);
-		void dividesigned(Regidx s,Regidx t);
-		void divideunsigned(Regidx s,Regidx t);
+		void mult(Regidx s,Regidx t);
+		void multu(Regidx s,Regidx t);
+		void div(Regidx s,Regidx t);
+		void divu(Regidx s,Regidx t);
 		void jr(Regidx s);
 		void andbitwise(Regidx d,Regidx s,Regidx t);
 		void orbitwise(Regidx d,Regidx s,Regidx t);
@@ -43,17 +43,17 @@ class Simulator{
 		void mflo(Regidx d );
 		void mtlo(Regidx d);
 		void mthi(Regidx d);
-		void LLshift(unsigned char shift,Regidx t, Regidx d);
-		void shiftLLVar(Regidx d , Regidx s, Regidx t);
-		void setlt(Regidx d , Regidx s, Regidx t);
-		void setltu(Regidx d , Regidx s, Regidx t);
-		void shiftRA(unsigned char shift,Regidx d,Regidx t);
-		void shiftRAVar(Regidx d, Regidx s,Regidx t);
-		void shiftRL(unsigned char shift,Regidx d,Regidx t);
-		void shiftRVar(Regidx d,Regidx t,Regidx s);
+		void sll(unsigned char shift,Regidx t, Regidx d);
+		void sllv(Regidx d , Regidx s, Regidx t);
+		void slt(Regidx d , Regidx s, Regidx t);
+		void sltu(Regidx d , Regidx s, Regidx t);
+		void sra(unsigned char shift,Regidx d,Regidx t);
+		void srav(Regidx d, Regidx s,Regidx t);
+		void srl(unsigned char shift,Regidx d,Regidx t);
+		void srlv(Regidx d,Regidx t,Regidx s);
 		//Below are immediate instructions
-		void addImm(Regidx t,Regidx s, Word immediate);
-		void addImmUnsigned(Regidx t,Regidx s,Word immediate);
+		void addi(Regidx t,Regidx s, Word immediate);
+		void addiu(Regidx t,Regidx s,Word immediate);
 		void ANDI(Regidx t,Regidx s,UWord immediate);
 		void XORI(Regidx t,Regidx s,UWord immediate);
 		void ORI(Regidx t,Regidx s,UWord immediate);
@@ -74,19 +74,19 @@ class Simulator{
 		void jal(Word instr_index);
 		void jalr(Regidx d,Regidx s);
 		//Below are memory instructions
-		void loadbyte(Regidx t, Regidx s,Word offset);
-		void loadUbyte(Regidx t, Regidx s,Word offset);
-		void loadhalfword(Regidx t, Regidx s,Word offset);
-		void loadhalfwordU(Regidx t, Regidx s,Word offset);
-		void loadupperImm(Regidx t,UWord immediate);
-		void loadword(Regidx t, Regidx s, Word addr);
-		void loadwordleft(Regidx s, Regidx t, Word immediate);
-		void loadwordright(Regidx s, Regidx t, Word immediate);
-		void storebyte(Regidx t, Regidx s, Word immediate);
-		void storehalfword(Regidx t, Regidx s,Word immediate);
-		void storeword(Regidx t, Regidx s, Word immediate);
-		void setlessthan_Imm_signed(Regidx t, Regidx s, Word immediate);
-		void setlessthan_Imm_Usigned(Regidx t, Regidx s, UWord immediate);
+		void lb(Regidx t, Regidx s,Word offset);
+		void lbu(Regidx t, Regidx s,Word offset);
+		void lh(Regidx t, Regidx s,Word offset);
+		void lhu(Regidx t, Regidx s,Word offset);
+		void lui(Regidx t,UWord immediate);
+		void lw(Regidx t, Regidx s, Word addr);
+		void lwl(Regidx s, Regidx t, Word immediate);
+		void lwr(Regidx s, Regidx t, Word immediate);
+		void sb(Regidx t, Regidx s, Word immediate);
+		void sh(Regidx t, Regidx s,Word immediate);
+		void sw(Regidx t, Regidx s, Word immediate);
+		void slti(Regidx t, Regidx s, Word immediate);
+		void sltiu(Regidx t, Regidx s, UWord immediate);
 
 		inline signed char word2Sbyte(Word word, int idx);
 
