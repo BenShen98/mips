@@ -315,7 +315,7 @@ void Simulator::sll(unsigned char shift,Regidx t, Regidx d){
 }
 
 void Simulator::sllv(Regidx d , Regidx s, Regidx t){
-	int shift=reg->get(s);
+	int shift=reg->get(s) & 0x1F;
 	UWord result;
 	if(shift<32){
 		 result=( (reg->get(t))<<shift);
@@ -362,7 +362,7 @@ void Simulator::sra(unsigned char shift,Regidx d,Regidx t){
 }
 
 void Simulator::srav(Regidx d,Regidx s,Regidx t){
-	unsigned char shift=reg->get(s);
+	int shift=reg->get(s) & 0x1F;
 	Word result;
 	//if is required here due to shift with E2 greater than type length is undefined
 	if(shift<32){
@@ -389,7 +389,7 @@ void Simulator::srl(unsigned char shift,Regidx d,Regidx t){
 }
 
 void Simulator::srlv(Regidx d,Regidx t,Regidx s){
-	unsigned char shift=reg->get(s);
+	int shift=reg->get(s) & 0x1F;
 	Word result;
 	if(shift<32){
 		result=( UWord(reg->get(t))>>shift );
