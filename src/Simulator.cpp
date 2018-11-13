@@ -2,6 +2,9 @@
 #include <iostream>
 #include <bitset>
 #include "helper.cpp"
+
+typedef unsigned long Ulong;
+
 Simulator::Simulator(char* instructionFile) {
 
 	mem = new Memory(instructionFile);
@@ -269,11 +272,15 @@ void Simulator::multiply(Regidx s,Regidx t){
 }
 
 void Simulator::multiplyunsigned(Regidx s,Regidx t){
-	//no exception here checked with PDF
-	long temp = long(reg->get(s))*long(reg->get(t));
+	//Careful here, when type convert from SIGNED int -> UNSIGNED long, C++ will do sign extension, use type cast to prevent it
+	Ulong a,b,temp;
+	a=UWord(reg->get(s));
+	b=UWord(reg->get(t));
+	temp=a*b;
+	std::cerr << std::hex<<temp << '\n';
 	reg->setLO(temp&0xFFFFFFFF);
 	reg->setHI(UWord(temp>>32));
-	std::cerr<<"multiplyunsigned\t| "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"multiplyunsigned\t| 0x"<<std::hex<<reg->getHI()<<" : "<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::divideunsigned(Regidx s, Regidx t){
