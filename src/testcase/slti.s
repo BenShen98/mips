@@ -1,4 +1,4 @@
-#slt,1,,,should return 1
-lui $1,65535
-slt $2,$1,1
+#slti,1,,,should return 1
+lui $14,65535
+slti $2,$14,1
 jr $0

@@ -1,4 +1,4 @@
 #shiftleft,0,,,left shift no exceptions
-addiu $1,$0,65535
-sllv  $2,$1,$1
+addiu $14,$0,65535
+sllv  $2,$14,$14
 jr $0

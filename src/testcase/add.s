@@ -1,4 +1,4 @@
 #add,6,,,simple add
-addi $1,$0,5
-add  $2,$1,1
+addi $14,$0,5
+add  $2,$14,1
 jr   $0

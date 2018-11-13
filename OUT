@@ -1,19 +1,17 @@
 ./bin/mips_testbench ./bin/mips_simulator
 srl,srl,Pass,team OOP,testing logical right shift 
 srav,srav,Pass,team OOP,testing arithmitic shift 
-multulqy,multulqy,Fail,team OOP,comment. Expect return 65343 get 0. Expect cout 0x get 0x000000000080ff3f 
 slt,slt,Pass,team OOP,comment 
-lh_insMem,lh,Pass,team OOP,using instrcution mem for testing 
 beq,beq,Pass,team OOP,testing beq should return 4 
 mthi,mthi,Pass,team OOP,from lqy testcode 
 mtlo,mtlo,Pass,team OOP,should return 10 
 mult_basic,mult,Pass,team OOP,$LO should return 1 
 blez,bltz,Pass,team OOP,testing bltz should return 1 
+sltiu,sltiu,Pass,team OOP,should return 0 
 divpro,divpro,Pass,team OOP,R 535 Q 1 
 subu,subu,Pass,team OOP,normal sub should return $2 0xFF 
 bgtz,bgtz,Pass,team OOP,testing bgtz with positive output 
 shiftcase,shiftleft,Pass,team OOP,left shift no exceptions 
-lwr_insMem,lwl,Pass,team OOP,using instrcution mem for testing 
 divu,divu,Pass,team OOP,R 200 Q 6 
 srlv,srl,Pass,team OOP,testing logical right shift 
 sltu,sltu,Pass,team OOP,comment 
@@ -29,11 +27,10 @@ sb,sb,Pass,team OOP,testing all loadb and storeb
 sw,sw,Pass,team OOP,testing all loadw and storew 
 addu,addu,Pass,team OOP,simple addu 
 bltz,bltz,Pass,team OOP,testing bltz should return 0 
-slti,slt,Pass,team OOP,should return 1 
+slti,slti,Pass,team OOP,should return 1 
 multu_basic,multu,Pass,team OOP,comment here 
 bitwise,bitwise,Pass,team OOP,testing all bit wise logic 
 bltzal,bltzal,Pass,team OOP,testing bgez should return 99 
-lwl_insMem,lwl,Pass,team OOP,using instrcution mem for testing 
 lb,lb,Pass,team OOP,testing all loadb and storeb 
 jump,jump,Pass,team OOP,here is for comment 
 div,div,Pass,team OOP,R -1 Q 0 
