@@ -1,0 +1,5 @@
+#srlv2,255,,,testing logical right shift
+lui $14,65535
+addiu $3,$0,200
+srlv $2,$14,$3
+jr $0
