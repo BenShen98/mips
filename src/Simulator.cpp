@@ -121,9 +121,9 @@ void Simulator::Rswitch(){
 		case 0b100101: orbitwise(d,s,t);break;
 		case 0b100110: xorbitwise(d,s,t);break;
 		case 0b010000: mfhi(d);break;
-		case 0b010001: mthi(d);break;
+		case 0b010001: mthi(s);break;
 		case 0b010010: mflo(d);break;
-		case 0b010011: mtlo(d);break;
+		case 0b010011: mtlo(s);break;
 		case 0b000000: LLshift(shift,t,d);break;
 		case 0b000100: shiftLLVar(d,s,t);break;
 		case 0b101010: setlt(d,s,t);break;
@@ -242,12 +242,15 @@ void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
 	std::cerr<<"xor\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
-void Simulator::mthi(Regidx d){
-	reg->setHI(reg->get(d));
+void Simulator::mthi(Regidx s){
+	reg->setHI(reg->get(s));
+	std::cerr<<"mthi\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
-void Simulator::mtlo(Regidx d){
-	reg->setLO(reg->get(d));
+void Simulator::mtlo(Regidx s){
+	reg->setLO(reg->get(s));
+	std::cerr<<"mtlo\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+
 }
 
 void Simulator::mfhi(Regidx d ){

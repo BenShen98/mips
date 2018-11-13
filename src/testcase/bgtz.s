@@ -1,4 +1,4 @@
-#bgtz,100,,,testing bgtz
+#bgtz,100,,,testing bgtz with positive output
 addiu $1,$0,300
 addiu $3,$0,100
 loop: sub  $1,$1,$3

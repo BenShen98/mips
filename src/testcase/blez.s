@@ -1,6 +1,6 @@
-#bltz,0,,,testing bltz should return 0
+#bltz,1,,,testing bltz should return 1
 addi $2,$0,65533
 # $2 is -3
 loop: addi $2,$2,1
-bltz  $2,loop
+blez  $2,loop
 jr $0
