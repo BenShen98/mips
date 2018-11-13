@@ -18,6 +18,7 @@ sltu,sltu,Pass,team OOP,comment
 addoverflow,addiu,Pass,team OOP,checking for immediate signed extension 
 sub,sub,Pass,team OOP, 
 bgez,bgez,Pass,team OOP,testing bgez with negative output 
+sh,sh,Pass,team OOP,should return 8 
 sra,sra,Pass,team OOP,testing arithmitic shift 
 bgezal,bgezal,Pass,team OOP,testing bgez should return 200 
 sll,sll,Pass,team OOP,testing logical left shift 
@@ -36,4 +37,5 @@ jump,jump,Pass,team OOP,here is for comment
 div,div,Pass,team OOP,R -1 Q 0 
 sw_cout,sw,Pass,team OOP,testing output PUTC 
 sllv,sllv,Pass,team OOP,testing logical left shift variable 
+srlv2,srlv2,Fail,team OOP,testing logical right shift. Expect return 255 get 0 
 lw,lw,Pass,team OOP,testing loadword 
