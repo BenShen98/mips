@@ -20,10 +20,13 @@ Word Register::getHI(){
 
 Word Register::setHI(Word value){
 	reg[33]=value;
+	std::cerr << "reg[HI] is set to 0x"<<std::hex<<value << '\n';
 }
 
 Word Register::setLO(Word value){
 	reg[32]=value;
+	std::cerr << "reg[LO] is set to 0x"<<std::hex<<value << '\n';
+
 }
 
 Word Register::getLO(){

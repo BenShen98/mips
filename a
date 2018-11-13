@@ -1,4 +1,5 @@
 ./bin/mips_testbench ./bin/mips_simulator
+<<<<<<< HEAD
 srl,srl,Pass,team OOP,testing logical right shift 
 srav,srav,Pass,team OOP,testing arithmitic shift 
 multulqy,multulqy,Fail,team OOP,comment. Expect return 65343 get 0. Expect cout 0x get 0x00000000008000c0 
@@ -31,9 +32,39 @@ bltz,bltz,Pass,team OOP,testing bltz should return 0
 multu_basic,multu,Pass,team OOP,comment here 
 bitwise,bitwise,Pass,team OOP,testing all bit wise logic 
 bltzal,bltzal,Pass,team OOP,testing bgez should return 99 
+=======
+srlv,srl,Pass,team OOP,testing logical right shift 
+slt,slt,Pass,team OOP,comment 
+lh_insMem,lh,Pass,team OOP,using instrcution mem for testing 
+sra,sra,Pass,team OOP,testing arithmitic shift 
+mult_basic,mult,Pass,team OOP,$LO should return 1 
+bitwiselogic,bitwise,Pass,team OOP,testing all bit wise logic 
+divpro,divpro,Pass,team OOP,R 535 Q 1 
+subu,subu,Pass,team OOP,normal sub should return $2 0xFF 
+bgtz,bgtz,Pass,team OOP,testing bgtz 
+shiftcase,shiftleft,Pass,team OOP,left shift no exceptions 
+lwr_insMem,lwl,Pass,team OOP,using instrcution mem for testing 
+divu,divu,Pass,team OOP,R 200 Q 6 
+sw,sw,Pass,team OOP,testing all loadw and storew 
+addoverflow,addoverflow,Pass,team OOP,here is for comment 
+bgez,bgez,Pass,team OOP,testing bgez with negative output 
+sltu,sltu,Pass,team OOP,comment 
+add,add,Pass,team OOP,here is for comment 
+srl,srl,Pass,team OOP,testing logical right shift 
+lw,lw,Pass,team OOP,testing loadword 
+srav,srav,Pass,team OOP,testing arithmitic shift 
+bltz,bltz,Pass,team OOP,testing bltz 
+multu_basic,multu,Pass,team OOP,comment here 
+bitwiseimm,bitwise,Pass,team OOP,$2 50 $4 65535 $5 65485 
+sub,sub,Pass,team OOP, 
+>>>>>>> 1174e86d4b74998a6112a6d9b6659acb0b480c40
 lwl_insMem,lwl,Pass,team OOP,using instrcution mem for testing 
 lb,lb,Pass,team OOP,testing all loadb and storeb 
 jump,jump,Pass,team OOP,here is for comment 
 div,div,Pass,team OOP,R -1 Q 0 
 sw_cout,sw,Pass,team OOP,testing output PUTC 
+<<<<<<< HEAD
 lw,lw,Pass,team OOP,testing loadword 
+=======
+bne,bne,Pass,team OOP,testing bne 
+>>>>>>> 1174e86d4b74998a6112a6d9b6659acb0b480c40
