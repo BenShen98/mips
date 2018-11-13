@@ -4,7 +4,7 @@ srav,srav,Pass,team OOP,testing arithmitic shift
 slt,slt,Pass,team OOP,comment 
 beq,beq,Pass,team OOP,testing beq should return 4 
 mthi,mthi,Pass,team OOP,from lqy testcode 
-mtlo,mtlo,Pass,team OOP,should return 10 
+lbu,lbu,Fail,team OOP,should return 0. Expect return 0 get 245 
 mult_basic,mult,Pass,team OOP,$LO should return 1 
 blez,bltz,Pass,team OOP,testing bltz should return 1 
 sltiu,sltiu,Pass,team OOP,should return 0 
@@ -32,6 +32,7 @@ bltz,bltz,Pass,team OOP,testing bltz should return 0
 slti,slti,Pass,team OOP,should return 1 
 multu_basic,multu,Pass,team OOP,comment here 
 bitwise,bitwise,Pass,team OOP,testing all bit wise logic 
+mtlo,mtlo,Pass,team OOP,should return 10 
 bltzal,bltzal,Pass,team OOP,testing bgez should return 99 
 lb,lb,Pass,team OOP,testing all loadb and storeb 
 jump,jump,Pass,team OOP,here is for comment 
