@@ -574,7 +574,7 @@ void Simulator::lb(Regidx t, Regidx s,Word offset){
 void Simulator::lbu(Regidx t, Regidx s,Word offset){
 	offset=hp::sgnExtend16(offset);
 	Word byteAddr = Word(reg->get(s))+Word(offset);
-	Word temp=mem->readWord(byteAddr);
+	Word temp=mem->readByte(byteAddr);
 	reg->set(t,temp);
 	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
