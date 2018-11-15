@@ -617,6 +617,7 @@ void Simulator::lhu(Regidx t, Regidx s,Word offset){
 	offset=hp::sgnExtend16(offset);
 	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp = mem->readWord(byteAddr&0xfffffffd);
+	//TODO discuss with ben !!
 	Word result;
 	if (byteAddr&0x2){
 		result = temp &0xFFFF;
