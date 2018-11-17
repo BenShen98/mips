@@ -2,14 +2,14 @@
 srl,srl,Pass,team OOP,testing logical right shift 
 srav,srav,Pass,team OOP,testing arithmitic shift 
 slt,slt,Pass,team OOP,comment 
-lhu,lhu,Fail,team OOP,should return 89. Expect return 89 get 245 
+lhu,lhu,Pass,team OOP,should return 89 
 beq,beq,Pass,team OOP,testing beq should return 4 
 mthi,mthi,Pass,team OOP,from lqy testcode 
 lbu,lbu,Pass,team OOP,should return 255 
 mult_basic,mult,Pass,team OOP,$LO should return 1 
 blez,bltz,Pass,team OOP,testing bltz should return 1 
 sltiu,sltiu,Pass,team OOP,should return 0 
-sllv,sllv,Pass,team OOP,testing logical left shift variable 
+sll,sll,Pass,team OOP,testing logical left shift 
 divpro,divpro,Pass,team OOP,R 535 Q 1 
 encrypt,password_encrypting,Pass,team OOP, testing encrypting 
 subu,subu,Pass,team OOP,normal sub should return $2 0xFF 
@@ -21,6 +21,7 @@ sltu,sltu,Pass,team OOP,comment
 addoverflow,addiu,Pass,team OOP,checking for immediate signed extension 
 sub,sub,Pass,team OOP, 
 bgez,bgez,Pass,team OOP,testing bgez with negative output 
+lwr,lwr,Pass,team OOP,should return 21 
 sh,sh,Pass,team OOP,should return 8 
 sra,sra,Pass,team OOP,testing arithmitic shift 
 bgezal,bgezal,Pass,team OOP,testing bgez should return 200 
@@ -29,6 +30,7 @@ add,add,Pass,team OOP,simple add
 bitwiseimm,bitwise,Pass,team OOP,$2 50 $4 65535 $5 65485 
 sb,sb,Pass,team OOP,testing all loadb and storeb 
 sw,sw,Pass,team OOP,testing all loadw and storew 
+lhu_memexception,lhu,Pass,team OOP,should return -11(245) 
 addu,addu,Pass,team OOP,simple addu 
 bltz,bltz,Pass,team OOP,testing bltz should return 0 
 slti,slti,Pass,team OOP,should return 1 
@@ -40,6 +42,7 @@ lb,lb,Pass,team OOP,testing all loadb and storeb
 jump,jump,Pass,team OOP,here is for comment 
 div,div,Pass,team OOP,R -1 Q 0 
 sw_cout,sw,Pass,team OOP,testing output PUTC 
-sll,sll,Pass,team OOP,testing logical left shift 
+lwl,lwl,Pass,team OOP,should return 89 
 srlv2,srlv2,Pass,team OOP,testing logical right shift 
 lw,lw,Pass,team OOP,testing loadword 
+sllv,sllv,Pass,team OOP,testing logical left shift variable 
