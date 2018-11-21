@@ -1,48 +1,66 @@
 ./bin/mips_testbench ./bin/mips_simulator
-srl,srl,Pass,team OOP,testing logical right shift 
-srav,srav,Pass,team OOP,testing arithmitic shift 
-slt,slt,Pass,team OOP,comment 
+multu_cc,multu_cc,Pass,team OOP,should return 254 with no errors 
+slt_cc,slt_cc,Pass,team OOP,set less than should return 0 
+slt,slt,Pass,team OOP,set less than  
+divu_cc,divu_cc,Fail,team OOP,Q  81. Expect return 81 get 133 
 lhu,lhu,Pass,team OOP,should return 89 
+sltu,sltu,Pass,team OOP,comment 
+div_cc,div_cc,Fail,team OOP,dividing 0. Expect return 0 get 136 
 beq,beq,Pass,team OOP,testing beq should return 4 
-mthi,mthi,Pass,team OOP,from lqy testcode 
+mthi,mthi,Pass,team OOP,should return 2 
+lb_cc,lb_cc,Pass,team OOP,check loading signed or not 
 lbu,lbu,Pass,team OOP,should return 255 
-mult_basic,mult,Pass,team OOP,$LO should return 1 
 blez,bltz,Pass,team OOP,testing bltz should return 1 
+mult_cc,mult_cc,Pass,team OOP,$LO should return 1 
 sltiu,sltiu,Pass,team OOP,should return 0 
 sll,sll,Pass,team OOP,testing logical left shift 
 divpro,divpro,Pass,team OOP,R 535 Q 1 
 encrypt,password_encrypting,Pass,team OOP, testing encrypting 
 subu,subu,Pass,team OOP,normal sub should return $2 0xFF 
+mult,mult,Pass,team OOP,$LO should return 25 
 bgtz,bgtz,Pass,team OOP,testing bgtz with positive output 
-shiftcase,shiftleft,Pass,team OOP,left shift no exceptions 
 divu,divu,Pass,team OOP,R 200 Q 6 
-srlv,srl,Pass,team OOP,testing logical right shift 
-sltu,sltu,Pass,team OOP,comment 
+srl,srl,Pass,team OOP,testing logical right shift 
+mtlo,mtlo,Pass,team OOP,should return 10 
+slti_cc,slti_cc,Pass,team OOP,should return 1 
 addoverflow,addiu,Pass,team OOP,checking for immediate signed extension 
+add_cc,add_cc,Pass,team OOP,math exception return -10 
 sub,sub,Pass,team OOP, 
-bgez,bgez,Pass,team OOP,testing bgez with negative output 
+addu_cc,addu,Pass,team OOP,simple addu corner case 
+sh_cc,sh_cc,Pass,team OOP,mem exception 245 
 lwr,lwr,Pass,team OOP,should return 21 
+sb_cc,sb_cc,Pass,team OOP,store byte to invaild addr -11 
+sra_cc1,sra_cc1,Pass,team OOP,testing arithmitic shift 
 sh,sh,Pass,team OOP,should return 8 
-sra,sra,Pass,team OOP,testing arithmitic shift 
+sllv_cc,sllv_cc,Pass,team OOP,shifting with large amount 
 bgezal,bgezal,Pass,team OOP,testing bgez should return 200 
 lb2,lb2,Pass,team OOP,should return 1 
+sw,sw,Pass,team OOP,testing all loadw and storew 
 add,add,Pass,team OOP,simple add 
 bitwiseimm,bitwise,Pass,team OOP,$2 50 $4 65535 $5 65485 
-sb,sb,Pass,team OOP,testing all loadb and storeb 
-sw,sw,Pass,team OOP,testing all loadw and storew 
+sb,sb,Pass,team OOP,store byte 
+lw,lw,Pass,team OOP,testing loadword 
 lhu_memexception,lhu,Pass,team OOP,should return -11(245) 
 addu,addu,Pass,team OOP,simple addu 
 bltz,bltz,Pass,team OOP,testing bltz should return 0 
+srav,srav,Pass,team OOP,testing arithmitic shift 
 slti,slti,Pass,team OOP,should return 1 
-multu_basic,multu,Pass,team OOP,comment here 
+srlv,srl,Pass,team OOP,testing logical right shift 
 bitwise,bitwise,Pass,team OOP,testing all bit wise logic 
-mtlo,mtlo,Pass,team OOP,should return 10 
+bgez,bgez,Pass,team OOP,testing bgez with negative output 
+lw_getc,lw_getc,Pass,team OOP,testing loadword getc 
 bltzal,bltzal,Pass,team OOP,testing bgez should return 99 
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
 lb,lb,Pass,team OOP,testing all loadb and storeb 
+sra_cc,sra_cc,Pass,team OOP,testing arithmitic shift 
 jump,jump,Pass,team OOP,here is for comment 
+multu,multu,Pass,team OOP,should return 36 
 div,div,Pass,team OOP,R -1 Q 0 
+lw_cc,lw_cc,Pass,team OOP,mem exception addr $?245 
 sw_cout,sw,Pass,team OOP,testing output PUTC 
 lwl,lwl,Pass,team OOP,should return 89 
 srlv2,srlv2,Pass,team OOP,testing logical right shift 
-lw,lw,Pass,team OOP,testing loadword 
-sllv,sllv,Pass,team OOP,testing logical left shift variable 
+lbu_cc,lbu_cc,Pass,team OOP,should return 255 
+sra,sra,Pass,team OOP,testing arithmitic shift 
+sllv,sllv,Pass,team OOP,logical left shift should return 20 
+sb_putc,sb_putc,Pass,team OOP,testing store byte 

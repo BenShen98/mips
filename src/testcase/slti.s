@@ -1,4 +1,4 @@
 #slti,1,,,should return 1
-lui $14,65535
-slti $2,$14,1
+addu $3,$0,6
+slti $2,$3,7
 jr $0

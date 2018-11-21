@@ -1,4 +1,4 @@
-#sra,255,,,testing arithmitic shift
-lui $14,65535
-sra $2,$14,17
+#sra,4,,,testing arithmitic shift
+addiu $3,$0,64
+sra $2,$3,4
 jr $0

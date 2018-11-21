@@ -1,5 +1,5 @@
-#sllv,0,,,testing logical left shift variable
-lui $14,65535
-addi $2,$0,17
-sll $2,$14,$2
+#sllv,20,,,logical left shift should return 20
+addiu $3,$0,5
+addi $2,$0,2
+sll $2,$3,$2
 jr $0

@@ -271,7 +271,7 @@ void Simulator::mult(Regidx s,Regidx t){
 	signed long temp = (signed long)(reg->get(s)*(signed long)(reg->get(t)));
 	reg->setLO(temp&0xFFFFFFFF);
 	reg->setHI(UWord(temp>>32));
-	std::cerr<<"multiplysigned\t| "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"multiplysigned\t| getting LO value and HI"<<std::dec<<reg->getHI()<<" : "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::multu(Regidx s,Regidx t){
@@ -283,21 +283,21 @@ void Simulator::multu(Regidx s,Regidx t){
 	std::cerr << std::hex<<temp << '\n';
 	reg->setLO(temp&0xFFFFFFFF);
 	reg->setHI(UWord(temp>>32));
-	std::cerr<<"multiplyunsigned\t| 0x"<<std::hex<<reg->getHI()<<" : "<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"multiplyunsigned\t| getting LO value and HI "<<std::dec<<reg->getHI()<<" : "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::divu(Regidx s, Regidx t){
 	//no exceptions here checked with PDF
 	reg->setLO(UWord(reg->get(s))/UWord(reg->get(t)));
 	reg->setHI(UWord(reg->get(s))%UWord(reg->get(t)));
-	std::cerr<<"divideunsigned\t| getting LO value and HI"<<std::dec<<reg->getLO()<<"   "<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"divideunsigned\t| getting LO value and HI "<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::div(Regidx s, Regidx t){
 	//no exceptions here checked with PDF
 	reg->setLO(Word(reg->get(s))/Word(reg->get(t)));
 	reg->setHI(Word(reg->get(s))%Word(reg->get(t)));
-	std::cerr<<"div\t| getting LO value and HI"<<std::dec<<reg->getLO()<<"   "<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	std::cerr<<"div\t| getting LO value and HI"<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 
 }
 
