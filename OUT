@@ -1,6 +1,7 @@
 ./bin/mips_testbench ./bin/mips_simulator
-add,add,Pass,team OOP,simple add 
-add_cc,add_cc,Pass,team OOP,math exception return -10 
+add_cc,add_cc,Fail,team OOP,positive overflow should return 246. Expect return 246 get 0 
+addi,addi,Pass,team OOP,simple add 
+addi_cc,add_cc,Pass,team OOP,math exception return -10 
 addoverflow,addiu,Pass,team OOP,checking for immediate signed extension 
 addu,addu,Pass,team OOP,simple addu 
 addu_cc,addu,Pass,team OOP,simple addu corner case 

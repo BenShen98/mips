@@ -28,7 +28,7 @@ MIPS_OBJDUMP = mips-linux-musl-objdump
 # MIPS_OBJDUMP = mips-linux-gnu-objdump
 
 MIPS_CPPFLAGS = -W -Wall -O3 -fno-builtin -march=mips1 -mfp32
-MIPS_LDFLAGS = -nostdlib -Wl,-melf32btsmip -march=mips1 -nostartfiles -mno-check-zero-division -Wl,--gpsize=0 -static -Wl,-Bstatic -Wl,--build-id=none
+MIPS_LDFLAGS = -nostdlib -Wl,-melf32btsmip -march=mips1 -nostartfiles -mno-check-zero-division -Wl,--gpsize=0 -static -Wl,-Bstatic -Wl,--build-id=none --entry=0000000010000000
 MIPS_Linker = $(src)/linker.ld
 
 #https://ftp.gnu.org/old-gnu/Manuals/make-3.79.1/html_chapter/make_10.html#SEC101
