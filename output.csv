@@ -14,9 +14,10 @@ blez,bltz,Pass,team OOP,testing bltz should return 1
 bltz,bltz,Pass,team OOP,testing bltz should return 0 
 bltzal,bltzal,Pass,team OOP,testing bgez should return 99 
 div,div,Pass,team OOP,R -1 Q 0 
+div_cc,div_cc,Fail,team OOP,dividing 0. Expect return 0 get 136 
 divpro,divpro,Pass,team OOP,R 535 Q 1 
 divu,divu,Pass,team OOP,R 200 Q 6 
-divu_cc,divu_cc,Pass,team OOP,Q  5368709 
+divu_cc,divu_cc,Fail,team OOP,Q  81. Expect return 81 get 133 
 encrypt,password_encrypting,Pass,team OOP, testing encrypting 
 jump,jump,Pass,team OOP,here is for comment 
 lb,lb,Pass,team OOP,testing all loadb and storeb 
@@ -30,7 +31,7 @@ lw,lw,Pass,team OOP,testing loadword
 lw_cc,lw_cc,Pass,team OOP,mem exception addr $?245 
 lw_getc,lw_getc,Pass,team OOP,testing loadword getc 
 lwl,lwl,Pass,team OOP,should return 89 
-lwl_cc,lwl_cc,Pass,team OOP,address error 245 
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
 lwr,lwr,Pass,team OOP,should return 21 
 mthi,mthi,Pass,team OOP,should return 2 
 mtlo,mtlo,Pass,team OOP,should return 10 
