@@ -1,42 +1,63 @@
-./bin/mips_testbench ./bin/mips_simulator
-srl,srl,Pass,team OOP,testing logical right shift 
-srav,srav,Pass,team OOP,testing arithmitic shift 
-multulqy,multulqy,Fail,team OOP,comment. Expect return 65343 get 0. Expect cout 0x get 0x000000000080ff3f 
-slt,slt,Pass,team OOP,comment 
-lh_insMem,lh,Pass,team OOP,using instrcution mem for testing 
-beq,beq,Pass,team OOP,testing beq should return 4 
-mthi,mthi,Pass,team OOP,from lqy testcode 
-mtlo,mtlo,Pass,team OOP,should return 10 
-mult_basic,mult,Pass,team OOP,$LO should return 1 
-blez,bltz,Pass,team OOP,testing bltz should return 1 
-divpro,divpro,Pass,team OOP,R 535 Q 1 
-subu,subu,Pass,team OOP,normal sub should return $2 0xFF 
-bgtz,bgtz,Pass,team OOP,testing bgtz with positive output 
-shiftcase,shiftleft,Pass,team OOP,left shift no exceptions 
-lwr_insMem,lwl,Pass,team OOP,using instrcution mem for testing 
-divu,divu,Pass,team OOP,R 200 Q 6 
-srlv,srl,Pass,team OOP,testing logical right shift 
-sltu,sltu,Pass,team OOP,comment 
-addoverflow,addiu,Pass,team OOP,checking for immediate signed extension 
-sub,sub,Pass,team OOP, 
-bgez,bgez,Pass,team OOP,testing bgez with negative output 
-sra,sra,Pass,team OOP,testing arithmitic shift 
-bgezal,bgezal,Pass,team OOP,testing bgez should return 200 
-sll,sll,Pass,team OOP,testing logical left shift 
-add,add,Pass,team OOP,simple add 
-bitwiseimm,bitwise,Pass,team OOP,$2 50 $4 65535 $5 65485 
-sb,sb,Pass,team OOP,testing all loadb and storeb 
-sw,sw,Pass,team OOP,testing all loadw and storew 
-addu,addu,Pass,team OOP,simple addu 
-bltz,bltz,Pass,team OOP,testing bltz should return 0 
-slti,slt,Pass,team OOP,should return 1 
-multu_basic,multu,Pass,team OOP,comment here 
-bitwise,bitwise,Pass,team OOP,testing all bit wise logic 
-bltzal,bltzal,Pass,team OOP,testing bgez should return 99 
-lwl_insMem,lwl,Pass,team OOP,using instrcution mem for testing 
-lb,lb,Pass,team OOP,testing all loadb and storeb 
-jump,jump,Pass,team OOP,here is for comment 
-div,div,Pass,team OOP,R -1 Q 0 
-sw_cout,sw,Pass,team OOP,testing output PUTC 
-sllv,sllv,Pass,team OOP,testing logical left shift variable 
-lw,lw,Pass,team OOP,testing loadword 
+
+### test Simulator named BoogieWoogieWoogie_1911 ###
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named Clarkitecture_2011 ###
+divu_cc,divu_cc,Fail,team OOP,Q  5368709. Expect return 133 get 244 
+divu,divu,Fail,team OOP,R 200 Q 6. Expect return 6 get 244 
+divpro,divpro,Fail,team OOP,R 535 Q 1. Expect return 1 get 244 
+div,div,Fail,team OOP,R -1 Q 0. Expect return 0 get 244 
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named GipsyFailure_1711 ###
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named help_2011 ###
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named IAmCrew_2011 ###
+sb_putc,sb_putc,Fail,team OOP,testing store byte. Expect return 101 get 245. Expect cout 0x65 get 0x 
+encrypt,password_encrypting,Fail,team OOP, testing encrypting. Expect return 0 get 245. Expect cout 0x0203040506 get 0x 
+add_cc,add_cc,Fail,team OOP,math exception return -10. Expect return 246 get 0 
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named LittleItaly_1511 ###
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named MIPSdoesBITs_2111 ###
+lwl,lwl,Fail,team OOP,should return 89. Expect return 89 get 244 
+bltzal,bltzal,Fail,team OOP,testing bgez should return 99. Expect return 99 get 245 
+bgez,bgez,Fail,team OOP,testing bgez with negative output. Expect return 156 get 245 
+lwr,lwr,Fail,team OOP,should return 21. Expect return 21 get 244 
+sh,sh,Fail,team OOP,should return 8. Expect return 8 get 0 
+bgezal,bgezal,Fail,team OOP,testing bgez should return 200. Expect return 200 get 245 
+lb2,lb2,Fail,team OOP,should return 1. Expect return 1 get 0 
+sh_cc,sh_cc,Fail,team OOP,mem exception 245. Expect return 245 get 0 
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 244 
+
+### test Simulator named MSoc_1911 ###
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named OOP_2111 ###
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named respectingPolice_1511 ###
+sb_putc,sb_putc,Fail,team OOP,testing store byte. Expect return 101 get 244. Expect cout 0x65 get 0x 
+sllv_cc,sllv_cc,Fail,team OOP,shifting with large amount. Expect return 0 get 244 
+lbu,lbu,Fail,team OOP,should return 255. Expect return 255 get 244 
+encrypt,password_encrypting,Fail,team OOP, testing encrypting. Expect return 0 get 244. Expect cout 0x0203040506 get 0x 
+srlv,srl,Fail,team OOP,testing logical right shift. Expect return 255 get 244 
+sb_cc,sb_cc,Fail,team OOP,store byte to invaild addr -11. Expect return 245 get 244 
+sh,sh,Fail,team OOP,should return 8. Expect return 8 get 244 
+lb,lb,Fail,team OOP,testing all loadb and storeb. Expect return 16 get 244 
+bitwiseimm,bitwise,Fail,team OOP,$2 50 $4 65535 $5 65485. Expect return 254 get 244 
+sb,sb,Fail,team OOP,store byte. Expect return 16 get 244 
+lb2,lb2,Fail,team OOP,should return 1. Expect return 1 get 244 
+sh_cc,sh_cc,Fail,team OOP,mem exception 245. Expect return 245 get 244 
+sllv,sllv,Fail,team OOP,logical left shift should return 20. Expect return 20 get 244 
+srlv2,srlv2,Fail,team OOP,testing logical right shift. Expect return 255 get 244 
+lbu_cc,lbu_cc,Fail,team OOP,should return 255. Expect return 255 get 244 
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
+
+### test Simulator named YouAreMyDad_2011 ###
+lwl_cc,lwl_cc,Fail,team OOP,mem exception 245. Expect return 245 get 89 
