@@ -288,17 +288,20 @@ void Simulator::multu(Regidx s,Regidx t){
 
 void Simulator::divu(Regidx s, Regidx t){
 	//no exceptions here checked with PDF
-	reg->setLO(UWord(reg->get(s))/UWord(reg->get(t)));
-	reg->setHI(UWord(reg->get(s))%UWord(reg->get(t)));
-	std::cerr<<"divideunsigned\t| getting LO value and HI "<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	if(reg->get(t)!=0){
+		reg->setLO(UWord(reg->get(s))/UWord(reg->get(t)));
+		reg->setHI(UWord(reg->get(s))%UWord(reg->get(t)));
+		std::cerr<<"divideunsigned\t| getting LO value and HI "<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	}
 }
 
 void Simulator::div(Regidx s, Regidx t){
 	//no exceptions here checked with PDF
-	reg->setLO(Word(reg->get(s))/Word(reg->get(t)));
-	reg->setHI(Word(reg->get(s))%Word(reg->get(t)));
-	std::cerr<<"div\t| getting LO value and HI"<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
-
+	if(reg->get(t)!=0){
+		reg->setLO(Word(reg->get(s))/Word(reg->get(t)));
+		reg->setHI(Word(reg->get(s))%Word(reg->get(t)));
+		std::cerr<<"div\t| getting LO value and HI"<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	}
 }
 
 // shift more /equal to the length of the type
