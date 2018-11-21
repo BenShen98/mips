@@ -1,5 +1,5 @@
-#add_cc,246,,,math exception return -10
-lui  $3,32767 #0x7FFF0000
-ori $3,$3,65535
-addi  $2,$3,1
+#addi_cc,246,,,positive overflow return -10
+lui  $3,0x8000
+addi $4,$0,0x8000
+add  $2,$3,$4
 jr   $0

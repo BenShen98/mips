@@ -152,7 +152,6 @@ void Simulator::BranchSwitch(){
 		case 0b00001:
 		bgez(s,immediate);break;
 		case 0b10001:
-		std::cerr << "/* error message */" << '\n';
 		bgezal(s,immediate);break;
 		case 0b00000:
 		bltz(s,immediate);break;
