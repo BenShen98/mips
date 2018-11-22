@@ -1,0 +1,155 @@
+# Fully Functional MIPS-I Simulator with Testbench
+
+* The simulator in this project is able to:
+  * Take mips binary from argument
+  * Take I/O input from stdin
+  * Produce I/O output in stdout
+  * Produce log file in stderr
+
+
+* The testbench in this project is able to:
+  * Auto-generate test case from src/testcase folder
+  * Test any MIPS-I simulator by input it as argument
+  * Produce output test result as csv to stdout, which can be redirected to .csv file
+
+# Simulator
+Here is the memory map requirement of the MIPS-I CPU trying to simulate.
+
+```
+Offset     |  Length     | Name       | R | W | X |
+-----------|-------------|------------|---|---|---|--------------------------------------------------------------------
+0x00000000 |        0x4  | ADDR_NULL  |   |   | Y | Jumping to this address means the Binary has finished execution.
+0x00000004 |  0xFFFFFFC  | ....       |   |   |   |
+0x10000000 |  0x1000000  | ADDR_INSTR | Y |   | Y | Executable memory. The Binary should be loaded here.
+0x11000000 |  0xF000000  | ....       |   |   |   |
+0x20000000 |  0x4000000  | ADDR_DATA  | Y | Y |   | Read-write data area. Should be zero-initialised.
+0x24000000 |  0xC000000  | ....       |   |   |   |
+0x30000000 |        0x4  | ADDR_GETC  | Y |   |   | Location of memory mapped input. Read-only.
+0x30000004 |        0x4  | ADDR_PUTC  |   | Y |   | Location of memory mapped output. Write-only.
+0x30000008 | 0xCFFFFFF8  | ....       |   |   |   |
+-----------|-------------|------------|---|---|---|--------------------------------------------------------------------
+```
+
+Please see [requirement.md](../../blob/master/requirement.md) for detail.
+
+## Components of Simulator
+
+The Simulator contains three classes, which are Simulator, Register and Memory as described by the UML below.\
+<sub>Word is typedefed as int, and regidx is typedefed as unsigned int</sub>
+
+![UML of the simulator](../../blob/master/ref/simulator.svg)
+
+I choose to let Simulator depended on Register and Memory class rather than as one giant class is for the level of abstraction.
+
+Both Register and Memory class provide a mapping between MIPS' register/memory to the heap of the computer running the simulator, so it's relatively low level. Compare to Simulator, Which acts as the MIPS CPU, does not know where is register and memory are mapped to, it only needs to know the method to get/set register and memory.
+
+## Compile and Run
+
+To compile the simulator, simply run on root of this project (Makefile was removed in this public version)
+> make simulator
+
+Which will generate the executable file at ./bin/mips_simulator
+
+To run this simulator, simply use the path for an MIPS instruction binary as argument, such as the line below:  (executable binary available for Ubuntu with Intel i7 CPU)
+>./bin/mips_simulator ./bin/caseBin/add.mips.bin
+
+Both I/O output and log will be produced on channel stdout and stdcerr respectively.\
+Exit code for the simulator is the least significant 8 bit in register $2.
+
+# Testbench
+
+Below is the Input/Output specification for this coursework, [click here](../../blob/master/requirement.md#testbench-inputoutput) to see detail.
+
+```
+A Testbench should take a single command-line parameter, which is the path of the Simulator to be tested.
+
+As output, the Testbench should print a CSV file, where each row of the file corresponds to exactly one execution of the Simulator under test. Each row should have the following fields:
+
+TestId , Instruction , Status , Author [, Message]
+```
+
+## Components of testbench
+
+The test case will be automatically generated from MIPS assembly file under ./src/testcase, with help of Makefile.
+
+The testbench which is a bash script will read the test case stored at ./bin/case.csv . And iterate all the test recorded in this file.
+
+## How to write testcase
+The testbench I wrote is really easy to extend, simply wrote a normal MIPS assembly file *.s, place it under [./src/testcase](../../tree/master/src/testcase). The only requirement is to add a comment on the first line, with the format as follows:
+
+>#[Instruction], [expect exit code in dec], [I/O input in hex], [expect I/O output in hex], [comment]
+
+### example:
+For example, if there is a MIPS assembly file stored as ./src/testcase/mult_cornercase.s with the first line as
+>#mult,1,2,3,$LO should return 1
+
+The file will be interpreted as a test case due to it was placed under ./src/testcase/ and end with .s at compile time (when runing the make command), with TestId mult_cornercase, Instruction mult, expect exit code 2, stdin 0x1, expect stdout 0x3, with comment "$LO should return 1".
+
+If the test pass, it will generate the following csv output on stdout of testbench:
+>mult_cornercase, mult, Pass, OOP, $LO should return 1
+
+On the other hand, if the simulator fails the test, testbench will output:
+>mult_cornercase, mult, Fail, OOP, $LO should return 1 {error message generated by testbench}
+
+
+## How to build testbench and its testcase
+
+Simply run the command:
+>make testbench
+
+And the make will do the following:
+1. remove all previous test case file.
+2. create test case dir if it does not exist.
+3. generating test case:
+    1) generating test case binary, store it under ./bin/caseBin .
+    2) generating test case disassembly from binary, stored under ./test/caseAssembly .
+    3) append test case entry to ./bin/case.csv .
+4. copy the testbench from ./src/mips_testbench to ./bin/mips_testbench .
+
+## How to run testbench after build
+
+Simply run the command:
+>./bin/mips_testbench ./bin/mips_simulator
+
+Where the mips_simulator is the simulator binary trying to test.
+
+When running the mips_testbench, it will iterate each test case in case.csv, do the following for each test case:
+1. feeding I/O input to stdin of the simulator, wait for it to finish.
+2. redirect stderr of the simulator to ./test/output/ .
+2. check if the stdout and exit code from the simulator are the same as expected, genearting debug message if is not.
+3. stdout with format mentioned above to indicate the result of this test.
+
+### Example of result
+
+|    TestId  |   Instruction     |   Status   |      Author     |      Message                                        |
+|--------------|-------------|------|----------|--------------------------------------------------------------|
+| srlv         | srl         | Pass | team OOP | testing logical right shift                                  |
+| slt          | slt         | Pass | team OOP | comment                                                      |
+| lh_insMem    | lh          | Fail | team OOP | using instrcution mem for testing. Expect return 5 get 245   |
+| sra          | sra         | Pass | team OOP | testing arithmitic shift                                     |
+| mult_basic   | mult        | Pass | team OOP | $LO should return 1                                          |
+| bitwiselogic | bitwise     | Pass | team OOP | testing all bit wise logic                                   |
+| divpro       | divpro      | Pass | team OOP | R 535 Q 1                                                    |
+| subu         | subu        | Pass | team OOP | normal sub should return $2 0xFF                             |
+| bgtz         | bgtz        | Pass | team OOP | testing bgtz                                                 |
+| shiftcase    | shiftleft   | Pass | team OOP | left shift no exceptions                                     |
+| lwr_insMem   | lwl         | Fail | team OOP | using instrcution mem for testing. Expect return 65 get 244  |
+| divu         | divu        | Pass | team OOP | R 200 Q 6                                                    |
+| sw           | sw          | Pass | team OOP | testing all loadw and storew                                 |
+| addoverflow  | addoverflow | Pass | team OOP | here is for comment                                          |
+| bgez         | bgez        | Pass | team OOP | testing bgez with negative output                            |
+| sltu         | sltu        | Pass | team OOP | comment                                                      |
+| add          | add         | Pass | team OOP | here is for comment                                          |
+| srl          | srl         | Pass | team OOP | testing logical right shift                                  |
+| lw           | lw          | Pass | team OOP | testing loadword                                             |
+| srav         | srav        | Fail | team OOP | testing arithmitic shift. Expect return 255 get 0            |
+| bltz         | bltz        | Pass | team OOP | testing bltz                                                 |
+| multu_basic  | multu       | Pass | team OOP | comment here                                                 |
+| bitwiseimm   | bitwise     | Pass | team OOP | $2 50 $4 65535 $5 65485                                      |
+| sub          | sub         | Pass | team OOP |                                                              |
+| lwl_insMem   | lwl         | Fail | team OOP | using instrcution mem for testing. Expect return 0 get 245   |
+| lb           | lb          | Pass | team OOP | testing all loadb and storeb                                 |
+| jump         | jump        | Pass | team OOP | here is for comment                                          |
+| div          | div         | Pass | team OOP | R -1 Q 0                                                     |
+| sw_cout      | sw          | Pass | team OOP | testing output PUTC                                          |
+| bne          | bne         | Pass | team OOP | testing bne                                                  |
