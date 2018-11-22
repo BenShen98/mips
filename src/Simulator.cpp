@@ -689,6 +689,7 @@ void Simulator::slti(Regidx t, Regidx s, Word immediate){
 }
 
 void Simulator::sltiu(Regidx t, Regidx s, UWord immediate){
+	immediate = hp::sgnExtend16(immediate);
 	if (UWord(reg->get(s))<UWord(immediate)){
 		reg->set(t,1);
 	}
