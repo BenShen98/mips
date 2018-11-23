@@ -29,6 +29,7 @@ void Simulator::run() {
 }
 
 inline void Simulator::executeInstruction(){
+
 	UWord const instruction=mem->getInstruction(PC);
 	Regidx s, t;
 	s=(instruction&0x03E00000) >>21;
@@ -93,6 +94,7 @@ inline void Simulator::executeInstruction(){
 		std::cerr << std::bitset<32>( instruction >>26) << '\n';
 		ISAexception();break;
 	}
+
 }
 
 inline void Simulator::advPC(){
@@ -216,9 +218,11 @@ void Simulator::jr(Regidx s){
 }
 
 void Simulator::jalr(Regidx d,Regidx s){
+	reg->set(d,PC+8);
+
 	advPC();
 	executeInstruction();
-	reg->set(d,PC+4);
+
 	PC=reg->get(s);
 	advPCbool=false;
 	std::cerr<<"jalr\t| jump to memory address 0x"<<std::hex<<PC<<"\n";
@@ -239,6 +243,7 @@ void Simulator::orbitwise(Regidx d,Regidx s,Regidx t){
 }
 
 void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
+
 	Word temp = (reg->get(s)) ^ (reg->get(t));
 	reg->set(d,temp);
 	std::cerr<<"xor\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
@@ -709,9 +714,9 @@ void Simulator::j(Word instr_index){
 }
 
 void Simulator::jal(Word instr_index){
+	reg->set(31,PC+8);
 
 	advPC();
-	reg->set(31,PC+4);
 	executeInstruction();
 	advPCbool=false;
 	PC=(instr_index<<2)| (PC&0xF0000000);
