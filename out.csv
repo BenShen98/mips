@@ -1,20 +1,94 @@
-./bin/mips_testbench ./bin/mips_simulator,,,,,
-multu_basic,multu,Pass,team OOP,comment,
-here,,,,,
-,,,team OOP,,
-addoverflow,addoverflow,Fail,team OOP,here,
-is,for,comment,,,
-.,team OOP,Expect,,,
-return,0,,get,team OOP,0
-mult_basic,mult,Pass,team OOP,comment,
-here,,,,,
-,,,team OOP,,
-jump,jump,Fail,team OOP,here,
-is,for,comment,,,
-.,team OOP,Expect,,,
-return,567,,get,team OOP,0
-sw_cout,sw,Fail,team OOP,here,
-is,for,comment..,team OOP,Expect,
-return,255,,get,team OOP,0
-Expect,cout,0x,,team OOP,get
-0x43,,,team OOP,,
+./bin/mips_testbench ./bin/mips_simulator
+divpro,divpro,Pass,team OOP,R 535 Q 1 
+encrypt,password_encrypting,Pass,team OOP, testing putc and getc 
+subu,subu,Pass,team OOP,normal sub should return $2 0xFF 
+mult,mult,Pass,team OOP,$LO should return 25 
+sll,sll,Pass,team OOP,testing logical left shift 
+sltiu_cc,sltiu_cc,Pass,team OOP,testing immediate sign extend 
+addiu,addiu,Pass,team OOP,simple addiu 
+jr_cc,jr_cc,Pass,team OOP,jumping to invaild addr should return -11 
+addi_cc2,addi_cc2,Pass,team OOP,negative overflow return 246 
+andi,andi,Pass,team OOP,testing ANDI 
+srl,srl,Pass,team OOP,testing logical right shift 
+mtlo,mtlo,Pass,team OOP,should return 10 
+sltiu,sltiu,Pass,team OOP,should return 0 
+and,and,Pass,team OOP,testing AND 
+bgezal_cc,bgezal_cc,Pass,team OOP,test if $31 is next+4 
+add_cc,add_cc,Pass,team OOP,positive overflow should return 246 
+srav,srav,Pass,team OOP,testing arithmitic shift 
+addi_cc,addi_cc,Pass,team OOP,positive overflow return -10 
+sh_cc,sh_cc,Pass,team OOP,mem exception 245 
+lwr,lwr,Pass,team OOP,should return 21 
+sb_cc,sb_cc,Pass,team OOP,store byte to invaild addr -11 
+sra_cc,sra_cc,Pass,team OOP,testing arithmitic shift 
+sh,sh,Pass,team OOP,should return 8 
+divu,divu,Pass,team OOP,R 200 Q 6 
+bgezal,bgezal,Pass,team OOP,testing bgez should return 200 
+lb2,lb2,Pass,team OOP,should return 1 
+sw,sw,Pass,team OOP,testing all loadw and storew 
+add,add,Pass,team OOP,simple add should return 10 
+bitwiseimm,bitwise,Pass,team OOP,$2 50 $4 65535 $5 65485 
+ori_cc,ori_cc,Pass,team OOP,ori should not sign extend 
+sra,sra,Pass,team OOP,testing arithmitic shift 
+lw,lw,Pass,team OOP,testing loadword 
+lhu_memexception,lhu,Pass,team OOP,should return -11(245) 
+bltzal_cc,bltzal_cc,Pass,team OOP,testing $31 next+4 
+addu,addu,Pass,team OOP,simple addu 
+xori,xori,Pass,team OOP,testing XORI 
+andi_cc,andi_cc,Pass,team OOP,andi should not sign extend 
+bltz,bltz,Pass,team OOP,testing bltz should return 0 
+xori_cc,xori_cc,Pass,team OOP,xori should not sign extend 
+or,or,Pass,team OOP,testing logic OR 
+or_cc,or_cc,Pass,team OOP,testing logic OR 
+slt,slt,Pass,team OOP,set less than  
+bitwise,bitwise,Pass,team OOP,testing all bitwise logic 
+bgez,bgez,Pass,team OOP,testing bgez with negative output 
+lw_getc,lw_getc,Pass,team OOP,testing loadword getc 
+bltzal,bltzal,Pass,team OOP,testing bgez should return 99 
+lwl_cc,lwl_cc,Pass,team OOP,address error 245 
+slti,slti,Pass,team OOP,should return 1 
+lb,lb,Pass,team OOP,testing all loadb and storeb 
+srav_cc,srav_cc,Pass,team OOP,testing arithmitic shift 
+blez,bltz,Pass,team OOP,testing bltz should return 1 
+jump,jump,Pass,team OOP,here is for comment 
+multu,multu,Pass,team OOP,should return 36 
+div,div,Pass,team OOP,R -1 Q 0 
+xor_cc,xor_cc,Pass,team OOP,testing XOR 
+lw_cc,lw_cc,Pass,team OOP,mem exception addr $?245 
+sw_cout,sw,Pass,team OOP,testing output PUTC 
+sub,sub,Pass,team OOP, 
+add_cc1,add_cc1,Pass,team OOP,negative overflow should return 246 
+srlv2,srlv2,Pass,team OOP,testing logical right shift 
+lbu_cc,lbu_cc,Pass,team OOP,should return 255 
+slt_cc,slt_cc,Pass,team OOP,set less than should return 0 
+div_0,div,Pass,team OOP,test div by 0 
+slti_cc,slti_cc,Pass,team OOP,should return 1 
+sllv_cc,sllv_cc,Pass,team OOP,shifting with large amount 
+sb_putc,sb_putc,Pass,team OOP,testing store byte 
+srl_cc,srl_cc,Pass,team OOP,testing logical right shift 
+multu_cc,multu_cc,Pass,team OOP,should return 254 with no errors 
+sllv,sllv,Pass,team OOP,logical left shift should return 20 
+bgez_cc,bgez_cc,Pass,team OOP,comparing negative values should return -3 
+and_cc,and_cc,Pass,team OOP,testing AND1 
+xor,xor,Pass,team OOP,testing XOR 
+bgtz,bgtz,Pass,team OOP,testing bgtz with positive output 
+jr_cc2,jr_cc2,Pass,team OOP,jumping to putc addr should return -11 
+bltzal_cc1,bltzal_cc1,Pass,team OOP,testing $31 next+4 and add result 
+divu_cc,divu_cc,Pass,team OOP,Q  5368709 
+lhu,lhu,Pass,team OOP,should return 89 
+sltu,sltu,Pass,team OOP,comment 
+addi,addi,Pass,team OOP,simple add 
+beq,beq,Pass,team OOP,testing beq should return 4 
+slti_cc1,slti_cc1,Pass,team OOP,testing immediate sign extend 
+srlv,srl,Pass,team OOP,testing logical right shift 
+mthi,mthi,Pass,team OOP,should return 2 
+lb_cc,lb_cc,Pass,team OOP,check loading signed or not 
+lbu,lbu,Pass,team OOP,should return 255 
+sra_cc1,sra_cc1,Pass,team OOP,testing arithmitic shift 
+bgtz_cc,bgtz_cc,Pass,team OOP,test branch when =0  
+ori,ori,Pass,team OOP,testing logic ORI 
+jr_cc1,jr_cc1,Pass,team OOP,jumping to getc addr should return -11 
+mult_cc,mult_cc,Pass,team OOP,$LO should return 1 
+sb,sb,Pass,team OOP,store byte 
+lwl,lwl,Pass,team OOP,should return 89 
+add_cc3,add_cc3,Pass,team OOP,checking for immediate signed extension 
