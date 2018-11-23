@@ -110,25 +110,19 @@ clearCase:
 
 
 testbench: clearCase makedir $(testcases)
-
-	# rm -f $(bin)/case.csv
-	# echo $(testcases)
-	# for basenamePath in $(testcase); do \
-	# 	 head -1 $(basenamePath).s | tr -d " #" >> $(bin)/csv ; \
-	# done
-
 	cp $(src)/mips_testbench $(bin)/mips_testbench
 
 $(testcases):
-	$(MIPS_CC) $(MIPS_CPPFLAGS) -c $@.s -o $@.mips.o
-	$(MIPS_CC) $(MIPS_CPPFLAGS) $(MIPS_LDFLAGS) -T $(MIPS_Linker) $@.s -o $@.mips.elf
-	$(MIPS_OBJCOPY) -O binary --only-section=.text $@.mips.elf $(mipsBinOut)/$(notdir $@).mips.bin
-	$(MIPS_OBJDUMP) -j .text -D $@.mips.elf > $(mipsAssemblyOut)/$(notdir $@).mips.s
-	echo -n $(notdir $@) >> $(caseFile)
-	echo -n , >> $(caseFile)
-	head -1 $@.s | tr -d '\#' >> $(caseFile)
-	rm $@.mips.o
-	rm $@.mips.elf
+	@echo "make testcase with ID $@"
+	@$(MIPS_CC) $(MIPS_CPPFLAGS) -c $@.s -o $@.mips.o
+	@$(MIPS_CC) $(MIPS_CPPFLAGS) $(MIPS_LDFLAGS) -T $(MIPS_Linker) $@.s -o $@.mips.elf
+	@$(MIPS_OBJCOPY) -O binary --only-section=.text $@.mips.elf $(mipsBinOut)/$(notdir $@).mips.bin
+	@$(MIPS_OBJDUMP) -j .text -D $@.mips.elf > $(mipsAssemblyOut)/$(notdir $@).mips.s
+	@echo -n $(notdir $@) >> $(caseFile)
+	@echo -n , >> $(caseFile)
+	@head -1 $@.s | tr -d '\#' >> $(caseFile)
+	@rm $@.mips.o
+	@rm $@.mips.elf
 
 
 

@@ -161,8 +161,8 @@ void Simulator::BranchSwitch(){
 }
 
 inline void Simulator::checkSignedOverflow(Word a, Word b, Word result){
-	if((a&0x80000000) && (b&0x80000000) && !(result&0x80000000) || //postive + postive => negative (overflow)
-			!(a&0x80000000) && !(b&0x80000000) && (result&0x80000000)) //negative + negative => postive (overflow)
+	if(((a&0x80000000) && (b&0x80000000) && !(result&0x80000000)) || //postive + postive => negative (overflow)
+			(!(a&0x80000000) && !(b&0x80000000) && (result&0x80000000))) //negative + negative => postive (overflow)
 	{
 				Mathexception();
 	}

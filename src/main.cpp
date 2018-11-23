@@ -8,7 +8,7 @@ int main(int argc, char** argv)
 
 	if(argv[1]==NULL){
 		std::cerr << "please include bin file" << '\n';
-		std::exit(-20);
+		std::exit(-21);
 	}
 
 	std::cerr << "init Simulator, trying to open "<< argv[1] << '\n';

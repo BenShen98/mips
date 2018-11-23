@@ -1,6 +1,4 @@
 #!/bin/bash
-#
-#
 
 
 # cat here genearting a unwanted \n
@@ -13,8 +11,6 @@ cat bin/case.csv | while IFS=, read -r fileName instr expReturn inchar expOutCha
 
 	#check error
 	if [[ $exitcode != $expReturn ]]; then
-		# $? here is not the ? from exit code
-		# message1="$message1. Expect return $expReturn, get $?"
 		message1="$message1. Expect return $expReturn get $exitcode"
 		state=Fail
 	fi
