@@ -1,4 +1,4 @@
-#bltzal_cc,12,,,testing $31 next+4
+#bltzal,12,,,testing $31 next+4
 addiu $2,$0,0xFFFE #-2
 addiu $3,$0,1
 bltzal  $2,end

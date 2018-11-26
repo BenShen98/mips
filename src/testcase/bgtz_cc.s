@@ -1,4 +1,4 @@
-#bgtz_cc,1,,,test branch when =0 
+#bgtz,1,,,test branch when =0 
 addiu $3,$0,0xFFFF #-1
 addiu $4,$0,1
 loop: add  $3,$3,$4

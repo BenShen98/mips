@@ -1,4 +1,4 @@
-#bgezal_cc,12,,,test if $31 is next+4
+#bgezal,12,,,test if $31 is next+4
 addiu $2,$0,300
 addiu $3,$0,100
 bgezal  $2,end

@@ -1,4 +1,4 @@
-#password_encrypting,0,0001020304,0203040506, testing putc and getc
+#sb_putc,0,0001020304,0203040506, testing putc and getc
 addi $3,$0,65535  #this is -1
 addiu $4,$0,2     #this is for encrypting code
 lui $6,12288 #0x30000000

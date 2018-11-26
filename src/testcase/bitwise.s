@@ -1,4 +1,4 @@
-#bitwise,255,,,testing all bitwise logic
+#and,255,,,testing all bitwise logic
 addiu $14,$0,65535
 addiu $3,$0,65535
 and  $2,$14,$3
