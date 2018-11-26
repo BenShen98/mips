@@ -23,7 +23,7 @@ void Simulator::run() {
 		executeInstruction();
 		advPC();
 	}
-	std::cerr<<"Function terminate without error!\n";
+	//std::cerr<<"Function terminate without error!\n";
 
   std::exit ( reg->get(2) &0xFF ); //return only the low 8-bits of the value in register $2
 }
@@ -36,7 +36,6 @@ inline void Simulator::executeInstruction(){
 	t=(instruction&0x001F0000) >>16;
 	UWord immediate = (instruction&0xFFFF);
 
-	// std::cerr << (( mem->getInstruction(PC) )>>26) << '\n';
 	switch(instruction>>26){
 		case 0b000000:
 		Rswitch();break;
@@ -91,7 +90,7 @@ inline void Simulator::executeInstruction(){
 		case 0b000011:
 		jal(instruction&0x3FFFFFF);break;
 		default:
-		std::cerr << std::bitset<32>( instruction >>26) << '\n';
+		//std::cerr << std::bitset<32>( instruction >>26) << '\n';
 		ISAexception();break;
 	}
 
@@ -174,7 +173,7 @@ void Simulator::add(Regidx d,Regidx s,Regidx t){
 	int temp=reg->get(s)+reg->get(t);
 	checkSignedOverflow(reg->get(s),reg->get(t),temp);
 	reg->set(d,temp);
-	std::cerr<<"add\t| "<<std::dec<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
+	//std::cerr<<"add\t| "<<std::dec<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
 }
 
 void Simulator::sub(Regidx d,Regidx s,Regidx t){
@@ -194,7 +193,7 @@ void Simulator::sub(Regidx d,Regidx s,Regidx t){
 
 	reg->set(d,temp);
 
-	std::cerr<<"sub\t| "<<std::dec<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
+	//std::cerr<<"sub\t| "<<std::dec<<reg->get(d)<<" is result at PC "<<std::hex<<PC<<"\n";
 }
 
 void Simulator::subu(Regidx d,Regidx s,Regidx t){
@@ -206,7 +205,7 @@ void Simulator::addu(Regidx d,Regidx s,Regidx t){
 	UWord temp = UWord(reg->get(s)) + UWord(reg->get(t));
 	reg->set(d,temp);
 	//no overflow check
-	std::cerr<<"addu\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"addu\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::jr(Regidx s){
@@ -214,7 +213,7 @@ void Simulator::jr(Regidx s){
 	executeInstruction();
 	PC=reg->get(s);
 	advPCbool=false;
-	std::cerr<<"jr\t| jump to memory address 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"jr\t| jump to memory address 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::jalr(Regidx d,Regidx s){
@@ -225,7 +224,7 @@ void Simulator::jalr(Regidx d,Regidx s){
 
 	PC=reg->get(s);
 	advPCbool=false;
-	std::cerr<<"jalr\t| jump to memory address 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"jalr\t| jump to memory address 0x"<<std::hex<<PC<<"\n";
 
 }
 
@@ -233,41 +232,41 @@ void Simulator::andbitwise(Regidx d,Regidx s,Regidx t){
 	Word temp = reg->get(s) & reg->get(t);
 	reg->set(d,temp);
 	//no exception
-	std::cerr<<"and\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"and\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::orbitwise(Regidx d,Regidx s,Regidx t){
 	int temp = reg->get(s) | reg->get(t);
 	reg->set(d,temp);
-	std::cerr<<"or\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"or\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::xorbitwise(Regidx d,Regidx s,Regidx t){
 
 	Word temp = (reg->get(s)) ^ (reg->get(t));
 	reg->set(d,temp);
-	std::cerr<<"xor\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"xor\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::mthi(Regidx s){
 	reg->setHI(reg->get(s));
-	std::cerr<<"mthi\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"mthi\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::mtlo(Regidx s){
 	reg->setLO(reg->get(s));
-	std::cerr<<"mtlo\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"mtlo\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 
 }
 
 void Simulator::mfhi(Regidx d ){
 	reg->set(d,reg->getHI());
-	std::cerr<<"mfhi\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"mfhi\t| "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::mflo(Regidx d ){
 	reg->set(d,reg->getLO());
-	std::cerr<<"mflo\t| "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"mflo\t| "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::mult(Regidx s,Regidx t){
@@ -275,7 +274,7 @@ void Simulator::mult(Regidx s,Regidx t){
 	signed long temp = (signed long)(reg->get(s)*(signed long)(reg->get(t)));
 	reg->setLO(temp&0xFFFFFFFF);
 	reg->setHI(UWord(temp>>32));
-	std::cerr<<"multiplysigned\t| getting LO value and HI"<<std::dec<<reg->getHI()<<" : "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"multiplysigned\t| getting LO value and HI"<<std::dec<<reg->getHI()<<" : "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::multu(Regidx s,Regidx t){
@@ -284,10 +283,10 @@ void Simulator::multu(Regidx s,Regidx t){
 	a=UWord(reg->get(s));
 	b=UWord(reg->get(t));
 	temp=a*b;
-	std::cerr << std::hex<<temp << '\n';
+	//std::cerr << std::hex<<temp << '\n';
 	reg->setLO(temp&0xFFFFFFFF);
 	reg->setHI(UWord(temp>>32));
-	std::cerr<<"multiplyunsigned\t| getting LO value and HI "<<std::dec<<reg->getHI()<<" : "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"multiplyunsigned\t| getting LO value and HI "<<std::dec<<reg->getHI()<<" : "<<std::dec<<reg->getLO()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::divu(Regidx s, Regidx t){
@@ -295,7 +294,7 @@ void Simulator::divu(Regidx s, Regidx t){
 	if(reg->get(t)!=0){
 		reg->setLO(UWord(reg->get(s))/UWord(reg->get(t)));
 		reg->setHI(UWord(reg->get(s))%UWord(reg->get(t)));
-		std::cerr<<"divideunsigned\t| getting LO value and HI "<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+		//std::cerr<<"divideunsigned\t| getting LO value and HI "<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 	}
 }
 
@@ -304,7 +303,7 @@ void Simulator::div(Regidx s, Regidx t){
 	if(reg->get(t)!=0){
 		reg->setLO(Word(reg->get(s))/Word(reg->get(t)));
 		reg->setHI(Word(reg->get(s))%Word(reg->get(t)));
-		std::cerr<<"div\t| getting LO value and HI"<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+		//std::cerr<<"div\t| getting LO value and HI"<<std::dec<<reg->getLO()<<" : "<<std::dec<<reg->getHI()<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 	}
 }
 
@@ -318,7 +317,7 @@ void Simulator::sll(unsigned char shift,Regidx t, Regidx d){
 		result=0;
 	}
 	reg->set(d,result);
-	std::cerr<<"shiftLL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"shiftLL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::sllv(Regidx d , Regidx s, Regidx t){
@@ -330,7 +329,7 @@ void Simulator::sllv(Regidx d , Regidx s, Regidx t){
 		result=0;
 	}
 	reg->set(d,result);
-	std::cerr<<"shiftLLVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"shiftLLVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::slt(Regidx d , Regidx s, Regidx t){
@@ -341,7 +340,7 @@ void Simulator::slt(Regidx d , Regidx s, Regidx t){
 		reg->set(d,0);
 	}
 	//TODO might have exception
-	std::cerr<<"setlt\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"setlt\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::sltu(Regidx d , Regidx s, Regidx t){
@@ -352,7 +351,7 @@ void Simulator::sltu(Regidx d , Regidx s, Regidx t){
 		reg->set(d,0);
 	}
 	//TODO might have exception
-	std::cerr<<"setltu\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"setltu\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::sra(unsigned char shift,Regidx d,Regidx t){
@@ -365,7 +364,7 @@ void Simulator::sra(unsigned char shift,Regidx d,Regidx t){
 		result=( Word(reg->get(t))>>31 );
 	}
 	reg->set(d,result);
-	std::cerr<<"srarithmitic\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"srarithmitic\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::srav(Regidx d,Regidx s,Regidx t){
@@ -380,7 +379,7 @@ void Simulator::srav(Regidx d,Regidx s,Regidx t){
 	}
 	reg->set(d,result);
 
-	std::cerr<<"srarithmiticVar\t| "<<std::hex<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"srarithmiticVar\t| "<<std::hex<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::srl(unsigned char shift,Regidx d,Regidx t){
@@ -392,7 +391,7 @@ void Simulator::srl(unsigned char shift,Regidx d,Regidx t){
 	}
 
 	reg->set(d,result);
-	std::cerr<<"shiftRL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"shiftRL\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::srlv(Regidx d,Regidx t,Regidx s){
@@ -404,7 +403,7 @@ void Simulator::srlv(Regidx d,Regidx t,Regidx s){
 		result=0;
 	}
 	reg->set(d,result);
-	std::cerr<<"shiftRVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"shiftRVar\t| "<<std::dec<<reg->get(d)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 //---------------------------------**********  I Type functions  **********------------------------------
@@ -416,7 +415,7 @@ void Simulator::addi(Regidx t,Regidx s, Word immediate){
 	Word temp=Word(reg->get(s))+Word(immediate);
 	checkSignedOverflow(reg->get(s),immediate,temp);
 	reg->set(t,temp);
-	std::cerr<<"addImm\t| "<<std::dec<<reg->get(t)<<" is result at PC "<<std::hex<<PC<<"\n";
+	//std::cerr<<"addImm\t| "<<std::dec<<reg->get(t)<<" is result at PC "<<std::hex<<PC<<"\n";
 }
 
 void Simulator::addiu(Regidx t,Regidx s,Word immediate){
@@ -424,26 +423,26 @@ void Simulator::addiu(Regidx t,Regidx s,Word immediate){
 	UWord temp = (UWord)(reg->get(s)) + (UWord)immediate;
 	// no overflow by reference
 	reg->set(t,temp);
-	std::cerr<<"addImmUnsigned\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"addImmUnsigned\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::ANDI(Regidx t,Regidx s,UWord immediate){
 	//already 0 extend
 	UWord temp = reg->get(s) & immediate;
 	reg->set(t,temp);
-	std::cerr<<"ANI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"ANI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::XORI(Regidx t,Regidx s,UWord immediate){
 	Word temp = (reg->get(s)) ^ immediate;
 	reg->set(t,temp);
-	std::cerr<<"XORI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"XORI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::ORI(Regidx t,Regidx s,UWord immediate){
 	int temp = reg->get(s) | immediate;
 	reg->set(t,temp);
-	std::cerr<<"ORI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"ORI\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::beq(Regidx t,Regidx s,Word immediate){
@@ -490,7 +489,7 @@ void Simulator::bgezal(Regidx s,Word immediate){
 	else{
 	// do nothing
 	}
-	std::cerr<<"bgezal\t| "<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"bgezal\t| "<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::bltz(Regidx s,Word immediate){
@@ -575,7 +574,7 @@ void Simulator::lb(Regidx t, Regidx s,Word offset){
 	Word temp=mem->readByte(byteAddr); //memory->readbyte can handle the correct address
 	temp=hp::sgnExtend8(temp);
 	reg->set(t,temp);
-	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::lbu(Regidx t, Regidx s,Word offset){
@@ -583,7 +582,7 @@ void Simulator::lbu(Regidx t, Regidx s,Word offset){
 	Word byteAddr = Word(reg->get(s))+Word(offset);
 	Word temp=mem->readByte(byteAddr);
 	reg->set(t,temp);
-	std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"loadbyte\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::sb(Regidx t, Regidx s,Word immediate){
@@ -591,7 +590,7 @@ void Simulator::sb(Regidx t, Regidx s,Word immediate){
 	//signed extend it otherwise no change
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	mem->writeByte(byteAddr,reg->get(t));
-	std::cerr<<"storebyte\t| storing "<<reg->get(t)<<"at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"storebyte\t| storing "<<reg->get(t)<<"at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 
@@ -600,7 +599,7 @@ void Simulator::lw(Regidx t, Regidx s,Word immediate){
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	Word temp=mem->readWord(byteAddr);
 	reg->set(t,temp);
-	std::cerr<<"loadword\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"loadword\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::lh(Regidx t, Regidx s,Word offset){
@@ -640,14 +639,14 @@ void Simulator::sw(Regidx t, Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	mem->writeWord(byteAddr,reg->get(t));
-	std::cerr<<"storeword\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"storeword\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::sh(Regidx t, Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
 	Word HWAddr = Word(reg->get(s))+Word(immediate);
 	mem->writeHalfword(HWAddr,reg->get(t)&0xFFFF);
-	std::cerr<<"storehalfword\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"storehalfword\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::lwl(Regidx t, Regidx s, Word immediate){
@@ -660,7 +659,7 @@ void Simulator::lwl(Regidx t, Regidx s, Word immediate){
 	UWord result=( UWord(mem->readWord(byteAddr&0xfffffffc)) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-index)));
 
 	reg->set(t,result);
-	std::cerr<<"loadwordleft\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"loadwordleft\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::lwr(Regidx t, Regidx s, Word immediate){
@@ -672,13 +671,13 @@ void Simulator::lwr(Regidx t, Regidx s, Word immediate){
 	UWord result=( UWord(mem->readWord(byteAddr&0xfffffffc)) >> 8*(3-index) ) | (reg->get(t) & (UWord(0xFFFFFF00)<<8*index));
 
 	reg->set(t,result);
-	std::cerr<<"loadwordright\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"loadwordright\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::lui(Regidx t,UWord immediate){
 	Word temp=immediate<<16;
 	reg->set(t,temp);
-	std::cerr<<"loadupperImm\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"loadupperImm\t| "<<std::hex<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::slti(Regidx t, Regidx s, Word immediate){
@@ -690,7 +689,7 @@ void Simulator::slti(Regidx t, Regidx s, Word immediate){
 	else {
 		reg->set(t,0);
 	}
-	std::cerr<<"setlessthan_Imm_signed\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"setlessthan_Imm_signed\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 
 void Simulator::sltiu(Regidx t, Regidx s, UWord immediate){
@@ -701,7 +700,7 @@ void Simulator::sltiu(Regidx t, Regidx s, UWord immediate){
 	else {
 		reg->set(t,0);
 	}
-	std::cerr<<"setlessthan_Imm_Usigned\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
+	//std::cerr<<"setlessthan_Imm_Usigned\t| "<<std::dec<<reg->get(t)<<" is result at PC 0x"<<std::hex<<PC<<"\n";
 }
 //*********************************   Jump instructions *******************************************************
 
@@ -725,13 +724,13 @@ void Simulator::jal(Word instr_index){
 //**********************************  Exception functions *****************************************************
 
 void Simulator::ISAexception(){
-	std::cerr<<"ISA exception at memory address 0x"<<std::hex<<PC<<std::endl;
+	//std::cerr<<"ISA exception at memory address 0x"<<std::hex<<PC<<std::endl;
 	//debug info eg PC counter....
 	std::exit (-12);
 }
 
 void Simulator::Mathexception(){
-	std::cerr<<"Math exception at memory address 0x"<<std::hex<<PC<<std::endl;
+	//std::cerr<<"Math exception at memory address 0x"<<std::hex<<PC<<std::endl;
 	//debug info eg PC counter....
 	std::exit (-10);
 }

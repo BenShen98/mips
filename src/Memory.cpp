@@ -23,7 +23,7 @@ Word Memory::getInstruction(Word PC){
 }
 
 void Memory::Memexception(Word addr){
-	std::cerr<<"Mem exception at memory address "<<std::hex<<addr<<std::endl;
+	//std::cerr<<"Mem exception at memory address "<<std::hex<<addr<<std::endl;
 	//debug info eg PC counter....
 	std::exit (-11);
 }
@@ -155,11 +155,11 @@ void Memory::writeWord(Word addr, Word wd){
 
 void Memory::_printInst(Word PC){
   Word inst=getInstruction(PC);
-  std::cerr << "mem[0x"<<std::hex<<PC<<"]\t0x"<<inst<<"\n";
+  //std::cerr << "mem[0x"<<std::hex<<PC<<"]\t0x"<<inst<<"\n";
 }
 
 Memory::Memory(char* instructionFile){
-	std::cerr << "generating instruction memory" << '\n';
+	//std::cerr << "generating instruction memory" << '\n';
 
 	std::streampos size;
 	char * memblock;
@@ -187,7 +187,7 @@ Memory::Memory(char* instructionFile){
 			insIdx++;
 		}
 
-    std::cerr << "below are the instruction memory inputx" << '\n';
+    //std::cerr << "below are the instruction memory inputx" << '\n';
     for (int i=0;i<insIdx;i++){
       _printInst((i<<2)+0x10000000);
     }
@@ -199,7 +199,7 @@ Memory::Memory(char* instructionFile){
 
 		delete[] memblock;
 	}else{
-		std::cerr << "unable to read instruction bin" << '\n';
+		//std::cerr << "unable to read instruction bin" << '\n';
 		std::exit(-21);
 	}
 

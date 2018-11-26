@@ -4,7 +4,10 @@ rm -rf ./../output_csv_files/
 mkdir ./../output_csv_files/
 for sim in $( ls ./../Compiled_Simulators/ ); do
   printf "\n### test Simulator named %s ###\n" ${sim}
+  start=$(date +%s.%N)
   chmod u+x ./../Compiled_Simulators/${sim}
   ./bin/mips_testbench ./../Compiled_Simulators/${sim} > ./../output_csv_files/${sim}.csv
   grep 'Fail' ./../output_csv_files/${sim}.csv
+  dur=$(echo "$(date +%s.%N) - $start" | bc)
+  printf "Execution time: %.6f seconds\n" $dur
 done
