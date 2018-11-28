@@ -691,10 +691,6 @@ void Simulator::lwl(Regidx t, Regidx s, Word immediate){
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	int index=byteAddr%4;
 
-	//check W is all readable, where "EffAddr is the address of the most-significant of four consecutive bytes forming a word in memory (W) starting at an arbitrary byte boundary."
-	if(byteAddr+3>=0x30000004){
-		std::exit(-11);
-	}
 
 	//first part of OR => the required word from memory (shift word) | 2nd part => the register to keep (shift mask)
 	UWord result=( UWord(mem->readWord(byteAddr&0xfffffffc)) << 8*index) | (reg->get(t) & (UWord(0x00FFFFFF)>>8*(3-index)));
@@ -709,10 +705,6 @@ void Simulator::lwr(Regidx t, Regidx s, Word immediate){
 	Word byteAddr = Word(reg->get(s))+Word(immediate);
 	int index=byteAddr%4;
 
-	//check W is all readable, where "EffAddr is the address of the most-significant of four consecutive bytes forming a word in memory (W) starting at an arbitrary byte boundary."
-	if(( (byteAddr-3)<0x30000000 && (byteAddr)>= 0x24000000)){
-		std::exit(-11);
-	}
 
 	//first part of OR => the required word from memory (shift word) | 2nd part => the register to keep (shift mask)
 	UWord result=( UWord(mem->readWord(byteAddr&0xfffffffc)) >> 8*(3-index) ) | (reg->get(t) & (UWord(0xFFFFFF00)<<8*index));
