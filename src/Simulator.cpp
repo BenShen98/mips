@@ -448,10 +448,15 @@ void Simulator::ORI(Regidx t,Regidx s,UWord immediate){
 void Simulator::beq(Regidx t,Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
 
+	bool condition=false;
+	if (reg->get(t)==reg->get(s)){
+		condition=true;
+	}
+
 	advPC();
 	executeInstruction();
 
-	if (reg->get(t)==reg->get(s)){
+	if (condition){
 		advPCbool=false; //assert flag to disable PC+4 in run()
 		PC+=immediate<<2;
 	}
@@ -462,11 +467,15 @@ void Simulator::beq(Regidx t,Regidx s,Word immediate){
 
 void Simulator::bgez(Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
+	bool condition=false;
+	if ((Word)reg->get(s)>=0){
+		condition=true;
+	}
 
 	advPC();
 	executeInstruction();
 
-	if ((Word)reg->get(s)>=0){
+	if (condition){
 		advPCbool=false; //assert flag to disable PC+4 in run()
 		PC+=immediate<<2;
 	}
@@ -479,10 +488,15 @@ void Simulator::bgezal(Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
 	reg->set(31,PC+8);
 
+	bool condition=false;
+	if ((Word)reg->get(s)>=0){
+		condition=true;
+	}
+
 	advPC();
 	executeInstruction();
 
-	if ((Word)reg->get(s)>=0){
+	if (condition){
 		advPCbool=false;
 		PC+=immediate<<2;
 	}
@@ -494,11 +508,14 @@ void Simulator::bgezal(Regidx s,Word immediate){
 
 void Simulator::bltz(Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
-
+	bool condition=false;
+	if ((Word)reg->get(s)<0){
+		condition=true;
+	}
 	advPC();
 	executeInstruction();
 
-	if ((Word)reg->get(s)<0){
+	if (condition){
 		advPCbool=false;
 		PC+=immediate<<2;
 	}
@@ -511,10 +528,15 @@ void Simulator::bltzal(Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
 	reg->set(31,PC+8);
 
+	bool condition=false;
+	if ((Word)reg->get(s)<0){
+		condition=true;
+	}
+
 	advPC();
 	executeInstruction();
 
-	if ((Word)reg->get(s)<0){
+	if (condition){
 		advPCbool=false;
 		PC+=immediate<<2;
 	}
@@ -523,28 +545,37 @@ void Simulator::bltzal(Regidx s,Word immediate){
 	}
 }
 
+
 void Simulator::bgtz(Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
+	bool condition=false;
+	if ((Word)reg->get(s)>0){
+		condition=true;
+	}
 
 	advPC();
 	executeInstruction();
 
-	if ((Word)reg->get(s)>0){
+	if (condition){
 		advPCbool=false;
 		PC+=immediate<<2;
 	}
 	else{
 		//do nothing
 	}
+
 }
 
 void Simulator::blez(Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
-
+	bool condition=false;
+	if ((Word)reg->get(s)<=0){
+		condition=true;
+	}
 	advPC();
 	executeInstruction();
 
-	if ((Word)reg->get(s)<=0){
+	if (condition){
 		advPCbool=false;
 		PC+=immediate<<2;
 	}
@@ -555,10 +586,15 @@ void Simulator::blez(Regidx s,Word immediate){
 void Simulator::bne(Regidx t,Regidx s,Word immediate){
 	immediate=hp::sgnExtend16(immediate);
 
+	bool condition=false;
+	if (reg->get(t)!=reg->get(s)){
+		condition=true;
+	}
+
 	advPC();
 	executeInstruction();
 
-	if (reg->get(t)!=reg->get(s)){
+	if (condition){
 		advPCbool=false;
 		PC+=immediate<<2;
 	}
